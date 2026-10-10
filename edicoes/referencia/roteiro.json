@@ -1,0 +1,362 @@
+{
+ "marca": "INEMA · RADAR FINANCEIRO",
+ "selo": "YOUTUBE · 03 A 08/10",
+ "avatar": {
+  "img": "img/avatar-teste.jpg",
+  "tag": "<b>NEI MALDANER</b> · INEMA"
+ },
+ "hero": "<div class=\"dt\">09/10/2026 · SEXTA</div><div class=\"t1\">IBOVESPA</div><div class=\"t2\">206.900</div><div class=\"t3\">+7,7% NUM DIA</div><div class=\"t4\">Os 5 maiores influenciadores de finanças do Brasil: o que disseram nesta semana</div><div class=\"rostos\"><div style=\"background-image:url('img/pd0Ikbmqju4.jpg')\"></div><div style=\"background-image:url('img/hty8Gb5H4gw.jpg')\"></div><div style=\"background-image:url('img/KgH6dY7IEjk.jpg')\"></div><div style=\"background-image:url('img/Zp8gL1OLinI.jpg')\"></div><div style=\"background-image:url('img/pitKu3u_-FI.jpg')\"></div></div>",
+ "falas": [
+  {
+   "id": "f1",
+   "fundo": "img/pd0Ikbmqju4.jpg",
+   "fala": "Dólar abaixo de cinco reais e a bolsa no maior nível da história. Eu vi os vídeos da semana dos cinco maiores influenciadores de finanças do Brasil. Olha os números.",
+   "fonte": "<b>Ranking:</b> Anbima FInfluence, 10ª edição · <b>Vídeos:</b> YouTube, 03 a 08/10/2026",
+   "destaque": [
+    "dólar",
+    "bolsa",
+    "história"
+   ]
+  },
+  {
+   "id": "f2",
+   "fundo": "img/pd0Ikbmqju4.jpg",
+   "fala": "O Primo Rico mostrou: na segunda-feira, a bolsa subiu sete vírgula sete por cento num dia só. Recorde histórico. A B3 chegou a pausar as negociações.",
+   "ficha": {
+    "nome": "O Primo Rico",
+    "canal": "Thiago Nigro · 07/10 · 297 mil views",
+    "rk": "TOP 10 · ANBIMA",
+    "foto": "img/pd0Ikbmqju4.jpg"
+   },
+   "numero": {
+    "k": "Ibovespa · segunda, 05/10",
+    "pre": "+",
+    "ate": 7.7,
+    "dec": 1,
+    "unid": "%",
+    "cor": "#2bff88",
+    "seta": "▲",
+    "l": "fechou em 206.900 pontos, recorde",
+    "em": "subiu"
+   },
+   "grafico": {
+    "serie": [
+     192.1,
+     209.6,
+     206.9
+    ],
+    "cor": "#2bff88",
+    "rotulo": "MIL PONTOS · VÉSPERA → MÁXIMA → FECHAMENTO",
+    "em": "subiu"
+   },
+   "caixa": {
+    "k": "O Primo Rico disse",
+    "q": "A B3 chegou a pausar as negociações por alguns minutos.",
+    "w": "vídeo de 07/10/2026",
+    "em": "pausar"
+   },
+   "fonte": "<b>Fonte:</b> O Primo Rico, YouTube, 07/10/2026 · “Brasil voando: Ibovespa recorde, dólar e juros caindo”",
+   "destaque": [
+    "recorde",
+    "histórico",
+    "pausar"
+   ]
+  },
+  {
+   "id": "f3",
+   "fundo": "img/pd0Ikbmqju4.jpg",
+   "fala": "E os bancos e corretoras dispararam. A xis pê subiu quase trinta e cinco por cento. A Magalu, vinte e quatro.",
+   "numero": {
+    "k": "XP · em um dia",
+    "pre": "+",
+    "ate": 35,
+    "unid": "%",
+    "cor": "#2bff88",
+    "seta": "▲",
+    "l": "quase 35%, segundo O Primo Rico",
+    "em": "XP"
+   },
+   "caixa": {
+    "k": "Alta na segunda, 05/10",
+    "itens": [
+     {
+      "txt": "XP +35%",
+      "em": "XP"
+     },
+     {
+      "txt": "Magalu +24%",
+      "em": "Magalu"
+     },
+     {
+      "txt": "B3 +22,6%",
+      "em": "Magalu"
+     },
+     {
+      "txt": "BTG +22,5%",
+      "em": "Magalu"
+     }
+    ]
+   },
+   "fonte": "<b>Fonte:</b> O Primo Rico, YouTube, 07/10/2026",
+   "destaque": [
+    "dispararam"
+   ]
+  },
+  {
+   "id": "f4",
+   "fundo": "img/hty8Gb5H4gw.jpg",
+   "fala": "O Economista Sincero, número dois da Anbima, foi além. Com o dólar a quatro e noventa e oito, ele aposta na bolsa a duzentos e cinquenta mil pontos.",
+   "ficha": {
+    "nome": "Economista Sincero",
+    "canal": "05/10 · 246 mil views",
+    "rk": "Nº 2 · ANBIMA",
+    "foto": "img/hty8Gb5H4gw.jpg"
+   },
+   "numero": {
+    "k": "Dólar · após o 1º turno",
+    "pre": "R$",
+    "de": 5.2,
+    "ate": 4.98,
+    "dec": 2,
+    "cor": "#ff5a4f",
+    "seta": "▼",
+    "l": "queda de mais de 4% em um dia",
+    "em": "dólar"
+   },
+   "caixa": {
+    "k": "O Economista Sincero disse",
+    "q": "Eu acredito em Ibovespa em 250 mil pontos.",
+    "w": "vídeo de 05/10/2026",
+    "em": "aposta"
+   },
+   "fonte": "<b>Fonte:</b> Economista Sincero, YouTube, 05/10/2026 · “Ibovespa 300.000 pontos? Dólar R$ 4,50?”",
+   "destaque": [
+    "além",
+    "aposta"
+   ]
+  },
+  {
+   "id": "f5",
+   "fundo": "img/GvjXhXRg62M.jpg",
+   "fala": "E ele mostrou as casas de apostas: oitenta e quatro por cento de chance de vitória do Flávio Bolsonaro no segundo turno.",
+   "numero": {
+    "k": "Polymarket · chance de vitória",
+    "ate": 84,
+    "unid": "%",
+    "cor": "#ffd23f",
+    "l": "Flávio Bolsonaro no 2º turno (25/10). Ricardo Amorim citou 85%",
+    "em": "84"
+   },
+   "carimbo": {
+    "txt": "APOSTA",
+    "em": "chance",
+    "cor": "#ffd23f"
+   },
+   "fonte": "<b>Fonte:</b> Economista Sincero, YouTube, 08/10/2026 · Ricardo Amorim, YouTube, 05/10/2026 · casas de apostas não são pesquisa eleitoral",
+   "destaque": [
+    "apostas",
+    "segundo",
+    "turno"
+   ]
+  },
+  {
+   "id": "f6",
+   "fundo": "img/KgH6dY7IEjk.jpg",
+   "fala": "Mas a polêmica da semana veio do Ricardo Amorim: o tráfico de drogas vai entrar na conta do PIB brasileiro.",
+   "ficha": {
+    "nome": "Ricardo Amorim",
+    "canal": "08/10 · “Tráfico vai contar no PIB”",
+    "rk": "Nº 3 · ANBIMA",
+    "foto": "img/KgH6dY7IEjk.jpg"
+   },
+   "numero": {
+    "k": "Atividades ilícitas e informais",
+    "ate": 15,
+    "unid": "% do PIB",
+    "cor": "#ffd23f",
+    "l": "estimativa Etco com FGV Ibre para 2021, citada por ele",
+    "em": "tráfico"
+   },
+   "carimbo": {
+    "txt": "POLÊMICA",
+    "em": "PIB"
+   },
+   "fonte": "<b>Fonte:</b> Ricardo Amorim, YouTube, 08/10/2026 · nova metodologia do IBGE a partir de 2028",
+   "destaque": [
+    "polêmica",
+    "tráfico",
+    "drogas"
+   ]
+  },
+  {
+   "id": "f7",
+   "fundo": "img/KgH6dY7IEjk.jpg",
+   "fala": "Calma: não vira legal. A partir de dois mil e vinte e oito, o IBGE só passa a contar o que já acontece. E com o PIB maior, a dívida parece menor.",
+   "caixa": {
+    "k": "Ricardo Amorim disse",
+    "q": "Isso não significa que o tráfico vai passar a ser uma atividade legal.",
+    "w": "vídeo de 08/10/2026"
+   },
+   "numero": {
+    "k": "IBGE · nova conta do PIB",
+    "ate": 2028,
+    "cor": "#fff",
+    "l": "Reino Unido, Itália e Espanha já fazem isso",
+    "em": "partir",
+    "cru": true
+   },
+   "fonte": "<b>Fonte:</b> Ricardo Amorim, YouTube, 08/10/2026",
+   "destaque": [
+    "calma",
+    "dívida",
+    "menor"
+   ]
+  },
+  {
+   "id": "f8",
+   "fundo": "img/Zp8gL1OLinI.jpg",
+   "fala": "E o Bruno Perini, número um da Anbima, mostrou outro caminho: comprou um apartamento em leilão por setecentos e cinquenta mil e vendeu por um milhão trezentos e sessenta.",
+   "ficha": {
+    "nome": "Bruno Perini",
+    "canal": "Você MAIS Rico · 08/10 · 28 mil views",
+    "rk": "Nº 1 · ANBIMA",
+    "foto": "img/Zp8gL1OLinI.jpg"
+   },
+   "numero": {
+    "k": "Venda do apartamento · Curitiba",
+    "pre": "R$",
+    "de": 0.75,
+    "ate": 1.36,
+    "unid": "mi",
+    "cor": "#2bff88",
+    "seta": "▲",
+    "l": "comprado em leilão por R$ 750 mil",
+    "em": "leilão",
+    "dur": 2.6,
+    "dec": 2
+   },
+   "caixa": {
+    "k": "A conta dele",
+    "itens": [
+     {
+      "txt": "Compra R$ 750 mil",
+      "em": "750"
+     },
+     {
+      "txt": "Reforma R$ 190 mil",
+      "em": "vendeu"
+     },
+     {
+      "txt": "Venda R$ 1,36 mi",
+      "em": ".360"
+     },
+     {
+      "txt": "Em 10 meses",
+      "em": "360"
+     }
+    ]
+   },
+   "fonte": "<b>Fonte:</b> Bruno Perini, YouTube, 08/10/2026 · “Quanto dá para ganhar investindo em leilão de imóveis?”",
+   "destaque": [
+    "leilão",
+    "outro",
+    "caminho"
+   ]
+  },
+  {
+   "id": "f9",
+   "fundo": "img/Zp8gL1OLinI.jpg",
+   "fala": "Na conta dele, deu dois vírgula cinco por cento ao mês, líquido. A renda fixa paga um por cento, bruto.",
+   "numero": {
+    "k": "Rentabilidade · leilão",
+    "ate": 2.54,
+    "dec": 2,
+    "unid": "% ao mês",
+    "cor": "#2bff88",
+    "l": "líquida, segundo ele · renda fixa: ~1% ao mês bruto",
+    "em": "2"
+   },
+   "fonte": "<b>Fonte:</b> Bruno Perini, YouTube, 08/10/2026 · resultado de uma operação, não é promessa de retorno",
+   "destaque": [
+    "líquido",
+    "bruto"
+   ]
+  },
+  {
+   "id": "f10",
+   "fundo": "img/pitKu3u_-FI.jpg",
+   "fala": "E no Os Economistas, o recado foi direto: se o Lula ganhar, o Brasil não vira Venezuela. Mas se mudar, o espaço pra subir é grande. Segundo turno: vinte e cinco de outubro.",
+   "ficha": {
+    "nome": "Os Economistas",
+    "canal": "Podcast · 03/10 · “Lula ou Flávio?”",
+    "rk": "TOP 10 · ANBIMA",
+    "foto": "img/pitKu3u_-FI.jpg"
+   },
+   "caixa": {
+    "k": "Convidado do Os Economistas",
+    "q": "Se, por exemplo, Lula ganhar, pegar um quarto mandato, o Brasil não vai virar Venezuela necessariamente.",
+    "w": "vídeo de 03/10/2026",
+    "em": "Venezuela"
+   },
+   "numero": {
+    "k": "2º turno",
+    "ate": 25,
+    "unid": "/10",
+    "cor": "#ffd23f",
+    "l": "o mercado vai reagir a cada pesquisa até lá",
+    "em": "Segundo"
+   },
+   "carimbo": {
+    "txt": "ASSIMETRIA",
+    "em": "subir",
+    "cor": "#2bff88"
+   },
+   "fonte": "<b>Fonte:</b> Os Economistas Podcast, YouTube, 03/10/2026",
+   "destaque": [
+    "Venezuela",
+    "subir"
+   ]
+  },
+  {
+   "id": "f11",
+   "fundo": "img/pd0Ikbmqju4.jpg",
+   "fala": "E tu? Acha que a bolsa chega nos duzentos e cinquenta mil? Comenta aqui o teu palpite.",
+   "numero": {
+    "k": "Teu palpite",
+    "ate": 250,
+    "unid": "mil?",
+    "cor": "#ffd23f",
+    "l": "comenta: sim ou não, e por quê",
+    "em": "250"
+   },
+   "fonte": "<b>Não é recomendação de investimento.</b> Resumo do que os influenciadores disseram, com a fonte de cada número",
+   "destaque": [
+    "tu",
+    "palpite"
+   ],
+   "limpa": true
+  },
+  {
+   "id": "f12",
+   "fundo": "img/cta.jpg",
+   "fala": "Enquanto o mercado discute eleição, a inteligência artificial já está mudando o trabalho. Te prepara pra gestão de agentes de IA: curso gratuito no inema ponto club.",
+   "hero": "<div class=\"t1\" style=\"font-size:96px\">GESTÃO DE</div><div class=\"t5\">AGENTES DE IA</div><img class=\"arte\" src=\"img/cta.jpg\">",
+   "caixa": {
+    "tipo": "cta",
+    "a": "INEMA.CLUB",
+    "b": "Curso gratuito: gestão de agentes de IA. Manda pra quem investe.",
+    "em": "gestão"
+   },
+   "fonte": "<b>inema.club</b> · cursos gratuitos de tecnologia e IA",
+   "destaque": [
+    "inteligência",
+    "artificial",
+    "gestão",
+    "agentes",
+    "gratuito",
+    "inema"
+   ],
+   "limpa": true
+  }
+ ]
+}

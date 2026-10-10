@@ -1,0 +1,21 @@
+{
+  "_como_editar": "Para incluir ou tirar alguém, edite esta lista (ou peça ao Claude). 'ativo': false pausa sem apagar. 'handle' é o caminho do canal no YouTube (@handle ou channel/UC...). Quem entra por sugestão do sistema precisa ser profissional de saúde com registro, consolidado e confiável, nunca emergente; a sugestão vem no bot e só entra com o ok do Nei.",
+  "_ranking": "Prêmio iBest 2024 (Influenciadores de Saúde) + medição própria de 10/10/2026 (yt-dlp e Apify): ver pesquisa/influenciadores.md. Augusto Cury fica de fora por decisão do Nei (político).",
+  "_nota_consenso": "Lair Ribeiro, Mohamad Barakat, Christian Aguiar e Victor Sorrentino são criticados pela comunidade científica por defender tratamentos sem consenso. Ficam ativos por decisão do Nei; o roteiro relata, atribui e carimba 'SEM CONSENSO' o que não tem respaldo (auto/roteiro.md). Para tirar, 'ativo': false.",
+  "canais": [
+    {"handle": "channel/UC9zqTTVeClpqMQ5CLuJdWtw", "nome": "Drauzio Varella", "rk": "MÉDICO · ONCOLOGISTA", "ativo": true},
+    {"handle": "channel/UClN6OLbLp1YjTSwDOkEM2dA", "nome": "Dayan Siebra", "rk": "MÉDICO · CIRURGIÃO VASCULAR", "ativo": true},
+    {"handle": "channel/UChXNyp6dL_aY_3qwVgDd-EQ", "nome": "Dr. Fernando Lemos", "rk": "MÉDICO · INTESTINO", "ativo": true},
+    {"handle": "channel/UC5VvsTwsyKWMZSQtt1MPCEw", "nome": "Ana Beatriz Barbosa (PodPeople)", "rk": "MÉDICA · PSIQUIATRA", "ativo": true},
+    {"handle": "channel/UCJCIbrvEJyRJnHGvh7z0-bQ", "nome": "Patricia Leite", "rk": "NUTRICIONISTA", "ativo": true},
+    {"handle": "channel/UCUOsr03iLj627hJm55cmIPw", "nome": "Paulo Muzy", "rk": "MÉDICO · ESPORTE", "ativo": true},
+    {"handle": "channel/UCHaSx5KrdWbxbBsX6BgwidQ", "nome": "Rossandro Klinjey", "rk": "PSICÓLOGO", "ativo": true},
+    {"handle": "channel/UC8B9eNWlA6ugo3j1YzJdmiA", "nome": "Marcio Atalla", "rk": "EDUCADOR FÍSICO", "ativo": true},
+    {"handle": "channel/UCKtJs_zI1yzswHDWqkqHtWw", "nome": "Dra. Ana Escobar", "rk": "MÉDICA · PEDIATRA", "ativo": true},
+    {"handle": "channel/UCk9mgpQVdJ5oKQWkM1UPBaQ", "nome": "Lair Ribeiro", "rk": "MÉDICO · NUTROLOGIA", "ativo": true},
+    {"handle": "channel/UCz19KhX53Y8e6ABd29UkHEg", "nome": "Instituto Dr. Barakat", "rk": "MEDICINA INTEGRATIVA", "ativo": true},
+    {"handle": "channel/UCcCq86XXw41aU4M9GS_9kdw", "nome": "Dr. Christian Aguiar", "rk": "MÉDICO", "ativo": true},
+    {"handle": "channel/UCyF-Ubm2ALNTtSiYdG-Ezqg", "nome": "Victor Sorrentino", "rk": "MÉDICO · LONGEVIDADE", "ativo": true},
+    {"handle": "channel/UCPGGSQfN8LREy6dWdk85fpw", "nome": "Dr. Juliano Pimentel", "rk": "MÉDICO", "ativo": false, "_nota": "canal do YouTube parado desde 2022; ativo no Instagram (@drjulianopimentel)"}
+  ]
+}

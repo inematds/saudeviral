@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>saudeviral — the health influencer radar in 1 minute</title>
+<meta name="description" content="saudeviral: a system that transcribes the videos of Brazil's biggest health influencers and builds, on its own, a 9:16 video with the facts, the source on screen and Nei commenting. Does not replace a medical consultation.">
+<link rel="alternate" hreflang="pt-BR" href="https://inematds.github.io/saudeviral/guia/">
+<link rel="alternate" hreflang="en" href="https://inematds.github.io/saudeviral/guia/en/">
+<link rel="alternate" hreflang="es" href="https://inematds.github.io/saudeviral/guia/es/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0c10; --bg2:#14141b; --card:#16161e; --line:#272730;
+    --txt:#e9e9ee; --mut:#9a9aa6; --amb:#E2A23B; --amb2:#f0c070; --sky:#38bdf8; --pro:#cbd5e1;
+    color-scheme:dark;
+  }
+  body.light{
+    --bg:#f6f7f9; --bg2:#eceef2; --card:#ffffff; --line:#e1e3ea;
+    --txt:#1a1a22; --mut:#5b5b68; --amb:#b9791d; --amb2:#a16207; --sky:#0369a1; --pro:#b45309;
+    color-scheme:light;
+  }
+  body.light .hero .glow{opacity:.5}
+  body.light pre{background:#0e0e14;color:#d6d6e0}
+  body.light pre .c{color:#8a8a98}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.65 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:Sora,sans-serif;line-height:1.15;margin:0}
+  a{color:var(--amb);text-decoration:none}
+  code,pre{font-family:"JetBrains Mono",monospace}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+  .mut{color:var(--mut)} .amb{color:var(--amb)}
+  .chip{display:inline-block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amb);font-weight:600;font-family:Sora}
+  nav{position:sticky;top:0;z-index:30;backdrop-filter:blur(12px);background:rgba(12,12,16,.78);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:22px;height:60px}
+  nav .brand{display:flex;align-items:center;gap:8px;font-family:Sora;font-weight:800;letter-spacing:-.02em;color:var(--amb)}
+  nav .brand .emoji{font-size:1.25rem}
+  nav .sep{color:var(--mut);opacity:.45}
+  nav .inema{color:var(--sky);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .inema:hover{filter:brightness(1.15)}
+  nav .pro{color:var(--pro);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .pro:hover{filter:brightness(1.15)}
+  nav .clubpro{display:inline-flex;align-items:center;gap:6px}
+  nav .links{margin-left:auto;display:flex;align-items:center;gap:20px;font-size:.92rem}
+  nav .links a.sec{color:var(--mut)} nav .links a.sec:hover{color:var(--txt)}
+  .lang{display:inline-flex;gap:2px;font-family:Sora;font-size:.78rem}
+  .lang a{color:var(--mut);padding:.2em .45em;border-radius:6px} .lang a.on{color:var(--amb);background:rgba(226,162,59,.12)}
+  .tgl{background:var(--bg2);border:1px solid var(--line);color:var(--txt);width:38px;height:38px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:1.05rem}
+  .tgl:hover{border-color:var(--amb)}
+  .btn{display:inline-block;background:var(--amb);color:#1a1206;font-weight:600;padding:.6em 1.05em;border-radius:10px;font-family:Sora}
+  .btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+  @media(max-width:760px){nav .links a.sec{display:none}}
+  @media(max-width:520px){nav .wrap{gap:8px;padding:8px 14px;height:auto;flex-wrap:wrap} nav .links{gap:8px;margin-left:0;width:100%;justify-content:space-between} nav .btn{padding:.45em .7em;font-size:.82rem} .tgl{width:34px;height:34px}}
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+  .hero .glow{position:absolute;inset:-40% -20% auto auto;width:70%;height:600px;background:radial-gradient(closest-side,rgba(226,162,59,.22),transparent 70%);pointer-events:none}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:74px 22px}
+  .hero h1{font-size:clamp(2.2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.025em}
+  .hero p.lead{font-size:1.18rem;color:var(--mut);margin:1.1em 0 1.6em;max-width:34ch}
+  .hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .hero figure{margin:0;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px #000}
+  .hero figure img{width:100%;display:block}
+  .resumo{padding:38px 0 34px;border-bottom:1px solid var(--line)}
+  .resumo p{font-size:1.12rem;line-height:1.7;max-width:74ch;margin:.55em 0 0}
+  @media(max-width:780px){.hero .wrap{grid-template-columns:1fr;padding:48px 22px}}
+  section{padding:62px 0;border-bottom:1px solid var(--line)}
+  section h2{font-size:clamp(1.5rem,3.4vw,2.1rem);font-weight:800;letter-spacing:-.02em}
+  section .sub{color:var(--mut);margin:.6em 0 2em;max-width:62ch}
+  .grid{display:grid;gap:16px}
+  .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:820px){.g3,.g4{grid-template-columns:1fr 1fr}}
+  @media(max-width:540px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card h3{font-size:1.05rem;margin-bottom:.4em}
+  .card p{color:var(--mut);font-size:.92rem;margin:0}
+  .num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:8px;background:rgba(226,162,59,.14);color:var(--amb);font-family:Sora;font-weight:800;font-size:.9rem;margin-bottom:.7em}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+  .flow span{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:.45em .9em;font-size:.85rem;font-family:Sora;font-weight:600}
+  .flow .arr{color:var(--amb);border:none;background:none;padding:0 .1em}
+  pre{background:#0a0a0e;border:1px solid var(--line);border-radius:12px;padding:16px 18px;overflow:auto;font-size:.86rem;line-height:1.6;color:#d6d6e0}
+  pre .c{color:#6f6f7c} pre .k{color:var(--amb2)} pre .s{color:#9ece6a}
+  .step{display:grid;grid-template-columns:46px minmax(0,1fr);gap:16px;margin-bottom:26px}
+  .step>div,.card{min-width:0}
+  p code,li code,td code{overflow-wrap:anywhere}
+  .step .b{width:46px;height:46px;border-radius:12px;background:var(--amb);color:#1a1206;font-family:Sora;font-weight:800;font-size:1.25rem;display:flex;align-items:center;justify-content:center}
+  .step h3{font-size:1.12rem;margin-bottom:.3em}
+  .step p{color:var(--mut);margin:.2em 0 .7em}
+  .ex{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:680px){.ex{grid-template-columns:1fr}}
+  .ex figure{margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+  .ex figure img{width:100%;display:block}
+  .ex figcaption{padding:12px 14px;font-size:.88rem;color:var(--mut);background:var(--card)}
+  .phase{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .phase:last-child{border:none}
+  .phase .tag{flex:0 0 92px;font-family:Sora;font-weight:800;color:var(--amb)}
+  .phase .d strong{display:block;margin-bottom:.2em}
+  .phase .d span{color:var(--mut);font-size:.92rem}
+  footer{padding:46px 0;text-align:center;color:var(--mut);font-size:.9rem}
+  .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:.3em .8em;font-size:.78rem;color:var(--mut);margin:0 4px}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="brand" href="#top"><span class="emoji">🩺</span> saudeviral</a>
+  <span class="sep">|</span>
+  <span class="clubpro">
+    <a class="inema" href="https://inema.club" target="_blank" rel="noopener">INEMA.CLUB</a>
+    <span class="sep">-</span>
+    <a class="pro" href="https://inema.pro" target="_blank" rel="noopener">PRO</a>
+  </span>
+  <div class="links">
+    <a class="sec" href="#oque">What it is</a>
+    <a class="sec" href="#fluxo">How it works</a>
+    <a class="sec" href="#agenda">Schedule</a>
+    <a class="sec" href="#quem">Influencers</a>
+    <a class="sec" href="#guia">User guide</a>
+    <a class="sec" href="#exemplos">Example</a>
+    <span class="lang"><a href="../">PT</a><a class="on" href="./">EN</a><a href="../es/">ES</a></span>
+    <button class="tgl" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+    <a class="btn" href="https://github.com/inematds/saudeviral" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</div></nav>
+
+<header class="hero" id="top">
+  <div class="glow"></div>
+  <div class="wrap">
+    <div>
+      <span class="chip">9:16 video · Health · automatic</span>
+      <h1>Health in <span class="amb">1 minute</span>, from the people who talk about it most</h1>
+      <p class="lead">Brazil's biggest health influencers (doctors, nutritionists and psychologists), transcribed, fact-checked and summarized in a video with the source on screen and Nei commenting.</p>
+      <div class="cta">
+        <a class="btn" href="#guia">Start the guide</a>
+        <a class="btn ghost" href="https://github.com/inematds/saudeviral" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+    </div>
+    <figure><img src="../assets/banner-en.jpg" alt="HEALTH RADAR banner: what Brazil's top health influencers said, in 1 minute"></figure>
+  </div>
+</header>
+
+<section id="resumo" class="resumo"><div class="wrap">
+  <span class="chip">In short</span>
+  <p>saudeviral is a system that, on its own, makes short videos (9:16) about what Brazil's biggest health influencers said in their videos: the doctors, nutritionists and psychologists with the largest audiences. It watches the YouTube videos through transcription, picks out the facts, numbers and controversies, and builds a video with the source of every data point on screen and Nei commenting (avatar). Everything is reported and attributed, and anything without medical consensus gets a "NO CONSENSUS" stamp. It does not replace a medical consultation. On Saturdays and Sundays it also makes the long 16:9 video "The week explained". Everything is published automatically on the Inema Pro YouTube channel and sent to Telegram. It is finviral's sibling: same engine, different topic.</p>
+</div></section>
+
+<section id="oque"><div class="wrap">
+  <span class="chip">What it is</span>
+  <h2>A health radar that builds itself</h2>
+  <p class="sub">Every night saudeviral reads what the channels published, checks every fact against the transcript and publishes a finished video. It does not replace a medical consultation: the video reports what each person said, always with the source.</p>
+  <figure style="margin:0 0 26px;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px #000"><img src="../assets/banner-grade-en.jpg" alt="saudeviral flow: collection, transcription, script, fact-check, avatar and bot v3" loading="lazy" style="width:100%;display:block"></figure>
+  <div class="grid g3">
+    <div class="card"><h3>🔎 Only sourced facts</h3><p>Every fact or number must be in the transcript, with the literal excerpt. Channel, date and title appear on screen in every scene.</p></div>
+    <div class="card"><h3>⚕️ No medical advice</h3><p>Everything is attributed ("according to him"). No dose, medicine or diet as an instruction. Treatments without consensus get the "NO CONSENSUS" stamp or are left out.</p></div>
+    <div class="card"><h3>🔒 All on the subscription</h3><p>Script with <code>claude -p</code> (subscription, no API), local transcription with Whisper and the avatar through the HeyGen studio. HeyGen's plan-change offer is always declined.</p></div>
+  </div>
+</div></section>
+
+<section id="fluxo"><div class="wrap">
+  <span class="chip">How it works</span>
+  <h2>From transcript to YouTube, no human in the middle</h2>
+  <p class="sub">Steps chained by <code>auto/rodar.sh</code>. If the fact-check fails twice, the video is not made.</p>
+  <div class="flow">
+    <span>Collection</span><span class="arr">→</span>
+    <span>Transcription</span><span class="arr">→</span>
+    <span>Script</span><span class="arr">→</span>
+    <span>Fact-check</span><span class="arr">→</span>
+    <span>Avatar</span><span class="arr">→</span>
+    <span>Video</span><span class="arr">→</span>
+    <span>YouTube + bot</span>
+  </div>
+  <div class="grid g3" style="margin-top:26px">
+    <div class="card"><div class="num">1</div><h3>Collection and transcription</h3><p>Lists the videos of the channels in <code>canais.json</code> (metadata only, yt-dlp), downloads the audio and transcribes it locally (inemavox, Whisper large-v3).</p></div>
+    <div class="card"><div class="num">2</div><h3>Script</h3><p><code>claude -p</code> reads the transcripts and writes <code>base.md</code> (each fact, who said it, the video and the literal excerpt), <code>roteiro.json</code> (lines and visuals) and <code>legenda.txt</code>.</p></div>
+    <div class="card"><div class="num">3</div><h3>Fact-check</h3><p><code>auto/checar.py</code> checks that every excerpt is in the transcript, that spoken numbers are written out, that images exist, that there is a CTA and the notice "Não substitui consulta médica" (does not replace a medical consultation). If it fails, it goes back once for correction.</p></div>
+    <div class="card"><div class="num">4</div><h3>Avatar</h3><p>HeyGen generates Nei's avatar through the studio (subscription). <code>motor/retempo.py</code> aligns the visuals to the speech. If HeyGen fails, a version with Nei's photo and voice (Chatterbox) is made instead.</p></div>
+    <div class="card"><div class="num">5</div><h3>Video</h3><p><code>motor/palco.html</code> is rendered frame by frame by Playwright, with counters, stamps and the source in every scene. The avatar sits in the corner.</p></div>
+    <div class="card"><div class="num">6</div><h3>Publishing</h3><p><code>auto/publicar.sh</code> publishes on the Inema Pro YouTube channel (lives12) through <code>yt-pubx</code> and always sends it to bot v3 with the link. If the avatar failed, the photo version only goes to the bot.</p></div>
+  </div>
+</div></section>
+
+<section id="agenda"><div class="wrap">
+  <span class="chip">Schedule</span>
+  <h2>Three runs a week, at 05:00</h2>
+  <p class="sub">systemd user timers. The time is kept away from finviral (02:00) so the two don't compete for the GPU and HeyGen. A weak day doesn't become a video: the bot gets "no topic".</p>
+  <div class="phase"><div class="tag">Mon to Fri</div><div class="d"><strong><code>diario</code> run · 40–60 s</strong><span>What they published yesterday and the day before: one main story and at most one or two more facts.</span></div></div>
+  <div class="phase"><div class="tag">Saturday</div><div class="d"><strong><code>semanal</code> run · 90 s to 2 min</strong><span>The week in review: the strongest topic, the controversy and who disagreed with whom. Then the long 16:9 "The week explained".</span></div></div>
+  <div class="phase"><div class="tag">Sunday</div><div class="d"><strong><code>domingo</code> run · ~90 s</strong><span>The warnings, habits and myths they pointed out during the week, always attributed. Then the long 16:9 explainer.</span></div></div>
+</div></section>
+
+<section id="quem"><div class="wrap">
+  <span class="chip">Influencers</span>
+  <h2>Who saudeviral follows</h2>
+  <p class="sub">Basis: iBest Award 2024 (Health Influencers) and our own measurement on 10/10/2026 on YouTube and Instagram (<code>pesquisa/influenciadores.md</code>). Collection reads YouTube only.</p>
+  <div class="grid g3">
+    <div class="card"><h3>🩺 Doctors</h3><p>Drauzio Varella (oncologist), Dayan Siebra (vascular surgeon), Fernando Lemos (gut health), Paulo Muzy (sports medicine), Ana Escobar (pediatrician), Ana Beatriz Barbosa (psychiatrist, PodPeople).</p></div>
+    <div class="card"><h3>🥗 Nutrition, mind and movement</h3><p>Patricia Leite (nutritionist), Rossandro Klinjey (psychologist) and Marcio Atalla (physical educator).</p></div>
+    <div class="card"><h3>⚠️ Under a consensus warning</h3><p>Lair Ribeiro, Instituto Dr. Barakat, Christian Aguiar and Victor Sorrentino: included, but anything without scientific support gets the "NO CONSENSUS" stamp.</p></div>
+  </div>
+</div></section>
+
+<section id="pre"><div class="wrap">
+  <span class="chip">Requirements</span>
+  <h2>What the machine needs</h2>
+  <p class="sub">A computer with a GPU, Claude Code logged in on the subscription and the explicavideos HeyGen profile.</p>
+  <div class="grid g3">
+    <div class="card"><h3>Collection and voice</h3><p>yt-dlp to list and download, inemavox (<code>~/projetos/inemavox</code>) to transcribe and cardshorts for the Chatterbox voice <code>nei</code>.</p></div>
+    <div class="card"><h3>Render</h3><p>Node with Playwright (<code>motor/node_modules</code> links to eventosextremospub's) and ffmpeg.</p></div>
+    <div class="card"><h3>Script, avatar and delivery</h3><p><code>claude</code> (Claude Code on the subscription), Xvfb <code>:99</code> with the explicavideos HeyGen profile, <code>yt-pubx</code> and bot v3.</p></div>
+  </div>
+</div></section>
+
+<section id="guia"><div class="wrap">
+  <span class="chip">User guide · step by step</span>
+  <h2>Turn on, test and run by hand</h2>
+  <p class="sub">Real commands from the repository, run from the project root.</p>
+  <div class="step"><div class="b">1</div><div>
+    <h3>Choose the influencers</h3>
+    <p>The list lives in <code>canais.json</code>. To pause someone without deleting them, use <code>"ativo": false</code>. The <code>handle</code> is the channel path on YouTube.</p>
+    <pre>{<span class="s">"handle"</span>: <span class="s">"channel/UC9zqTTVeClpqMQ5CLuJdWtw"</span>, <span class="s">"nome"</span>: <span class="s">"Drauzio Varella"</span>, <span class="s">"rk"</span>: <span class="s">"MÉDICO · ONCOLOGISTA"</span>, <span class="s">"ativo"</span>: true}</pre>
+    <p>If another established, licensed and trustworthy health professional stands out, the system suggests adding them in the bot message. They only join with Nei's ok.</p>
+  </div></div>
+  <div class="step"><div class="b">2</div><div>
+    <h3>Turn on the schedule</h3>
+    <p>Copy the systemd user units and enable the three timers.</p>
+    <pre><span class="k">cp</span> systemd/saudeviral-* ~/.config/systemd/user/ &amp;&amp; <span class="k">systemctl</span> --user daemon-reload
+<span class="k">systemctl</span> --user enable --now saudeviral-diario.timer saudeviral-semanal.timer saudeviral-domingo.timer
+<span class="k">systemctl</span> --user list-timers <span class="s">'saudeviral-*'</span></pre>
+  </div></div>
+  <div class="step"><div class="b">3</div><div>
+    <h3>Test without spending or sending anything</h3>
+    <p>Run a round without HeyGen and without sending to the bot or YouTube.</p>
+    <pre><span class="k">SEM_AVATAR=1 SEM_BOT=1 auto/rodar.sh</span> diario   <span class="c"># test: no HeyGen, nothing sent</span></pre>
+  </div></div>
+  <div class="step"><div class="b">4</div><div>
+    <h3>Run outside the schedule or skip a run</h3>
+    <p>Pass the mode and the date; to skip, add the line to <code>auto/pular.txt</code>.</p>
+    <pre><span class="k">auto/rodar.sh</span> diario 2026-10-09          <span class="c"># run for a specific day</span>
+<span class="k">echo</span> <span class="s">"2026-10-17 diario"</span> &gt;&gt; auto/pular.txt     <span class="c"># skip a run</span></pre>
+  </div></div>
+  <div class="step"><div class="b">5</div><div>
+    <h3>Follow along on Telegram and YouTube</h3>
+    <p>Each run publishes on Inema Pro (lives12) and sends the video to bot v3 with the link. If there is no topic or something fails, the bot gets the notice.</p>
+  </div></div>
+</div></section>
+
+<section id="regras"><div class="wrap">
+  <span class="chip">Rules for every video</span>
+  <h2>What every video follows</h2>
+  <p class="sub">The fact-check gate and the script follow these rules.</p>
+  <div class="grid g3">
+    <div class="card"><h3>📅 Full frame 0</h3><p>Date dd/mm/yyyy and the strongest fact right in the first frame.</p></div>
+    <div class="card"><h3>📌 Source on screen</h3><p>Only facts that are in the transcript, with channel, date and title on screen.</p></div>
+    <div class="card"><h3>⚕️ Not a consultation</h3><p>"Does not replace a medical consultation" in every video; dose, medicine or diet never become instructions.</p></div>
+    <div class="card"><h3>⚖️ No sides taken</h3><p>A controversy is what THEY said; politics always attributed.</p></div>
+    <div class="card"><h3>🗣️ Nei's tone</h3><p>Spoken in Nei's tone ("tu"), with numbers and years written out.</p></div>
+    <div class="card"><h3>📣 Ends with a CTA</h3><p>Comment hook and the AI agent management CTA at inema.club.</p></div>
+  </div>
+</div></section>
+
+<section id="exemplos"><div class="wrap">
+  <span class="chip">Example</span>
+  <h2>Pilot of 10/10/2026</h2>
+  <p class="sub">Two frames from saudeviral's first video (edition <code>edicoes/2026-10-10-diario</code>).</p>
+  <div class="ex" style="max-width:760px;margin:0 auto">
+    <figure><img src="../assets/q_0.jpg" alt="Opening frame of the saudeviral pilot" loading="lazy"><figcaption>Frame 0: date, the strongest fact and the thumbnails of the videos cited.</figcaption></figure>
+    <figure><img src="../assets/q_meio.jpg" alt="Middle frame of the pilot, with the source in the footer" loading="lazy"><figcaption>A scene from the middle, with the source (channel, date and title) in the footer.</figcaption></figure>
+  </div>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    <div class="pill">yt-dlp + Whisper</div><div class="pill">Claude Code</div><div class="pill">Playwright + ffmpeg</div><div class="pill">HeyGen (studio)</div>
+    <p style="margin-top:18px">saudeviral · does not replace a medical consultation · quoted content belongs to the original channels · MIT license ·
+      <a href="https://github.com/inematds/saudeviral">inematds/saudeviral</a> ·
+      <a href="https://inema.club">INEMA.CLUB</a></p>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var KEY='saudeviral-theme';
+    var b=document.body, t=document.getElementById('themeToggle');
+    if(localStorage.getItem(KEY)==='light'){ b.classList.add('light'); t.textContent='☀️'; }
+    t.addEventListener('click',function(){
+      var light=b.classList.toggle('light');
+      t.textContent=light?'☀️':'🌙';
+      localStorage.setItem(KEY, light?'light':'dark');
+    });
+  })();
+</script>
+</body>
+</html>

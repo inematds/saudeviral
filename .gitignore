@@ -1,0 +1,23 @@
+# gerados / pesados (refazer com motor/* e auto/rodar.sh)
+motor/node_modules
+edicoes/*/build/
+edicoes/*/.obra/
+edicoes/*/img/
+edicoes/*/cena.js
+edicoes/*/q_*.jpg
+edicoes/*/prev*.jpg
+edicoes/*/*.mp4
+edicoes/*/*.wav
+edicoes/*/*.envio-v3.json
+edicoes/*/avatar/*.mp4
+edicoes/*/avatar/*.wav
+edicoes/*/avatar/t/
+edicoes/*/avatar/*.log
+edicoes/*/todos.tsv
+*.log
+auto/.rodando
+__pycache__/
+auto/usados-diario.txt
+cena-longo.js
+.longo.html
+edicoes/*/claude.log

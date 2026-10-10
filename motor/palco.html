@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@500;700;900&display=swap" rel="stylesheet">
+<script src="cena.js"></script>
+<style>
+:root{--red:#ff2a1f;--amb:#ffd23f;--grn:#2bff88;--blu:#5ec8ff;--ink:#0b0f14}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#05080c;font-family:Inter,sans-serif;color:#fff}
+/* fundo: miniatura do vídeo citado, escurecida, zoom lento */
+.fundo{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;filter:saturate(1.1) brightness(.42)}
+#grade{position:absolute;inset:0;opacity:.22;background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:60px 60px}
+#vinheta{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,8,12,.92) 0,rgba(5,8,12,.3) 360px,rgba(5,8,12,.35) 880px,rgba(5,8,12,.94) 1080px,rgba(5,8,12,.98) 1920px)}
+#topo{position:absolute;left:56px;right:56px;top:70px;display:flex;justify-content:space-between;align-items:center}
+#marca{font:900 28px Inter;letter-spacing:6px}
+#selo{background:var(--red);border-radius:40px;padding:10px 22px;font:900 22px Inter;letter-spacing:1px}
+#selo:before{content:"●  "}
+/* abertura (quadro 0 já cheio) */
+#hero{position:absolute;left:0;right:0;top:130px;padding:40px 56px 60px;opacity:0}
+#hero .dt{display:inline-block;background:#fff;color:#0b0f14;font:900 44px Inter;padding:8px 22px;border-radius:12px;margin-bottom:18px;letter-spacing:1px}
+#hero .t1{font:400 132px/0.95 'Archivo Black';letter-spacing:-2px}
+#hero .t2{font:400 150px/0.95 'Archivo Black';color:var(--grn);letter-spacing:-3px;text-shadow:0 0 40px rgba(43,255,136,.45)}
+#hero .t3{font:400 92px/1 'Archivo Black';color:var(--amb);margin-top:14px}
+#hero .t4{font:700 40px/1.22 Inter;margin-top:18px;max-width:940px}
+#hero .arte{width:968px;border-radius:18px;border:4px solid var(--amb);margin-top:26px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+#hero .t5{font:400 120px/1 'Archivo Black';color:var(--amb);letter-spacing:-2px}
+#hero .rostos{display:flex;gap:14px;margin-top:30px}
+#hero .rostos div{width:180px;height:101px;border-radius:12px;background-size:cover;background-position:center;border:3px solid rgba(255,255,255,.7)}
+/* ficha do influenciador */
+#ficha{position:absolute;left:56px;right:56px;top:160px;display:flex;gap:26px;align-items:center;opacity:0}
+#ficha .ft{width:250px;height:141px;border-radius:16px;background-size:cover;background-position:center;border:4px solid var(--amb);flex:none;box-shadow:0 10px 40px rgba(0,0,0,.6)}
+#ficha .rk{font:400 40px 'Archivo Black';color:var(--amb)}
+#ficha .nm{font:400 64px/1 'Archivo Black';letter-spacing:-1px}
+#ficha .cn{font:700 26px/1.3 Inter;color:#c9d1db;margin-top:6px}
+/* número gigante */
+#num{position:absolute;left:56px;right:56px;top:390px;opacity:0}
+#num .k{font:900 30px Inter;letter-spacing:2px;text-transform:uppercase;color:#ffb3ad;margin-bottom:4px}
+#num .n{font:400 210px/1 'Archivo Black';letter-spacing:-6px;white-space:nowrap}
+#num .n small{font-size:.42em;letter-spacing:-1px;margin-left:10px}
+#num .n i{font-style:normal;font-size:.5em;letter-spacing:-1px;margin-right:8px;vertical-align:.18em}
+#num .l{font:700 40px/1.22 Inter;margin-top:8px;max-width:960px}
+#num .seta{display:inline-block;font:900 120px/1 Inter;margin-left:18px;vertical-align:.25em}
+/* gráfico de linha desenhado aos poucos */
+#graf{position:absolute;left:56px;right:56px;top:760px;height:300px;opacity:0}
+#graf svg{width:100%;height:100%;overflow:visible}
+#graf .rot{position:absolute;right:0;top:-6px;font:900 24px Inter;color:#c9d1db;letter-spacing:1px}
+/* carimbo de polêmica */
+#carimbo{position:absolute;right:50px;top:640px;border:8px solid var(--red);color:var(--red);font:400 78px/1 'Archivo Black';padding:10px 24px;border-radius:14px;
+ transform:rotate(-9deg) scale(1);opacity:0;background:rgba(5,8,12,.55);letter-spacing:2px}
+/* caixa de baixo à esquerda: citação / itens / cta */
+#caixa{position:absolute;left:40px;right:470px;top:1290px;min-height:453px;background:rgba(14,18,24,.9);border:2px solid rgba(255,255,255,.14);border-radius:22px;padding:24px 26px;opacity:0}
+#caixa .k{font:900 20px Inter;letter-spacing:2px;color:var(--amb);text-transform:uppercase;margin-bottom:12px}
+#caixa .q{font:900 38px/1.2 Inter}
+#caixa .q:before{content:"“";color:var(--amb);font:400 90px/0 'Archivo Black';vertical-align:-.35em;margin-right:6px}
+#caixa .w{font:700 24px Inter;color:#c9d1db;margin-top:16px}
+#caixa .itens div{font:900 34px/1.32 Inter;opacity:.25}
+#caixa .itens div.on{opacity:1}
+#caixa.cta{background:var(--red);border:none}
+#caixa.cta .a{font:400 52px/1.05 'Archivo Black'}
+#caixa.cta .b{font:700 27px/1.3 Inter;margin-top:14px}
+#club{position:absolute;left:40px;right:40px;top:1290px;opacity:0}
+/* avatar (piloto: imagem) */
+#avbox{position:absolute;left:636px;top:1286px;width:408px;height:461px;background:#E2A23B;opacity:0}
+#avbox div{position:absolute;left:4px;top:4px;width:400px;height:453px;background-size:cover;background-position:center 20%}
+#avtag{position:absolute;left:640px;top:1700px;width:400px;height:43px;background:rgba(11,15,20,.85);font:900 19px Inter;padding:11px 16px;letter-spacing:1px;opacity:0}
+#avtag b{color:var(--amb)}
+#fonte{position:absolute;left:40px;right:40px;top:1795px;background:rgba(14,18,24,.75);border-radius:12px;padding:10px 16px;font:500 19px/1.3 Inter;color:#d9dee5;opacity:0}
+#fonte b{color:#fff}
+#leg{position:absolute;left:40px;right:40px;top:1112px;text-align:center;font:900 60px/1.1 Inter;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;text-shadow:0 4px 18px rgba(0,0,0,.95)}
+#leg span{margin:0 8px}
+</style></head>
+<body>
+<div id="fundos"></div>
+<div id="grade"></div>
+<div id="vinheta"></div>
+<div id="topo"><div id="marca"></div><div id="selo"></div></div>
+<div id="hero"></div>
+<div id="ficha"></div>
+<div id="num"></div>
+<div id="graf"></div>
+<div id="carimbo"></div>
+<div id="caixa"></div>
+<div id="avbox"><div></div></div>
+<div id="avtag"></div>
+<div id="fonte"></div>
+<div id="leg"></div>
+<script>
+const C = window.CENA;
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const ease=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const back=x=>{const c=1.7;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2);};
+const lerp=(a,b,k)=>a+(b-a)*k;
+function vis(t,a,b,d=.3){ if(t<a||t>b) return 0; return Math.min(a<=0?1:clamp((t-a)/d),clamp((b-t)/d)); }
+function prog(t,a,dur){ return ease(clamp((t-a)/dur)); }
+const ativo=(lista,t)=>(lista||[]).find(x=>t>=x.ini&&t<=x.fim);
+const $=id=>document.getElementById(id);
+const fmt=(v,dec)=>v.toLocaleString('pt-BR',{minimumFractionDigits:dec||0,maximumFractionDigits:dec||0});
+
+$('marca').textContent=C.marca; $('selo').textContent=C.selo;
+// fundos: uma div por imagem
+const FB=$('fundos'); (C.fundos||[]).forEach((f,i)=>{const d=document.createElement('div');d.className='fundo';d.id='fb'+i;d.style.backgroundImage=`url("${f.img}")`;FB.appendChild(d);});
+if(C.avatar){ $('avbox').firstElementChild.style.backgroundImage=`url("${C.avatar.img}")`; $('avtag').innerHTML=C.avatar.tag||''; }
+const imgs=[...(C.fundos||[]).map(f=>f.img),C.avatar&&C.avatar.img,...(C.fichas||[]).map(f=>f.foto)].filter(Boolean);
+const preload=imgs.map(s=>{const im=new Image();im.src=s;return im.decode().catch(()=>{});});
+
+function desenhar(t){
+  // fundos com dissolve e zoom lento (≤1,2)
+  (C.fundos||[]).forEach((f,i)=>{const o=vis(t,f.ini,f.fim,.6); const d=$('fb'+i); d.style.opacity=o;
+    if(o){const k=clamp((t-f.ini)/(f.fim-f.ini)); d.style.transform=`scale(${lerp(1.04,1.18,k)})`;}});
+  const h=ativo(C.hero,t); const H=$('hero');
+  if(h){H.innerHTML=h.html;H.style.opacity=h.ini<=0?clamp((h.fim-t)/.3):vis(t,h.ini,h.fim);} else H.style.opacity=0;
+  $('topo').style.opacity=1;
+  // ficha do influenciador (entra deslizando)
+  const f=ativo(C.fichas,t); const F=$('ficha');
+  if(f){const k=back(clamp((t-f.ini)/.45)); F.innerHTML=`<div class="ft" style="background-image:url('${f.foto}')"></div><div><div class="rk">${f.rk||''}</div><div class="nm">${f.nome}</div><div class="cn">${f.canal}</div></div>`;
+    F.style.opacity=vis(t,f.ini,f.fim); F.style.transform=`translateX(${(1-k)*-120}px)`;} else F.style.opacity=0;
+  // número gigante com contador
+  const n=ativo(C.numeros,t); const N=$('num');
+  if(n){const k=prog(t,n.ini,n.dur||1.6); const v=lerp(n.de??0,n.ate,k);
+    const pulso=1+0.06*Math.sin(clamp((t-n.ini-(n.dur||1.6))/.35)*Math.PI);
+    const seta=n.seta?`<span class="seta" style="color:${n.seta==='▲'?'var(--grn)':'var(--red)'}">${n.seta}</span>`:'';
+    N.innerHTML=`<div class="k">${n.k}</div><div class="n" style="color:${n.cor||'#fff'};transform:scale(${pulso});transform-origin:left center">${n.pre?`<i>${n.pre}</i>`:''}${n.cru?Math.round(v):fmt(v,n.dec)}${n.unid?`<small>${n.unid}</small>`:''}${seta}</div>${n.l?`<div class="l">${n.l}</div>`:''}`;
+    N.style.opacity=vis(t,n.ini,n.fim);} else N.style.opacity=0;
+  // gráfico de linha
+  const g=ativo(C.graficos,t); const G=$('graf');
+  if(g){const s=g.serie, mn=Math.min(...s), mx=Math.max(...s), W=968, Hh=300;
+    const pts=s.map((v,i)=>[i/(s.length-1)*W, Hh-(v-mn)/(mx-mn||1)*Hh*.9-10]);
+    const p=prog(t,g.ini+.2,g.dur||2); const m=Math.max(1,p*(pts.length-1)); const i0=Math.floor(m), fr=m-i0;
+    const vis_=pts.slice(0,i0+1); if(i0<pts.length-1) vis_.push([lerp(pts[i0][0],pts[i0+1][0],fr),lerp(pts[i0][1],pts[i0+1][1],fr)]);
+    const d='M'+vis_.map(q=>q.map(x=>x.toFixed(1)).join(',')).join(' L'); const ult=vis_[vis_.length-1];
+    G.innerHTML=`<div class="rot">${g.rotulo||''}</div><svg viewBox="0 0 ${W} ${Hh}"><defs><linearGradient id="gg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${g.cor}" stop-opacity=".35"/><stop offset="1" stop-color="${g.cor}" stop-opacity="0"/></linearGradient></defs>
+      <path d="${d} L${ult[0]},${Hh} L0,${Hh} Z" fill="url(#gg)"/><path d="${d}" fill="none" stroke="${g.cor}" stroke-width="8" stroke-linejoin="round" stroke-linecap="round" style="filter:drop-shadow(0 0 12px ${g.cor})"/>
+      <circle cx="${ult[0]}" cy="${ult[1]}" r="14" fill="#fff" stroke="${g.cor}" stroke-width="6"/></svg>`;
+    G.style.opacity=vis(t,g.ini,g.fim);} else G.style.opacity=0;
+  // carimbo POLÊMICA (bate e treme)
+  const c=ativo(C.carimbos,t); const K=$('carimbo');
+  if(c){const k=clamp((t-c.ini)/.28); K.textContent=c.txt; K.style.opacity=vis(t,c.ini,c.fim,.12);
+    K.style.transform=`rotate(-9deg) scale(${lerp(2.4,1,ease(k))})`; K.style.borderColor=K.style.color=c.cor||'var(--red)';} else K.style.opacity=0;
+  // caixa de baixo
+  const b=ativo(C.caixas,t); const B=$('caixa');
+  if(b){ B.className=b.tipo==='cta'?'cta':'';
+    if(b.tipo==='cta') B.innerHTML=`<div class="a">${b.a}</div><div class="b">${b.b}</div>`;
+    else if(b.itens) B.innerHTML=`<div class="k">${b.k}</div><div class="itens">${b.itens.map(i=>`<div class="${t>=i.t?'on':''}">${i.txt}</div>`).join('')}</div>`;
+    else B.innerHTML=`<div class="k">${b.k}</div><div class="q">${b.q}</div><div class="w">${b.w||''}</div>`;
+    B.style.opacity=vis(t,b.ini,b.fim);} else B.style.opacity=0;
+  // avatar (imagem no piloto)
+  const av=C.avatar; const ao=av?vis(t,av.ini,av.fim):0; $('avbox').style.opacity=ao; $('avtag').style.opacity=ao;
+  const fo=ativo(C.fontes,t); const FO=$('fonte'); if(fo){FO.innerHTML=fo.html;FO.style.opacity=vis(t,fo.ini,fo.fim);} else FO.style.opacity=0;
+  const L=ativo(C.legenda,t); $('leg').innerHTML=L?L.palavras.map(w=>`<span style="color:${t>=w.t?(w.cor||'#fff'):'rgba(255,255,255,.35)'}">${w.w}</span>`).join(''):'';
+  // legenda sempre numa linha: encolhe a fonte até caber (nunca corta na borda)
+  const LG=$('leg'); LG.style.fontSize='60px'; for(let fs=60;LG.scrollWidth>LG.clientWidth&&fs>34;fs-=2) LG.style.fontSize=fs+'px';
+}
+window.render=t=>new Promise(r=>{desenhar(t);requestAnimationFrame(()=>requestAnimationFrame(()=>r(true)));});
+window.pronto=Promise.all([document.fonts.ready,...preload]).then(()=>true);
+</script></body></html>

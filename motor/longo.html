@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<!-- saudeviral LONGO 16:9 — cenas do explicavideo v2 (motor/v2, cópia do runtime 2.7.7) + peças de dados
+     (motor/v2/saudeviral-v2.js), render quadro a quadro como o eventosextremospub (render(t) → screenshot). -->
+<link rel="stylesheet" href="v2/v2.css">
+<script src="v2/gsap.min.js"></script><script src="v2/CustomEase.min.js"></script><script src="v2/v2.js"></script>
+<script src="v2/saudeviral-v2.js"></script>
+<script src="cena.js"></script>
+<style>
+html,body{width:1920px;height:1080px}
+#root{width:1920px;height:1080px}
+.v2-scene{display:none}
+/* avatar: o vídeo do HeyGen entra por cima no ffmpeg (1478,36 · 406×228); aqui só a moldura e a foto da prévia */
+#pipf{position:absolute;left:1478px;top:36px;width:406px;height:228px;border-radius:22px;overflow:hidden;z-index:30;background:#0b0f14 center 22%/cover no-repeat;
+ box-shadow:0 0 0 3px rgba(255,182,56,.7),0 18px 60px rgba(0,0,0,.6)}
+#piptag{position:absolute;left:1478px;top:272px;width:406px;z-index:30;font-family:"Mono";font-size:17px;letter-spacing:.18em;color:var(--dim);text-align:right}
+#piptag b{color:var(--amber);font-weight:400}
+/* marca no canto de baixo à direita */
+#marca{position:absolute;right:36px;bottom:30px;z-index:30;font-family:"Mono";font-size:16px;letter-spacing:.22em;color:var(--dim);text-align:right}
+#marca b{color:var(--amber);font-weight:400}
+/* fonte do dado: sempre na tela quando a fala cita alguém */
+#fonte{position:absolute;left:90px;top:1030px;width:1330px;z-index:35;font-family:"MontX";font-size:19px;color:#aab6cc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0}
+#fonte b{color:#eef3ff}
+/* legenda karaokê numa linha (encolhe até caber) */
+#leg{position:absolute;left:90px;top:966px;width:1330px;z-index:40;text-align:center;font-family:"MontBlack";font-size:42px;line-height:1.15;white-space:nowrap;text-transform:uppercase;text-shadow:0 3px 16px rgba(0,0,0,.95)}
+#leg span{margin:0 .18em}
+/* troca de capítulo: tela limpa + nome grande (lição 09/10) */
+#capit{position:absolute;inset:0;z-index:60;background:#030407;opacity:0;display:flex;flex-direction:column;justify-content:center;padding-left:150px}
+#capit .ft{display:none}
+#capit .k{position:relative;font-family:"Mono";font-size:30px;letter-spacing:.3em;color:var(--amber)}
+#capit .n{position:relative;font-family:"MontBlack";font-size:150px;line-height:1;margin-top:18px;letter-spacing:-.01em}
+#capit .s{position:relative;font-family:"MontX";font-size:38px;color:#c9d4e6;margin-top:22px}
+#capit .bar{position:relative;width:220px;height:8px;background:var(--amber);margin-top:34px;transform-origin:0 0}
+/* peças de dados */
+.fv-capbg{position:absolute;inset:0;background:center/cover no-repeat;filter:brightness(.16) saturate(1.1) blur(8px)}
+.fv-capa{position:absolute;left:90px;top:70px;width:1330px}
+.fv-capa .dt{display:inline-block;background:#fff;color:#05070d;font-family:"MontBlack";font-size:40px;padding:8px 22px;border-radius:12px;margin-bottom:22px}
+.fv-capa .ln{font-family:"MontBlack";line-height:.98;letter-spacing:-.01em;white-space:nowrap}
+.fv-capa .sb{font-family:"MontX";font-size:38px;line-height:1.25;margin-top:20px;color:#dfe6f2}
+.fv-capa .rostos{display:flex;gap:18px;margin-top:34px}
+.fv-capa .rostos div{width:246px;height:138px;border-radius:14px;background:center/cover;border:3px solid rgba(255,255,255,.75);box-shadow:0 12px 40px rgba(0,0,0,.6)}
+.fv-thumb{position:absolute;left:90px;top:230px;width:720px;height:405px;border-radius:22px;background:center/100% no-repeat #111;border:4px solid var(--amber);box-shadow:0 24px 70px rgba(0,0,0,.6)}
+.fv-ftx{position:absolute;left:860px;top:290px;width:560px}
+.fv-ftx .rk{font-family:"Mono";font-size:26px;letter-spacing:.2em;color:var(--amber)}
+.fv-ftx .nm{font-family:"MontBlack";line-height:1.02;margin-top:12px}
+.fv-ftx .cn{font-family:"MontX";font-size:28px;line-height:1.35;color:#c9d4e6;margin-top:18px}
+.fv-nk{position:absolute;left:90px;top:250px;width:1330px;font-family:"Mono";font-size:30px;letter-spacing:.2em;color:#ffb3ad;text-transform:uppercase}
+.fv-nn{position:absolute;left:84px;top:300px;font-family:"MontBlack";font-size:230px;line-height:1;white-space:nowrap;transform-origin:0 50%}
+.fv-nn small{font-size:.4em;margin-left:14px}
+.fv-nn i{font-style:normal;font-size:.45em;margin-right:12px;vertical-align:.25em}
+.fv-nn .seta{font-family:"MontX";font-size:.55em;margin-left:20px;vertical-align:.2em}
+.fv-nl{position:absolute;left:90px;top:580px;width:1300px;font-family:"MontX";font-size:44px;line-height:1.25}
+.fv-cit{position:absolute;left:90px;top:210px;width:1330px;min-height:420px;box-sizing:border-box;padding:40px 48px;border-radius:24px;background:var(--panel);border:1.5px solid var(--line);border-left:10px solid var(--amber)}
+.fv-cit .k{font-family:"Mono";font-size:22px;letter-spacing:.24em;color:var(--amber)}
+.fv-cit .q{font-family:"MontX";line-height:1.28;margin-top:18px}
+.fv-cit .q:before{content:"“";color:var(--amber);font-family:"MontBlack";font-size:1.6em;line-height:0;vertical-align:-.42em;margin-right:8px}
+.fv-cit .w{font-family:"Mono";font-size:22px;color:var(--dim);margin-top:26px;letter-spacing:.06em}
+.fv-graf{position:absolute;left:110px;top:300px;width:1250px;height:460px}
+.fv-graf .rot{position:absolute;left:0;top:-80px;font-family:"MontX";font-size:34px;color:#c9d4e6}
+.fv-carimbo{position:absolute;left:880px;top:560px;border:9px solid;border-radius:16px;padding:12px 28px;font-family:"MontBlack";font-size:82px;letter-spacing:.04em;background:rgba(5,7,13,.6)}
+</style></head>
+<body>
+<div id="root" data-composition-id="main">
+ <div id="bg" class="full"><div class="bg-grad"></div><div id="bg-grid-wrap"><div id="bg-grid" style="transform:rotateX(62deg)"></div></div><svg id="stars" width="1920" height="1080" viewBox="0 0 1920 1080"></svg><div class="vignette"></div></div>
+ <div id="cenas"></div>
+ <div id="pipf"></div><div id="piptag"><b>NEI MALDANER</b> · INEMA</div>
+ <div id="marca"></div>
+ <div id="fonte"></div>
+ <div id="leg"></div>
+ <div id="capit"><div class="ft"></div><div class="k"></div><div class="n"></div><div class="s"></div><div class="bar"></div></div>
+</div>
+<script>
+const C = window.CENA;
+window.__timelines = {};
+const $ = id => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const vis = (t, a, b, d = .3) => (t < a || t > b) ? 0 : Math.min(a <= 0 ? 1 : clamp((t - a) / d), clamp((b - t) / d));
+const ativo = (l, t) => (l || []).find(x => t >= x.ini && t <= x.fim);
+
+$('marca').innerHTML = C.marca || '';
+if (C.avatar_img) $('pipf').style.backgroundImage = `url("${C.avatar_img}")`;
+// fundo (estrelas + grade andando), igual ao explicavideo
+const bg = gsap.timeline({ paused: true }), D = C.duracao;
+let seed = 8; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+let st = ''; for (let i = 0; i < 140; i++) { const r = rnd() * 1.6 + .3; st += `<circle cx="${(rnd() * 1920).toFixed(1)}" cy="${(rnd() * 620).toFixed(1)}" r="${r.toFixed(2)}" fill="#bcd4ff" opacity="${(rnd() * .5 + .1).toFixed(2)}"/>`; }
+$('stars').innerHTML = st;
+bg.fromTo('#stars', { x: 0 }, { x: -Math.min(400, D * .6), duration: D, ease: 'none' }, 0);
+bg.fromTo('#bg-grid', { backgroundPosition: '0px 0px' }, { backgroundPosition: '0px ' + Math.round(D * 16) + 'px', duration: D, ease: 'none' }, 0);
+// uma cena v2 por capítulo
+const CEN = C.cenas.map(S => {
+  const id = 'scene-' + String(S.n).padStart(3, '0');
+  const d = document.createElement('div');
+  d.className = 'v2-scene'; d.dataset.compositionId = id;
+  d.innerHTML = '<div class="v2-fit"><div class="v2-stage"></div></div>';
+  $('cenas').appendChild(d);
+  V2.scene(id, S);
+  return { el: d, tl: window.__timelines[id], ini: S.ini, fim: S.ini + S.dur };
+});
+const imgs = [...document.querySelectorAll('img')].map(i => i.decode().catch(() => {}));
+const bgs = [C.avatar_img, ...(C.capitulos || []).map(c => c.foto), ...C.cenas.flatMap(S => S.shots.flatMap(s => [s.foto, s.src, ...(s.fotos || [])]))].filter(Boolean)
+  .map(s => { const im = new Image(); im.src = s; return im.decode().catch(() => {}); });
+
+function desenhar(t) {
+  bg.seek(t, false);
+  CEN.forEach(c => { const on = t >= c.ini && t < c.fim; c.el.style.display = on ? 'block' : 'none'; if (on) c.tl.seek(t - c.ini, false); });
+  const k = ativo(C.capitulos, t), K = $('capit');
+  if (k) {
+    K.style.opacity = vis(t, k.ini, k.fim, .35);
+    K.querySelector('.ft').style.backgroundImage = k.foto ? `url("${k.foto}")` : 'none';
+    K.querySelector('.k').textContent = k.kicker || ''; K.querySelector('.n').textContent = k.nome; K.querySelector('.s').textContent = k.sub || '';
+    K.querySelector('.bar').style.transform = `scaleX(${clamp((t - k.ini) / .6)})`;
+  } else K.style.opacity = 0;
+  const fo = ativo(C.fontes, t), FO = $('fonte');
+  if (fo) { FO.innerHTML = fo.html; FO.style.opacity = vis(t, fo.ini, fo.fim); } else FO.style.opacity = 0;
+  const L = ativo(C.legenda, t), LG = $('leg');
+  LG.innerHTML = L ? L.palavras.map(w => `<span style="color:${t >= w.t ? (w.cor || '#eef3ff') : 'rgba(238,243,255,.38)'}">${w.w}</span>`).join('') : '';
+  LG.style.fontSize = '42px'; for (let f = 42; LG.scrollWidth > LG.clientWidth && f > 28; f -= 2) LG.style.fontSize = f + 'px';
+}
+window.render = t => new Promise(r => { desenhar(t); requestAnimationFrame(() => requestAnimationFrame(() => r(true))); });
+window.pronto = Promise.all([document.fonts.ready, ...imgs, ...bgs]).then(() => true);
+</script></body></html>
