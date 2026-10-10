@@ -320,9 +320,9 @@
   {
    "id": "f11",
    "fundo": "img/pd0Ikbmqju4.jpg",
-   "fala": "E tu? Acha que a bolsa chega nos duzentos e cinquenta mil? Comenta aqui o teu palpite.",
+   "fala": "E você? Acha que a bolsa chega nos duzentos e cinquenta mil? Comente aqui o seu palpite.",
    "numero": {
-    "k": "Teu palpite",
+    "k": "Seu palpite",
     "ate": 250,
     "unid": "mil?",
     "cor": "#ffd23f",
@@ -331,7 +331,7 @@
    },
    "fonte": "<b>Não é recomendação de investimento.</b> Resumo do que os influenciadores disseram, com a fonte de cada número",
    "destaque": [
-    "tu",
+    "você",
     "palpite"
    ],
    "limpa": true
@@ -339,7 +339,7 @@
   {
    "id": "f12",
    "fundo": "img/cta.jpg",
-   "fala": "Enquanto o mercado discute eleição, a inteligência artificial já está mudando o trabalho. Te prepara pra gestão de agentes de IA: curso gratuito no inema ponto club.",
+   "fala": "Enquanto o mercado discute eleição, a inteligência artificial já está mudando o trabalho. Se prepare pra gestão de agentes de IA: curso gratuito no inema ponto club.",
    "hero": "<div class=\"t1\" style=\"font-size:96px\">GESTÃO DE</div><div class=\"t5\">AGENTES DE IA</div><img class=\"arte\" src=\"img/cta.jpg\">",
    "caixa": {
     "tipo": "cta",

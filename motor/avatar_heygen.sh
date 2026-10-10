@@ -27,6 +27,7 @@ for i, b in enumerate(blocos, 1):
 print(len(blocos))
 EOF
 )
+# O heygen-studio.mjs entra na fila do perfil sozinho (explicavideos/engine/heygen-perfil.mjs, até 3 h): por isso o timeout do envio é 12000 s.
 # Quem não pega a trava (ex.: lote de tradução do explicavideos) abre o mesmo perfil e o Chrome recusa
 # ("ProcessSingleton", 10/10/2026): espera 2 min e tenta de novo, até 1 h. Nada foi enviado quando isso acontece.
 tenta(){ local log="$1" k; shift
@@ -42,7 +43,7 @@ tenta(){ local log="$1" k; shift
     # retomada: bloco já enviado (id gravado) não é reenviado — só baixa (REFAZER_HEYGEN=1 força novo envio)
     if [ -s "$A/video_id-b$i.txt" ] && [ "${REFAZER_HEYGEN:-}" != 1 ]; then echo "bloco $i já enviado: $(cat "$A/video_id-b$i.txt")"; continue; fi
     T="$TITULO"; [ "$N" -gt 1 ] && T="$TITULO-b$i"
-    tenta "$A/studio-b$i.log" timeout 900 node "$ENG/heygen-studio.mjs" --titulo "$T" --fala-arquivo "$A/fala-b$i.txt" --perfil "$PERFIL" --template TEMPLATE-AVATAR16 \
+    tenta "$A/studio-b$i.log" timeout 12000 node "$ENG/heygen-studio.mjs" --titulo "$T" --fala-arquivo "$A/fala-b$i.txt" --perfil "$PERFIL" --template TEMPLATE-AVATAR16 \
       || { echo "ERRO no estúdio (bloco $i/$N): $(grep -h ERRO "$A/studio-b$i.log" | tail -1)"; exit 3; }
     ID=$(grep -o 'create-v4/[0-9a-f]\{32\}' "$A/studio-b$i.log" | tail -1 | cut -d/ -f2)
     [ -n "$ID" ] || { echo "ERRO: id do vídeo do bloco $i não achado no studio-b$i.log"; exit 3; }

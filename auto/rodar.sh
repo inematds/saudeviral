@@ -89,9 +89,14 @@ roteirizar() {
   ( cd "$ED" && timeout 2400 env -u ANTHROPIC_API_KEY claude -p "$1" --allowedTools "Read,Write,Edit,Glob,Grep" \
       --add-dir "$RAIZ" --add-dir "$TX" --permission-mode acceptEdits > "$ED/claude.log" 2>&1 )
 }
+# REUSAR_ROTEIRO=1: refaz só avatar/vídeo/publicação com o roteiro.json + base.md que já estão na edição (corrigido à mão)
+if [ "${REUSAR_ROTEIRO:-}" = 1 ] && [ -s "$ED/roteiro.json" ] && [ -s "$ED/base.md" ]; then
+  echo "reusando o roteiro.json da edição"; rm -f "$ED/SEM_PAUTA.txt"
+else
 rm -f "$ED/SEM_PAUTA.txt" "$ED/roteiro.json" "$ED/base.md"
 rm -rf "$ED/avatar"  # roteiro novo = avatar novo (o avatar_heygen.sh reaproveita blocos já enviados)
 roteirizar "$PROMPT" || avisar "o claude -p falhou ao escrever o roteiro ($(tail -c 200 "$ED/claude.log"))"
+fi
 [ -f "$ED/SEM_PAUTA.txt" ] && avisar "sem pauta: $(cat "$ED/SEM_PAUTA.txt")" 0
 if ! python3 "$RAIZ/auto/checar.py" "$ED" "$TX" > "$ED/checar.log"; then
   roteirizar "$PROMPT

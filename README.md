@@ -63,7 +63,7 @@ Se aparecer em destaque outro profissional de saúde consolidado, com registro e
 - Tratamento sem consenso científico leva o carimbo "SEM CONSENSO" ou fica de fora.
 - Política: atribuída, sem tomar lado.
 - "Não substitui consulta médica." em todo vídeo.
-- Fala no tom do Nei ("tu"), com números e anos por extenso. Fim: gancho de comentário e CTA de gestão de agentes de IA no inema.club.
+- Fala no tom do Nei ("você"), com números e anos por extenso. Fim: gancho de comentário e CTA de gestão de agentes de IA no inema.club.
 
 ## Requisitos
 

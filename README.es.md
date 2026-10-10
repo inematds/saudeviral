@@ -63,7 +63,7 @@ Si se destaca otro profesional de salud consolidado, con registro y confiable, e
 - Un tratamiento sin consenso científico lleva el sello "SIN CONSENSO" o queda fuera.
 - Política: atribuida, sin tomar partido.
 - "No sustituye una consulta médica" en todo video.
-- Habla en el tono de Nei ("tu"), con números y años escritos con letras. Cierre: gancho de comentario y CTA de gestión de agentes de IA en inema.club.
+- Habla en el tono de Nei ("você", "usted"), con números y años escritos con letras. Cierre: gancho de comentario y CTA de gestión de agentes de IA en inema.club.
 
 ## Requisitos
 

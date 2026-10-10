@@ -63,7 +63,7 @@ If another established, licensed and trustworthy health professional stands out,
 - Treatments without scientific consensus get the "NO CONSENSUS" stamp or are left out.
 - Politics: attributed, no sides taken.
 - "Does not replace a medical consultation" in every video.
-- Spoken in Nei's tone ("tu"), with numbers and years written out. Ending: comment hook and the AI agent management CTA at inema.club.
+- Spoken in Nei's tone ("você", formal "you"), with numbers and years written out. Ending: comment hook and the AI agent management CTA at inema.club.
 
 ## Requirements
 

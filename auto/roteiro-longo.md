@@ -59,9 +59,9 @@ Um script confere cada trecho; se algum não estiver no transcript, o vídeo é 
 
 **Fecho (cz, 3 a 5 falas):**
 - Resumo em `bullets` (um item por capítulo).
-- Gancho de comentário: pergunta sobre o tema ("E tu? … Comenta aqui."), com `fonte` "<b>Não substitui consulta
+- Gancho de comentário: pergunta sobre o tema ("E você? … Comente aqui."), com `fonte` "<b>Não substitui consulta
   médica.</b> Resumo do que os influenciadores disseram, com a fonte de cada fato".
-- Última fala: CTA — ponte curta do tema para a IA + "Te prepara pra gestão de agentes de IA: curso gratuito no inema
+- Última fala: CTA — ponte curta do tema para a IA + "Se prepare pra gestão de agentes de IA: curso gratuito no inema
   ponto club." Shots: `{"type":"media","src":"img/cta.jpg","calm":true,"label":"**inema.club** · gestão de agentes de IA"}`
   e `keyword` "inema.club".
 
@@ -80,10 +80,10 @@ Um script confere cada trecho; se algum não estiver no transcript, o vídeo é 
 - Dados: `ficha {foto, rk, nome, canal}`, `numero {k, ate, de?, dec?, pre?, unid?, cor?, seta?("▲"|"▼"), l?}`,
   `citacao {q, w, k?}`, `grafico {serie[], cor?, rotulo}`, `carimbo {txt, cor?}` (com `"keep": true`).
 
-**Texto falado:** tom do Nei, "tu", frases curtas; TODOS os números e anos por extenso ("trinta por cento", "dois mil e vinte e seis"); siglas comuns em maiúsculas (SUS, OMS, IMC, Anvisa);
+**Texto falado:** tom do Nei, tratando por "você" (nunca "tu"/"teu"), frases curtas; TODOS os números e anos por extenso ("trinta por cento", "dois mil e vinte e seis"); siglas comuns em maiúsculas (SUS, OMS, IMC, Anvisa);
 sem emoji. **Saúde (regras duras):**
   - Relatar e atribuir sempre ("segundo ele", "ela recomenda"). Nunca vira conselho do Nei.
-  - Nada de dose, remédio, suplemento, jejum ou dieta como instrução para quem assiste. Quando citar, fechar com "fala com teu médico antes".
+  - Nada de dose, remédio, suplemento, jejum ou dieta como instrução para quem assiste. Quando citar, fechar com "fale com seu médico antes".
   - Promessa de cura, tratamento sem consenso científico, discurso antivacina ou contra tratamento estabelecido NÃO vira manchete. Se entrar, vem com `carimbo` "SEM CONSENSO" e a fala diz que isso não tem consenso na medicina. Na dúvida, fica de fora.
   - Polêmica é o que ELES disseram. Política: atribuída, sem lado, sem opinião do Nei.
 

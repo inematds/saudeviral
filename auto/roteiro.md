@@ -53,18 +53,18 @@ Regras das `falas`:
   - Todo número mostrado está no base.md.
 - **`fonte`:** "<b>Fonte:</b> Canal, YouTube, dd/mm/aaaa · “título curto”".
 - **Texto falado (`fala`), no tom do Nei:**
-  - Tratar por "tu", frases curtas.
+  - Tratar por "você" (nunca "tu", "teu", "te prepara"; o Nei pediu em 10/10/2026), frases curtas.
   - Escrever TODOS os números e anos por extenso, sem algarismo: "sete vírgula sete por cento", "dois mil e vinte e oito".
   - Siglas lidas como se fala ("ésse ú ésse" para SUS, "ó ême ésse" para OMS). Sem emoji.
 - **`em` (âncora):** uma palavra comum que está na fala, nunca um número.
-- **Penúltima fala:** gancho de comentário. É uma pergunta sobre o tema ("E tu? ... Comenta aqui"), com `"limpa": true`. A `fonte` dela é "<b>Não substitui consulta médica.</b> Resumo do que os influenciadores disseram, com a fonte de cada fato".
+- **Penúltima fala:** gancho de comentário. É uma pergunta sobre o tema ("E você? ... Comente aqui"), com `"limpa": true`. A `fonte` dela é "<b>Não substitui consulta médica.</b> Resumo do que os influenciadores disseram, com a fonte de cada fato".
 - **Última fala:** CTA com `fundo` "img/cta.jpg" e `"limpa": true`.
-  - Fala: uma ponte curta do tema para a IA, mais "Te prepara pra gestão de agentes de IA: curso gratuito no inema ponto club."
+  - Fala: uma ponte curta do tema para a IA, mais "Se prepare pra gestão de agentes de IA: curso gratuito no inema ponto club."
   - `hero` igual ao da referência (GESTÃO DE / AGENTES DE IA / img/cta.jpg).
   - `caixa` tipo cta com "INEMA.CLUB".
 - **Saúde (regras duras):**
   - Relatar e atribuir sempre ("segundo ele", "ela recomenda"). Nunca vira conselho do Nei.
-  - Nada de dose, remédio, suplemento, jejum ou dieta como instrução para quem assiste. Quando citar, fechar com "fala com teu médico antes".
+  - Nada de dose, remédio, suplemento, jejum ou dieta como instrução para quem assiste. Quando citar, fechar com "fale com seu médico antes".
   - Promessa de cura, tratamento sem consenso científico, discurso antivacina ou contra tratamento estabelecido NÃO vira manchete. Se entrar, vem com `carimbo` "SEM CONSENSO" e a fala diz que isso não tem consenso na medicina. Na dúvida, fica de fora.
   - Polêmica é o que ELES disseram. Política: atribuída, sem lado, sem opinião do Nei.
 
