@@ -1,0 +1,186 @@
+{
+ "marca": "INEMA · RADAR SAÚDE",
+ "selo": "YOUTUBE · 08/10",
+ "avatar": {
+  "img": "img/avatar-teste.jpg",
+  "tag": "<b>NEI MALDANER</b> · INEMA"
+ },
+ "hero": "<div class=\"dt\">10/10/2026 · SÁBADO</div><div class=\"t1\">SAÚDE NO YOUTUBE</div><div class=\"t2\">1 TRILHÃO</div><div class=\"t3\">DE VIEWS EM VÍDEOS DE SAÚDE</div><div class=\"t4\">O que os maiores influenciadores de saúde do Brasil publicaram nos últimos dias</div><div class=\"rostos\"><div style=\"background-image:url('img/r6hOqxcyTHk.jpg')\"></div><div style=\"background-image:url('img/AFTZx1MSM4Q.jpg')\"></div><div style=\"background-image:url('img/OBJcIm9__RE.jpg')\"></div></div>",
+ "falas": [
+  {
+   "id": "f1",
+   "fundo": "img/r6hOqxcyTHk.jpg",
+   "fala": "Um trilhão de visualizações só em vídeos de saúde. Quem contou foi o diretor de saúde do YouTube, no canal do Drauzio Varella.",
+   "fonte": "<b>Fonte:</b> Drauzio Varella, YouTube, 08/10/2026 · “Por que democratizar a informação em saúde é importante?”",
+   "destaque": [
+    "trilhão",
+    "saúde",
+    "Drauzio"
+   ]
+  },
+  {
+   "id": "f2",
+   "fundo": "img/r6hOqxcyTHk.jpg",
+   "fala": "Segundo ele, um ou dois anos antes eram setecentos e quarenta bilhões. E segue crescendo.",
+   "ficha": {
+    "nome": "Drauzio Varella",
+    "canal": "DrauzioCast · 08/10 · 7 mil views",
+    "rk": "MÉDICO · ONCOLOGISTA",
+    "foto": "img/r6hOqxcyTHk.jpg"
+   },
+   "numero": {
+    "k": "YouTube · views em saúde",
+    "de": 740,
+    "ate": 1000,
+    "unid": " bi",
+    "cor": "#2bff88",
+    "seta": "▲",
+    "l": "de 740 bilhões para 1 trilhão, segundo o diretor de saúde do YouTube",
+    "em": "antes"
+   },
+   "caixa": {
+    "k": "Diretor de saúde do YouTube disse",
+    "q": "Nós anunciamos há dois meses que passamos 1 trilhão de visões em informação de saúde.",
+    "w": "DrauzioCast, 08/10/2026",
+    "em": "segue"
+   },
+   "fonte": "<b>Fonte:</b> Drauzio Varella, YouTube, 08/10/2026 · convidado: Garth Graham, diretor global de saúde do YouTube",
+   "destaque": [
+    "antes",
+    "crescendo"
+   ]
+  },
+  {
+   "id": "f3",
+   "fundo": "img/r6hOqxcyTHk.jpg",
+   "fala": "E tem selo: vídeo de profissional licenciado ou de hospital credenciado ganha um aviso e aparece no topo da busca.",
+   "caixa": {
+    "k": "Como o YouTube marca a fonte",
+    "itens": [
+     {
+      "txt": "Selo: profissional licenciado",
+      "em": "profissional"
+     },
+     {
+      "txt": "Selo: instituição acreditada",
+      "em": "hospital"
+     },
+     {
+      "txt": "No topo da busca",
+      "em": "topo"
+     }
+    ]
+   },
+   "fonte": "<b>Fonte:</b> Drauzio Varella, YouTube, 08/10/2026 · fala do diretor de saúde do YouTube",
+   "destaque": [
+    "selo",
+    "topo"
+   ]
+  },
+  {
+   "id": "f4",
+   "fundo": "img/AFTZx1MSM4Q.jpg",
+   "fala": "A nutricionista Patricia Leite derrubou um mito: limão em água morna não queima mais gordura. Segundo ela, limão demais ataca os dentes. Fala com teu médico antes.",
+   "ficha": {
+    "nome": "Patricia Leite",
+    "canal": "08/10 · 17 mil views",
+    "rk": "NUTRICIONISTA",
+    "foto": "img/AFTZx1MSM4Q.jpg"
+   },
+   "caixa": {
+    "k": "Patricia Leite disse",
+    "q": "A água ser morna não vai ativar mais o limão, queimar mais gordura.",
+    "w": "vídeo de 08/10/2026",
+    "em": "mito"
+   },
+   "carimbo": {
+    "txt": "ALERTA",
+    "em": "dentes"
+   },
+   "fonte": "<b>Fonte:</b> Patricia Leite, YouTube, 08/10/2026 · “Você está bebendo água com limão errado!”",
+   "destaque": [
+    "mito",
+    "gordura",
+    "dentes"
+   ]
+  },
+  {
+   "id": "f5",
+   "fundo": "img/OBJcIm9__RE.jpg",
+   "fala": "E a psiquiatra Ana Beatriz Barbosa contou: vendeu o próprio carro pra lançar o livro dela sobre déficit de atenção. Deu três mil exemplares.",
+   "ficha": {
+    "nome": "Ana Beatriz Barbosa",
+    "canal": "PodPeople · 08/10 · 10 mil views",
+    "rk": "MÉDICA · PSIQUIATRA",
+    "foto": "img/OBJcIm9__RE.jpg"
+   },
+   "numero": {
+    "k": "Primeira tiragem · livro sobre TDAH",
+    "ate": 3000,
+    "unid": " livros",
+    "cor": "#ffd23f",
+    "l": "pagos com a venda do carro dela",
+    "em": "exemplares"
+   },
+   "caixa": {
+    "k": "Ana Beatriz Barbosa disse",
+    "q": "Eu vendi e deu para fazer 3 mil livros.",
+    "w": "vídeo de 08/10/2026",
+    "em": "carro"
+   },
+   "fonte": "<b>Fonte:</b> PodPeople - Ana Beatriz Barbosa, YouTube, 08/10/2026 · “Como foi crescer com TDAH sem saber o que tinha”",
+   "destaque": [
+    "carro",
+    "livro",
+    "atenção"
+   ]
+  },
+  {
+   "id": "f6",
+   "fundo": "img/r6hOqxcyTHk.jpg",
+   "fala": "E tu? Já pesquisou sintoma no YouTube antes de ir ao médico? Comenta aqui.",
+   "caixa": {
+    "k": "Comenta aqui",
+    "itens": [
+     {
+      "txt": "Sim, pesquiso antes",
+      "em": "pesquisou"
+     },
+     {
+      "txt": "Não, vou direto ao médico",
+      "em": "médico"
+     }
+    ]
+   },
+   "fonte": "<b>Não substitui consulta médica.</b> Resumo do que os influenciadores disseram, com a fonte de cada fato",
+   "destaque": [
+    "tu",
+    "sintoma",
+    "comenta"
+   ],
+   "limpa": true
+  },
+  {
+   "id": "f7",
+   "fundo": "img/cta.jpg",
+   "fala": "A saúde já mora no vídeo, e a inteligência artificial vem junto. Te prepara pra gestão de agentes de IA: curso gratuito no inema ponto club.",
+   "hero": "<div class=\"t1\" style=\"font-size:96px\">GESTÃO DE</div><div class=\"t5\">AGENTES DE IA</div><img class=\"arte\" src=\"img/cta.jpg\">",
+   "caixa": {
+    "tipo": "cta",
+    "a": "INEMA.CLUB",
+    "b": "Curso gratuito: gestão de agentes de IA. Manda pra quem vive no YouTube.",
+    "em": "gestão"
+   },
+   "fonte": "<b>inema.club</b> · cursos gratuitos de tecnologia e IA",
+   "destaque": [
+    "inteligência",
+    "artificial",
+    "gestão",
+    "agentes",
+    "gratuito",
+    "inema"
+   ],
+   "limpa": true
+  }
+ ]
+}
