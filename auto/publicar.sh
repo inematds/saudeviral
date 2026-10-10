@@ -5,6 +5,8 @@
 #   SEM_YT=1 só manda ao bot; SEM_BOT=1 simula o envio ao bot (teste).
 # Autorizado pelo Nei em 10/10/2026: "pode sempre criar direto com o avatar … publicar … e sempre manda para o bot também".
 set -uo pipefail
+# systemd não tem ~/.npm-global/bin no PATH e pegava o codex velho de /usr/bin (0.116), que não lê o config.toml do novo (10/10/2026)
+export PATH="$HOME/.npm-global/bin:$PATH"
 V="$1"; E="$(cd "$2" && pwd)"; ROT="$3"; EXTRA="${4:-}"
 PL="$E/publicar-$(printf %s "$ROT" | tr -c 'A-Za-z0-9-' _).log"  # o rótulo traz a data dd/mm/aaaa: barra no nome quebrava o log (10/10/2026)
 BOT="$HOME/projetos/refazvideo/ferramentas/enviar_bot_v3.mjs"

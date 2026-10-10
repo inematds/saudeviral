@@ -1,4 +1,5 @@
 # FALHAS — saudeviral
+| 2026-10-10 | Longo foi ao bot mas não ao YouTube: o codex de /usr/bin (0.116) não lê o config.toml gravado pelo codex novo (service_tier="default") | publicar.sh põe ~/.npm-global/bin no PATH | infra |
 
 | data | o que quebrou | menor correção | prompt \| infra |
 |---|---|---|---|
