@@ -27,6 +27,14 @@ for i, b in enumerate(blocos, 1):
 print(len(blocos))
 EOF
 )
+# Quem não pega a trava (ex.: lote de tradução do explicavideos) abre o mesmo perfil e o Chrome recusa
+# ("ProcessSingleton", 10/10/2026): espera 2 min e tenta de novo, até 1 h. Nada foi enviado quando isso acontece.
+tenta(){ local log="$1" k; shift
+  for k in $(seq 1 30); do
+    "$@" > "$log" 2>&1 && return 0
+    grep -q ProcessSingleton "$log" || return 1
+    echo "perfil do HeyGen aberto por outro processo; nova tentativa em 2 min ($k/30)"; sleep 120
+  done; return 1; }
 {
   flock -w 1800 9 || { echo "ERRO: perfil do HeyGen ocupado há 30 min"; exit 5; }
   cd "$HOME/projetos/explicavideos"
@@ -34,7 +42,7 @@ EOF
     # retomada: bloco já enviado (id gravado) não é reenviado — só baixa (REFAZER_HEYGEN=1 força novo envio)
     if [ -s "$A/video_id-b$i.txt" ] && [ "${REFAZER_HEYGEN:-}" != 1 ]; then echo "bloco $i já enviado: $(cat "$A/video_id-b$i.txt")"; continue; fi
     T="$TITULO"; [ "$N" -gt 1 ] && T="$TITULO-b$i"
-    timeout 900 node "$ENG/heygen-studio.mjs" --titulo "$T" --fala-arquivo "$A/fala-b$i.txt" --perfil "$PERFIL" --template TEMPLATE-AVATAR16 > "$A/studio-b$i.log" 2>&1 \
+    tenta "$A/studio-b$i.log" timeout 900 node "$ENG/heygen-studio.mjs" --titulo "$T" --fala-arquivo "$A/fala-b$i.txt" --perfil "$PERFIL" --template TEMPLATE-AVATAR16 \
       || { echo "ERRO no estúdio (bloco $i/$N): $(grep -h ERRO "$A/studio-b$i.log" | tail -1)"; exit 3; }
     ID=$(grep -o 'create-v4/[0-9a-f]\{32\}' "$A/studio-b$i.log" | tail -1 | cut -d/ -f2)
     [ -n "$ID" ] || { echo "ERRO: id do vídeo do bloco $i não achado no studio-b$i.log"; exit 3; }
@@ -45,7 +53,7 @@ EOF
   sleep 60
   for i in $(seq 1 "$N"); do
     [ -s "$A/avatar-b$i.mp4" ] && continue
-    timeout 18000 node "$ENG/heygen-estudio-baixar.mjs" --id "$(cat "$A/video_id-b$i.txt")" --saida "$A/avatar-b$i.mp4" --perfil "$PERFIL" --minutos 290 --intervalo 120 > "$A/baixar-b$i.log" 2>&1 \
+    tenta "$A/baixar-b$i.log" timeout 18000 node "$ENG/heygen-estudio-baixar.mjs" --id "$(cat "$A/video_id-b$i.txt")" --saida "$A/avatar-b$i.mp4" --perfil "$PERFIL" --minutos 290 --intervalo 120 \
       || { echo "ERRO ao baixar o bloco $i/$N: $(tail -1 "$A/baixar-b$i.log")"; exit 4; }
   done
 } 9>"$HOME/.cache/inemaccbot/heygen-estudio.lock"

@@ -35,10 +35,10 @@ case "$MODO" in
   diario)  DE=$(d -2); ATE=$(d -1); MAXV=6
     INSTR="DIÁRIO de $DATA_BR: o que eles publicaram ontem e anteontem. Vídeo de 40 a 60 s, de 5 a 7 falas, de 110 a 150 palavras no total. UMA história principal (o número ou a polêmica mais forte) e no máximo mais um ou dois números. Se só um influenciador publicou algo forte, o vídeo é sobre ele." ;;
   semanal) DE=$(d -7); ATE=$(d -1); MAXV=12
-    INSTR="SEMANAL (sábado, $DATA_BR): balanço da semana de $(date -d "$DIA -7 day" +%d/%m) a $(date -d "$DIA -1 day" +%d/%m). Vídeo de 90 s a 2 min, de 9 a 12 falas, de 230 a 300 palavras. Placar da semana: o assunto mais forte, a polêmica, quem discordou de quem, um fato ou número de cada influenciador relevante. $AVISO_LONGO"
+    INSTR="SEMANAL (sábado, $DATA_BR): balanço da semana de $(date -d "$DIA -7 day" +%d/%m) a $(date -d "$DIA -1 day" +%d/%m). Vídeo de 90 s a 2 min, de 9 a 12 falas, de 230 a 300 palavras. No máximo TRÊS assuntos da semana, o mais forte primeiro e com mais tempo (umas quatro falas), cada um explicado inteiro (contexto, o que ele disse, o que muda pra quem assiste). Não é um fato de cada influenciador: quem não entra num desses assuntos fica pro longo. $AVISO_LONGO"
     INSTR_L="SEMANAL (sábado, $DATA_BR): a semana de $(date -d "$DIA -7 day" +%d/%m) a $(date -d "$DIA -1 day" +%d/%m) explicada. Vídeo de 5,5 a 7 min. Um capítulo por influenciador com assunto forte; mostre divergências entre eles." ;;
   domingo) DE=$(d -7); ATE=$(d -1); MAXV=12
-    INSTR="DOMINGO ($DATA_BR): os alertas e hábitos da semana, segundo eles. Vídeo de uns 90 s, de 8 a 10 falas, de 190 a 240 palavras. Comece pelo fato mais forte da semana que passou e foque nos alertas, nos hábitos e nos mitos que ELES apontaram, sempre atribuídos. $AVISO_LONGO"
+    INSTR="DOMINGO ($DATA_BR): os alertas e hábitos da semana, segundo eles. Vídeo de uns 90 s, de 8 a 10 falas, de 190 a 240 palavras. No máximo TRÊS assuntos: comece pelo alerta mais forte da semana e foque nos alertas, nos hábitos e nos mitos que ELES apontaram, sempre atribuídos, cada um explicado inteiro (contexto, o que ele disse, o que muda pra quem assiste). $AVISO_LONGO"
     INSTR_L="DOMINGO ($DATA_BR): os alertas e hábitos da semana, explicados. Vídeo de 5,5 a 7 min. Um capítulo por influenciador: o alerta, o hábito ou o mito que ELE apontou, o raciocínio dele e os números; passos citados viram flow ou timeline; divergências entre eles com compare." ;;
   *) echo "modo inválido"; exit 2 ;;
 esac

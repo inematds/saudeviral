@@ -6,8 +6,8 @@
 :root{--red:#ff2a1f;--amb:#ffd23f;--grn:#2bff88;--blu:#5ec8ff;--ink:#0b0f14}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:1080px;height:1920px;overflow:hidden;background:#05080c;font-family:Inter,sans-serif;color:#fff}
-/* fundo: miniatura do vídeo citado, escurecida, zoom lento */
-.fundo{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;filter:saturate(1.1) brightness(.42)}
+/* fundo: miniatura do vídeo citado, desfocada (a miniatura é 16:9 e cheia de letreiro: em 9:16 saía cortada), zoom lento */
+.fundo{position:absolute;inset:-120px;background-size:cover;background-position:center;opacity:0;filter:blur(38px) saturate(1.3) brightness(.4)}
 #grade{position:absolute;inset:0;opacity:.22;background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:60px 60px}
 #vinheta{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,8,12,.92) 0,rgba(5,8,12,.3) 360px,rgba(5,8,12,.35) 880px,rgba(5,8,12,.94) 1080px,rgba(5,8,12,.98) 1920px)}
 #topo{position:absolute;left:56px;right:56px;top:70px;display:flex;justify-content:space-between;align-items:center}
@@ -102,12 +102,15 @@ if(C.avatar){ $('avbox').firstElementChild.style.backgroundImage=`url("${C.avata
 const imgs=[...(C.fundos||[]).map(f=>f.img),C.avatar&&C.avatar.img,...(C.fichas||[]).map(f=>f.foto)].filter(Boolean);
 const preload=imgs.map(s=>{const im=new Image();im.src=s;return im.decode().catch(()=>{});});
 
+// título grande do hero não pode estourar a largura ("EMAGRECEDORAS" saía cortado): reduz a fonte até caber
+function caber(H){H.querySelectorAll('.t1,.t2,.t3,.t5').forEach(e=>{let px=parseFloat(getComputedStyle(e).fontSize);
+  while(e.scrollWidth>e.clientWidth+2&&px>40){px-=4;e.style.fontSize=px+'px';}});}
 function desenhar(t){
   // fundos com dissolve e zoom lento (≤1,2)
   (C.fundos||[]).forEach((f,i)=>{const o=vis(t,f.ini,f.fim,.6); const d=$('fb'+i); d.style.opacity=o;
     if(o){const k=clamp((t-f.ini)/(f.fim-f.ini)); d.style.transform=`scale(${lerp(1.04,1.18,k)})`;}});
   const h=ativo(C.hero,t); const H=$('hero');
-  if(h){H.innerHTML=h.html;H.style.opacity=h.ini<=0?clamp((h.fim-t)/.3):vis(t,h.ini,h.fim);} else H.style.opacity=0;
+  if(h){if(H.dataset.k!==h.html){H.innerHTML=h.html;H.dataset.k=h.html;} caber(H);H.style.opacity=h.ini<=0?clamp((h.fim-t)/.3):vis(t,h.ini,h.fim);} else H.style.opacity=0;
   $('topo').style.opacity=1;
   // ficha do influenciador (entra deslizando)
   const f=ativo(C.fichas,t); const F=$('ficha');
@@ -150,5 +153,7 @@ function desenhar(t){
   const LG=$('leg'); LG.style.fontSize='60px'; for(let fs=60;LG.scrollWidth>LG.clientWidth&&fs>34;fs-=2) LG.style.fontSize=fs+'px';
 }
 window.render=t=>new Promise(r=>{desenhar(t);requestAnimationFrame(()=>requestAnimationFrame(()=>r(true)));});
-window.pronto=Promise.all([document.fonts.ready,...preload]).then(()=>true);
+// fonte só baixa quando usada: carregar antes do 1º quadro, senão o caber() mede com a fonte de reserva
+const fontes=["400 132px 'Archivo Black'","700 40px Inter","900 44px Inter","500 40px Inter"].map(f=>document.fonts.load(f).catch(()=>0));
+window.pronto=Promise.all([document.fonts.ready,...fontes,...preload]).then(()=>true);
 </script></body></html>

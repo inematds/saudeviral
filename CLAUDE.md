@@ -16,6 +16,8 @@ When I correct you, or you catch yourself making a mistake: before continuing, a
 
 ## Lessons
 
+- Curto não é lista: no máximo 3 assuntos, cada um com contexto, o que ele disse e o que muda pra quem assiste; termo técnico explicado na fala (o Nei reprovou o semanal de 10/10 por "assunto muito mal explicado"). (10/10/2026)
+- Fundo do palco é miniatura do YouTube (16:9, letreiro grande): vai desfocada, nunca nítida em 9:16; título do hero mede depois de carregar a fonte. (10/10/2026)
 - (Herdadas do finviral, mesmo motor.) Cadeia longa (HeyGen + render + publicação) disparada à mão vai por `systemd-run --user --unit …`, nunca como background da sessão. O `avatar_heygen.sh` retoma sem reenviar.
 - Legenda palavra a palavra: bloco por TAMANHO (≤18 letras); palavra da legenda vem do roteiro (o Whisper erra nome próprio).
 - No palco.html, função global não pode se chamar `render` (usar `desenhar`).

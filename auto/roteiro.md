@@ -40,6 +40,13 @@ Mesmo formato da edição de referência:
 
 Regras das `falas`:
 - **Abertura (f1):** a frase-choque com o número mais forte. Nunca abrir com "Neste vídeo", "Imagine" ou "Olá".
+- **Explicar, não listar (o Nei reprovou o semanal de 10/10/2026: seis assuntos em fragmentos, "assunto muito mal explicado").** Poucos assuntos, cada um contado inteiro, em três passos e em falas seguidas:
+  1. **contexto**: o que é a coisa e por que alguém se importa (ex.: "a caneta emagrecedora é o remédio de injeção semanal que virou moda pra emagrecer");
+  2. **o que ELE disse**: o número ou o argumento, atribuído;
+  3. **o que isso muda pra quem assiste**: a consequência, em linguagem de gente ("ou seja: parou, o peso volta").
+  - Todo termo técnico é explicado na própria fala na primeira vez em que aparece: lugol, Vigitel, protocolo, B12. Se não der pra explicar em meia frase, corte.
+  - Nada solto: número sem dizer o que significa, polêmica sem contar o que foi dito e a quem, dado que não se liga ao assunto. Cada fala continua a anterior; quem só ouve tem que entender sem ver a tela.
+  - Na dúvida entre mais um assunto e explicar melhor o que já entrou, explique melhor.
 - **Uma ideia por fala.** Cada influenciador citado ganha `ficha` (nome, canal com "dd/mm · N mil views", `rk` do canais.json, foto `img/<id>.jpg`) e `fundo` `img/<id>.jpg`.
 - **Números:**
   - Usar `numero` (contador grande), `grafico` (só se houver série real dita no vídeo), `caixa` com citação literal ou itens, e `carimbo` ("POLÊMICA", "ALERTA", "SEM CONSENSO", "ESTUDO") quando couber.
