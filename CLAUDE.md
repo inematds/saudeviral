@@ -17,7 +17,7 @@ When I correct you, or you catch yourself making a mistake: before continuing, a
 ## Lessons
 
 - Narração e pergunta tratam por "você", nunca "tu"/"teu"/"te prepara" (pedido do Nei, 10/10/2026). A edição de referência foi convertida também, porque o modelo copia o tom dela.
-- Miniatura do fundo aparece INTEIRA (16:9, sem zoom) sobre uma cópia desfocada; o Nei reprovou o zoom de cover em 9:16. (10/10/2026)
+- Miniatura do fundo aparece INTEIRA (16:9, sem zoom) no meio da tela escura, sem preenchimento desfocado: o Nei reprovou o zoom de cover em 9:16 e depois o desfocado ("parece que quer esconder algo"). (10/10/2026)
 - Curto não é lista: no máximo 3 assuntos, cada um com contexto, o que ele disse e o que muda pra quem assiste; termo técnico explicado na fala (o Nei reprovou o semanal de 10/10 por "assunto muito mal explicado"). (10/10/2026)
 - Título do hero mede depois de carregar a fonte (document.fonts.load). (10/10/2026)
 - (Herdadas do finviral, mesmo motor.) Cadeia longa (HeyGen + render + publicação) disparada à mão vai por `systemd-run --user --unit …`, nunca como background da sessão. O `avatar_heygen.sh` retoma sem reenviar.

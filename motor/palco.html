@@ -6,9 +6,9 @@
 :root{--red:#ff2a1f;--amb:#ffd23f;--grn:#2bff88;--blu:#5ec8ff;--ink:#0b0f14}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:1080px;height:1920px;overflow:hidden;background:#05080c;font-family:Inter,sans-serif;color:#fff}
-/* fundo: miniatura do vídeo citado INTEIRA (16:9, sem corte nem zoom grande) sobre uma cópia desfocada que preenche a tela 9:16 */
+/* fundo: miniatura do vídeo citado INTEIRA (16:9, sem corte nem zoom grande), no meio da tela escura */
 .fundo{position:absolute;inset:0;opacity:0}
-.fundo .desf{position:absolute;inset:-120px;background:var(--img) center/cover;filter:blur(40px) saturate(1.3) brightness(.35)}
+.fundo .desf{display:none} /* o preenchimento desfocado parecia esconder algo quando não havia texto (Nei, 10/10/2026): em volta fica o fundo escuro com a grade */
 .fundo .nit{position:absolute;left:0;right:0;top:680px;height:608px;background:var(--img) center/contain no-repeat;filter:brightness(.45) saturate(1.05);-webkit-mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent)}
 #grade{position:absolute;inset:0;opacity:.22;background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:60px 60px}
 #vinheta{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,8,12,.92) 0,rgba(5,8,12,.3) 360px,rgba(5,8,12,.35) 880px,rgba(5,8,12,.94) 1080px,rgba(5,8,12,.98) 1920px)}
