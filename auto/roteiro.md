@@ -39,7 +39,7 @@ Mesmo formato da edição de referência:
   - os rostos (miniaturas `img/<id>.jpg` dos vídeos citados).
 
 Regras das `falas`:
-- **Abertura (f1):** a frase-choque com o número mais forte. Nunca abrir com "Neste vídeo", "Imagine" ou "Olá".
+- **Abertura (f1):** a frase-choque com o número mais forte. O número já está no `hero`: f1 NÃO leva `numero`, `ficha`, `caixa` nem `carimbo`. Nunca abrir com "Neste vídeo", "Imagine" ou "Olá".
 - **Explicar, não listar (o Nei reprovou o semanal de 10/10/2026: seis assuntos em fragmentos, "assunto muito mal explicado").** Poucos assuntos, cada um contado inteiro, em três passos e em falas seguidas:
   1. **contexto**: o que é a coisa e por que alguém se importa (ex.: "a caneta emagrecedora é o remédio de injeção semanal que virou moda pra emagrecer");
   2. **o que ELE disse**: o número ou o argumento, atribuído;
@@ -60,6 +60,7 @@ Regras das `falas`:
 - **Penúltima fala:** gancho de comentário. É uma pergunta sobre o tema ("E você? ... Comente aqui"), com `"limpa": true`. A `fonte` dela é "<b>Não substitui consulta médica.</b> Resumo do que os influenciadores disseram, com a fonte de cada fato".
 - **Última fala:** CTA com `fundo` "img/cta.jpg" e `"limpa": true`.
   - Fala: uma ponte curta do tema para a IA, mais "Se prepare pra gestão de agentes de IA: curso gratuito no inema ponto club."
+  - O CTA é SEMPRE só o inema.club: não citar canal do YouTube, Inema Pro, "vídeo longo", "se inscreva" nem outro destino.
   - `hero` igual ao da referência (GESTÃO DE / AGENTES DE IA / img/cta.jpg).
   - `caixa` tipo cta com "INEMA.CLUB".
 - **Saúde (regras duras):**

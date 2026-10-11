@@ -29,7 +29,7 @@ $1" || echo "falhou o envio do aviso"
   echo "AVISO: $1"; exit "${2:-1}"
 }
 
-AVISO_LONGO="Na ÚLTIMA fala (CTA), antes do convite do curso, diga: 'A explicação completa de cada um está no vídeo longo do canal Inema Pro.'"
+AVISO_LONGO=""  # CTA é só o inema.club (Nei, 11/10/2026): nada de mandar para o vídeo longo / canal do YouTube
 INSTR_L=""
 case "$MODO" in
   diario)  DE=$(d -2); ATE=$(d -1); MAXV=6

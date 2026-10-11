@@ -2,6 +2,7 @@
 
 | data | o que quebrou | menor correção | prompt \| infra |
 |---|---|---|---|
+| 2026-10-11 | (vindo do finviral) topo vazio até a âncora, legenda "15 %", "teu"/"te prepara" na fala e CTA para o vídeo longo do Inema Pro | mesmo patch do gerar_cena.py + checar.py reprova tu/CTA fora do inema.club + AVISO_LONGO vazio | prompt + infra |
 | 2026-10-10 | Longo foi ao bot mas não ao YouTube: o codex de /usr/bin (0.116) não lê o config.toml gravado pelo codex novo (service_tier="default") | publicar.sh põe ~/.npm-global/bin no PATH | infra |
 | 2026-10-10 | Semanal com 6 assuntos em fragmentos, termos sem explicação (lugol, Vigitel, protocolo do SUS): o Nei achou "muito mal explicado" | roteiro.md: explicar em 3 passos (contexto, o que ele disse, o que muda) e termo técnico explicado na fala; rodar.sh: no máximo 3 assuntos no curto | prompt |
 | 2026-10-10 | Fundo = miniatura 16:9 cheia de letreiro ampliada em 9:16: letras gigantes cortadas ("RISCO", "ÓIDE") | palco.html: fundo com blur 38 px | prompt |

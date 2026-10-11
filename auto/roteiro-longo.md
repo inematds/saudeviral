@@ -42,8 +42,8 @@ Um script confere cada trecho; se algum não estiver no transcript, o vídeo é 
   {"text":"A SEMANA EXPLICADA","size":96},{"text":"<NÚMERO MAIS FORTE>","size":150,"cor":"#3ef0a0"},
   {"text":"<linha âmbar curta>","size":92,"cor":"#ffb638"}],"sub":"<promessa>","fotos":["img/<id>.jpg", …]}`
   (fotos = miniaturas dos vídeos dos capítulos, até 5; SEM `src`).
-- A 1ª frase diz o GANHO de quem assiste ("Em seis minutos tu entende o que os maiores influenciadores de saúde
-  disseram nesta semana e o que isso muda pra ti"). Nunca abrir com "Olá", "Neste vídeo" ou "Imagine".
+- A 1ª frase diz o GANHO de quem assiste ("Em seis minutos você entende o que os maiores influenciadores de saúde
+  disseram nesta semana e o que isso muda para você"). Nunca abrir com "Olá", "Neste vídeo" ou "Imagine".
 - Depois, a prévia: um `bullets` (row) com os capítulos e um "no fim: …" que prende até o final.
 
 **Cada capítulo de influenciador (5 a 10 falas, 120 a 200 palavras):**
@@ -62,7 +62,7 @@ Um script confere cada trecho; se algum não estiver no transcript, o vídeo é 
 - Gancho de comentário: pergunta sobre o tema ("E você? … Comente aqui."), com `fonte` "<b>Não substitui consulta
   médica.</b> Resumo do que os influenciadores disseram, com a fonte de cada fato".
 - Última fala: CTA — ponte curta do tema para a IA + "Se prepare pra gestão de agentes de IA: curso gratuito no inema
-  ponto club." Shots: `{"type":"media","src":"img/cta.jpg","calm":true,"label":"**inema.club** · gestão de agentes de IA"}`
+  ponto club." O CTA é SEMPRE só o inema.club: não citar canal do YouTube, "inscreva-se" nem outro destino. Shots: `{"type":"media","src":"img/cta.jpg","calm":true,"label":"**inema.club** · gestão de agentes de IA"}`
   e `keyword` "inema.club".
 
 **Shots — regras:**

@@ -71,12 +71,17 @@ for i, f in enumerate(R["falas"]):
             cena["fundos"][-1]["fim"] = a + .3
         cena["fundos"].append({"img": str(E / f["fundo"]), "ini": a - .3 if i else -1, "fim": DUR + 1})
         fundo_atual = f["fundo"]
+    # f1 com hero: o número já está no quadro 0; nada por cima dele (finviral 11/10 saiu "+3,4%" sobre "+7,7%")
+    if not i and R.get("hero"):
+        f = {k: v for k, v in f.items() if k not in ("numero", "ficha", "caixa", "carimbo", "grafico")}
     if f.get("hero") and i:
         cena["hero"].append({"ini": a - .05, "fim": DUR + 1, "html": f["hero"].replace('src="img/', f'src="{E}/img/')})
     if f.get("ficha"):
         cena["fichas"].append({**f["ficha"], "foto": str(E / f["ficha"]["foto"]), "ini": t0(fid, f["ficha"]), "fim": prox("ficha")})
     if f.get("numero"):
-        cena["numeros"].append({**f["numero"], "ini": t0(fid, f["numero"]), "fim": f["numero"].get("ate_fim") and prox("numero") or b + .1})
+        # entra no início da fala e fica até o próximo número, ficha ou tela limpa (a parte de cima não fica vazia)
+        fim_n = next((ini(g["id"]) for g in R["falas"][i + 1:] if g.get("numero") or g.get("ficha") or g.get("limpa") or g.get("hero")), DUR + 1)
+        cena["numeros"].append({**f["numero"], "ini": a - .05, "fim": fim_n})
     if f.get("grafico"):
         cena["graficos"].append({**f["grafico"], "ini": t0(fid, f["grafico"]), "fim": b + .1})
     if f.get("carimbo"):
@@ -100,7 +105,10 @@ for i, f in enumerate(R["falas"]):
             par = difflib.get_close_matches(nu, list(grafia), n=1, cutoff=0.8)
             if par:
                 p = {**p, "w": grafia[par[0]].rstrip(".,;:!?") + w[len(w.rstrip(".,;:!?")):]}
-        if pal and p["w"].startswith("-"):
+        # o Whisper parte número: "15" "%" ou "7" ",7" → "15%", "7,7"
+        if pal and pal[-1]["w"][-1:].isdigit() and re.match(r"^([.,]\d|%)", p["w"]):
+            pal[-1] = {**pal[-1], "w": pal[-1]["w"] + p["w"]}
+        elif pal and p["w"].startswith("-"):
             pal[-1] = {**pal[-1], "w": pal[-1]["w"] + p["w"]}
         else:
             pal.append(p)
