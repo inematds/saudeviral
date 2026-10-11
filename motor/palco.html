@@ -50,6 +50,8 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#05080c;font-fam
 #graf{position:absolute;left:56px;right:56px;top:760px;height:300px;opacity:0}
 #graf svg{width:100%;height:100%;overflow:visible}
 #graf .rot{position:absolute;right:0;top:-6px;font:900 24px Inter;color:#c9d1db;letter-spacing:1px}
+/* miniatura grande do vídeo citado quando a fala não tem número nem gráfico (o meio da tela não fica vazio) */
+#print{position:absolute;left:110px;right:110px;top:400px;aspect-ratio:16/9;border-radius:22px;border:5px solid var(--amb);background-size:cover;background-position:center;box-shadow:0 24px 70px rgba(0,0,0,.75);opacity:0}
 /* carimbo de polêmica */
 #carimbo{position:absolute;right:50px;top:640px;border:8px solid var(--red);color:var(--red);font:400 78px/1 'Archivo Black';padding:10px 24px;border-radius:14px;
  transform:rotate(-9deg) scale(1);opacity:0;background:rgba(5,8,12,.55);letter-spacing:2px}
@@ -84,6 +86,7 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#05080c;font-fam
 <div id="ficha"></div>
 <div id="num"></div>
 <div id="graf"></div>
+<div id="print"></div>
 <div id="carimbo"></div>
 <div id="caixa"></div>
 <div id="avbox"><div></div></div>
@@ -145,9 +148,13 @@ function desenhar(t){
       <path d="${d} L${ult[0]},${Hh} L0,${Hh} Z" fill="url(#gg)"/><path d="${d}" fill="none" stroke="${g.cor}" stroke-width="8" stroke-linejoin="round" stroke-linecap="round" style="filter:drop-shadow(0 0 12px ${g.cor})"/>
       <circle cx="${ult[0]}" cy="${ult[1]}" r="14" fill="#fff" stroke="${g.cor}" stroke-width="6"/></svg>`;
     G.style.opacity=vis(t,g.ini,g.fim);} else G.style.opacity=0;
-  // carimbo POLÊMICA (bate e treme)
+  // sem número nem gráfico na tela: a miniatura do vídeo do influenciador ocupa o meio
+  const P=$('print'); const po=(f&&!n&&!g)?vis(t,f.ini,f.fim):0;
+  if(po){const u=`url('${f.foto}')`; if(P.style.backgroundImage!==u) P.style.backgroundImage=u;} P.style.opacity=po;
+  // carimbo POLÊMICA (bate e treme): abaixo do texto do número, nunca por cima dele
   const c=ativo(C.carimbos,t); const K=$('carimbo');
-  if(c){const k=clamp((t-c.ini)/.28); K.textContent=c.txt; K.style.opacity=vis(t,c.ini,c.fim,.12);
+  if(c){let topo=640; if(n&&N.lastElementChild){topo=Math.min(950,Math.max(topo,N.lastElementChild.getBoundingClientRect().bottom+30));}
+    else if(po){topo=Math.min(950,P.getBoundingClientRect().bottom-60);} K.style.top=topo+'px';const k=clamp((t-c.ini)/.28); K.textContent=c.txt; K.style.opacity=vis(t,c.ini,c.fim,.12);
     K.style.transform=`rotate(-9deg) scale(${lerp(2.4,1,ease(k))})`; K.style.borderColor=K.style.color=c.cor||'var(--red)';} else K.style.opacity=0;
   // caixa de baixo
   const b=ativo(C.caixas,t); const B=$('caixa');

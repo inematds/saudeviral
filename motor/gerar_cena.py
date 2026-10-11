@@ -51,6 +51,13 @@ cena = {"duracao": DUR, "marca": R["marca"], "selo": R["selo"], "fundos": [], "h
         "graficos": [], "carimbos": [], "caixas": [], "fontes": [], "legenda": []}
 if R.get("avatar"):
     cena["avatar"] = {**R["avatar"], "img": str(E / R["avatar"]["img"]), "ini": -1, "fim": DUR + 1}
+NUMW = {"zero", "um", "uma", "dois", "duas", "tres", "quatro", "cinco", "seis", "sete", "oito", "nove", "dez", "onze", "doze", "treze",
+        "quatorze", "catorze", "quinze", "dezesseis", "dezessete", "dezoito", "dezenove", "vinte", "trinta", "quarenta", "cinquenta",
+        "sessenta", "setenta", "oitenta", "noventa", "cem", "cento", "duzentos", "duzentas", "trezentos", "trezentas", "quatrocentos",
+        "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos", "mil", "milhao", "milhoes", "bilhao", "bilhoes", "trilhao", "trilhoes", "virgula", "porcento"}
+TELA = {r"\bésse ú ésse\b": "SUS", r"\binema ponto club\b": "inema.club", r"\binema club\b": "inema.club"}
+
+
 def chamada(hero):
     """quadro 0 diz com todas as letras que é o RESUMO do que os influenciadores falaram (Nei, 11/10/2026):
     faixa vermelha no lugar da etiqueta de data (a data vai junto) e sem o t4, que repetia isso em letra miúda."""
@@ -87,7 +94,7 @@ for i, f in enumerate(R["falas"]):
             cena["fundos"][-1]["fim"] = a + .3
         cena["fundos"].append({"img": str(E / f["fundo"]), "ini": a - .3 if i else -1, "fim": DUR + 1})
         fundo_atual = f["fundo"]
-    # f1 com hero: o número já está no quadro 0; nada por cima dele (finviral 11/10 saiu "+3,4%" sobre "+7,7%")
+    # f1 com hero: o número já está no quadro 0; nada por cima dele (11/10 saiu "+3,4%" sobre "+7,7%")
     if not i and R.get("hero"):
         f = {k: v for k, v in f.items() if k not in ("numero", "ficha", "caixa", "carimbo", "grafico")}
     if f.get("hero") and i:
@@ -112,18 +119,61 @@ for i, f in enumerate(R["falas"]):
     # legenda: blocos de até 3 palavras e até 18 letras (cabe numa linha); números e destaques em amarelo
     dest = {n(x) for x in f.get("destaque", [])}
     pal = []
-    grafia = {}  # grafia do roteiro (o Whisper erra nome próprio: "Dráuzio" por "Drauzio")
+    grafia = {}  # grafia do roteiro (o Whisper erra nome próprio: "Ambima" por "Anbima")
     for tok in f["fala"].split():
         grafia.setdefault(tok.strip(".,;:!?\"'()").lower(), tok.strip("\"'()"))
-    for p in T[fid]["palavras"]:  # o Whisper separa "segunda" de "-feira": cola de volta
+    # o texto da legenda é o do ROTEIRO; do Whisper só o tempo (e o número em algarismo). Em 11/10 ele ouviu
+    # "Segundo o assunto" onde o roteiro dizia "Segundo assunto" e a palavra inventada foi para a tela.
+    # grafia falada → grafia da tela (a voz lê "ésse ú ésse", a tela mostra SUS)
+    txt = f["fala"]
+    for de, para in TELA.items():
+        txt = re.sub(de, para, txt, flags=re.I)
+    rot, ouv = txt.split(), T[fid]["palavras"]
+    # número por extenso no roteiro e em algarismo no Whisper: os dois viram um "#" para o alinhamento,
+    # e o número da tela é sempre o do Whisper ("dois mil e vinte" × "2020.")
+    def grupos(ws, eh_num):
+        g = []
+        for k, w in enumerate(ws):
+            if eh_num(k) and g and g[-1][0] == "#":
+                g[-1][2] = k + 1
+            else:
+                g.append(["#" if eh_num(k) else n(w), k, k + 1])
+        return g
+    nr = lambda k: n(rot[k]) in NUMW or (n(rot[k]) == "e" and 0 < k < len(rot) - 1 and n(rot[k - 1]) in NUMW and n(rot[k + 1]) in NUMW) \
+        or (n(rot[k]) == "por" and k + 1 < len(rot) and n(rot[k + 1]) == "cento")
+    no = lambda k: re.search(r"[\d%]", ouv[k]["w"]) is not None or (ouv[k]["w"].startswith(",") and k > 0) \
+        or (k > 0 and n(ouv[k]["w"]) in NUMW and re.search(r"\d", ouv[k - 1]["w"]) is not None)  # "35" "mil"
+    gr, go = grupos(rot, nr), grupos([p["w"] for p in ouv], no)
+    lista = []
+    for op, i1, i2, j1, j2 in difflib.SequenceMatcher(None, [g[0] for g in gr], [g[0] for g in go], autojunk=False).get_opcodes():
+        rs = [w for g in gr[i1:i2] for w in rot[g[1]:g[2]]]
+        os_ = [p for g in go[j1:j2] for p in ouv[g[1]:g[2]]]
+        tem_num = any(g[0] == "#" for g in gr[i1:i2] + go[j1:j2])
+        if op == "equal":
+            for gi, gj in zip(gr[i1:i2], go[j1:j2]):
+                if gi[0] == "#":
+                    lista += ouv[gj[1]:gj[2]]
+                else:  # palavra do roteiro, maiúscula como o Whisper ouviu ("2020. E pra", não "e pra")
+                    w = rot[gi[1]].strip("\"'()"); o = ouv[gj[1]]
+                    lista.append({**o, "w": (w[:1].upper() + w[1:]) if o["w"][:1].isupper() else w})
+        elif op == "replace" and not tem_num and rs and os_:
+            # "para a semana" ouvido × "pra semana" escrito: palavras do roteiro repartidas no tempo do trecho
+            t0_, t1_ = os_[0]["t"], os_[-1]["f"]
+            lista += [{"w": w.strip("\"'()"), "t": round(t0_ + k * (t1_ - t0_) / len(rs), 3),
+                       "f": round(t0_ + (k + 1) * (t1_ - t0_) / len(rs), 3)} for k, w in enumerate(rs)]
+        elif op in ("replace", "insert"):  # com número: fica o que o Whisper ouviu; palavra inventada sem número sai
+            lista += [p for p in os_ if op == "replace" or re.search(r"[\d%]", p["w"]) or p["w"].startswith("-")]
+    for p in lista:  # o Whisper separa "segunda" de "-feira": cola de volta
         w = p["w"]; nu = w.strip(".,;:!?").lower()
         if len(nu) >= 4 and nu not in grafia:
             par = difflib.get_close_matches(nu, list(grafia), n=1, cutoff=0.8)
             if par:
                 p = {**p, "w": grafia[par[0]].rstrip(".,;:!?") + w[len(w.rstrip(".,;:!?")):]}
-        # o Whisper parte número: "15" "%" ou "7" ",7" → "15%", "7,7"
+        # o Whisper parte número: "7" ",7" "%" → "7,7%"
         if pal and pal[-1]["w"][-1:].isdigit() and re.match(r"^([.,]\d|%)", p["w"]):
             pal[-1] = {**pal[-1], "w": pal[-1]["w"] + p["w"]}
+        elif pal and pal[-1]["w"][-1:].isdigit() and n(p["w"]) in ("mil", "milhoes", "bilhoes", "trilhoes", "milhao", "bilhao", "trilhao"):
+            pal[-1] = {**pal[-1], "w": pal[-1]["w"] + " " + p["w"]}  # "35 mil" fica no mesmo bloco da legenda
         elif pal and p["w"].startswith("-"):
             pal[-1] = {**pal[-1], "w": pal[-1]["w"] + p["w"]}
         else:
