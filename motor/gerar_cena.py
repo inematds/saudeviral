@@ -51,8 +51,24 @@ cena = {"duracao": DUR, "marca": R["marca"], "selo": R["selo"], "fundos": [], "h
         "graficos": [], "carimbos": [], "caixas": [], "fontes": [], "legenda": []}
 if R.get("avatar"):
     cena["avatar"] = {**R["avatar"], "img": str(E / R["avatar"]["img"]), "ini": -1, "fim": DUR + 1}
+def chamada(hero):
+    """quadro 0 diz com todas as letras que é o RESUMO do que os influenciadores falaram (Nei, 11/10/2026):
+    faixa vermelha no lugar da etiqueta de data (a data vai junto) e sem o t4, que repetia isso em letra miúda."""
+    modo = E.name.split("-")[3] if E.name.count("-") >= 3 else ""
+    area = "SAÚDE" if "SAÚDE" in R.get("marca", "").upper() else "FINANÇAS"
+    nomes = {f["ficha"]["nome"] for f in R["falas"] if f.get("ficha", {}).get("nome")}
+    quem = f"{len(nomes)} INFLUENCIADORES" if len(nomes) >= 2 else "OS INFLUENCIADORES"
+    l1 = {"diario": "RESUMO DO DIA", "semanal": "RESUMO DA SEMANA", "domingo": "RESUMO DA SEMANA"}.get(modo, "RESUMO")
+    l2 = f"O QUE {quem} DE {area} FALARAM" + (" E ESPERAM PARA A PRÓXIMA" if modo == "domingo" else "")
+    dt = re.search(r'<div class="dt">(.*?)</div>', hero)
+    html = f'<div class="chamada"><div class="c1"><i></i>{l1}</div><div class="c2">{l2}</div>' \
+           + (f'<div class="c3">{dt.group(1)}</div>' if dt else "") + "</div>"
+    hero = re.sub(r'<div class="t4">.*?</div>', "", hero)
+    return hero.replace(dt.group(0), html) if dt else html + hero
+
+
 if R.get("hero"):
-    cena["hero"].append({"ini": -1, "fim": fim(ORDEM[0]) - .05, "html": R["hero"].replace('src="img/', f'src="{E}/img/')
+    cena["hero"].append({"ini": -1, "fim": fim(ORDEM[0]) - .05, "html": chamada(R["hero"]).replace('src="img/', f'src="{E}/img/')
                          .replace("url('img/", f"url('{E}/img/")})
 
 

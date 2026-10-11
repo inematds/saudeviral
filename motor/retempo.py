@@ -31,10 +31,28 @@ for i in range(len(pal)):  # palavra sem par fica com a fala da vizinha anterior
 tempos = []
 for k, f in enumerate(falas):
     ps = [p for p, d in zip(pal, dono) if d == k]
-    if not ps:
-        sys.exit(f"fala {f['id']} não achada na transcrição do avatar")
     tempos.append({"id": f["id"], "fala": f["fala"], "ini": 0, "fim": 0,
                    "palavras": [{"w": p["word"].strip(), "t": round(p["start"], 3), "f": round(p["end"], 3)} for p in ps]})
+# fala sem palavra = o Whisper pulou o trecho (finviral 11/10: 7,6 s de áudio sem texto na f22):
+# reparte a lacuna entre a fala anterior e a seguinte pelas palavras do roteiro; mais de 3 = o avatar não leu
+vazias = [k for k, t in enumerate(tempos) if not t["palavras"]]
+if len(vazias) > 3:
+    sys.exit(f"{len(vazias)} falas não achadas na transcrição do avatar: {[tempos[k]['id'] for k in vazias]}")
+k = 0
+while k < len(tempos):
+    if tempos[k]["palavras"]:
+        k += 1; continue
+    fim_run = k
+    while fim_run < len(tempos) and not tempos[fim_run]["palavras"]:
+        fim_run += 1
+    t0 = tempos[k - 1]["palavras"][-1]["f"] if k > 0 else 0.0
+    t1 = tempos[fim_run]["palavras"][0]["t"] if fim_run < len(tempos) else cs.dur(wav)
+    ws = [(j, w) for j in range(k, fim_run) for w in falas[j]["fala"].split()]
+    passo = max(t1 - t0, 0.3 * len(ws)) / max(len(ws), 1)
+    for n, (j, w) in enumerate(ws):
+        tempos[j]["palavras"].append({"w": w, "t": round(t0 + n * passo, 3), "f": round(t0 + (n + 1) * passo, 3)})
+    print("aviso: fala(s)", [tempos[j]["id"] for j in range(k, fim_run)], f"sem transcrição; interpolada(s) em {t0:.1f}–{t1:.1f} s")
+    k = fim_run
 for k, t in enumerate(tempos):
     t["ini"] = 0.0 if k == 0 else round(tempos[k - 1]["palavras"][-1]["f"] + 0.05, 3)
 for k, t in enumerate(tempos):
