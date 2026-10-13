@@ -58,9 +58,9 @@ Regras das `falas`:
   - Escrever TODOS os números e anos por extenso, sem algarismo: "sete vírgula sete por cento", "dois mil e vinte e oito".
   - Siglas lidas como se fala ("ésse ú ésse" para SUS, "ó ême ésse" para OMS). Endereço do governo se fala sem "ponto": "consumidor gov bê érre", "gov bê érre" (nunca "consumidor ponto gov ponto bê erre"; o Nei reprovou em 13/10/2026). Na tela (`caixa`, `fonte`) continua "consumidor.gov.br". O CTA "inema ponto club" não muda. Sem emoji.
 - **`em` (âncora):** uma palavra comum que está na fala, nunca um número.
-- **Penúltima fala:** gancho de comentário. É uma pergunta sobre o tema ("E você? ... Comente aqui"), com `"limpa": true`. A `fonte` dela é "<b>Não substitui consulta médica.</b> Resumo do que os influenciadores disseram, com a fonte de cada fato".
+- **Penúltima fala:** gancho de comentário. É uma pergunta que chama a pessoa a contar onde ela está e como é aí (Nei, 13/10/2026): "De onde você está assistindo? O que você acha desse caso? Como é a situação aí na sua cidade? Comente aqui" (adapte ao tema: o caso, o preço, o atendimento, o golpe que mais aparece na região), com `"limpa": true`. A `fonte` dela é "<b>Não substitui consulta médica.</b> Resumo do que os influenciadores disseram, com a fonte de cada fato".
 - **Última fala:** CTA com `fundo` "img/cta.jpg" e `"limpa": true`.
-  - Fala: uma ponte curta do tema para a IA, mais "Se prepare pra gestão de agentes de IA com o curso gratuito do inema ponto club."
+  - Fala: uma ponte curta do tema para a IA, mais "Você pode aprender isso no inema ponto club, com cursos gratuitos." (Nei, 13/10/2026: o CTA diz que dá pra APRENDER no inema.club)
   - O CTA é SEMPRE só o inema.club: não citar canal do YouTube, Inema Pro, "vídeo longo", "se inscreva" nem outro destino.
   - `hero` igual ao da referência (GESTÃO DE / AGENTES DE IA / img/cta.jpg).
   - `caixa` tipo cta com "INEMA.CLUB".
