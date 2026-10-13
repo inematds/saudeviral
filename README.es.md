@@ -51,7 +51,7 @@ echo "2026-10-17 diario" >> auto/pular.txt     # saltar una ronda
 
 ## Influencers
 
-La lista está en `canais.json`, con `"ativo": false` para pausar. La base es la investigación del 10/10/2026 (`pesquisa/influenciadores.md`): Drauzio Varella, Dayan Siebra, Fernando Lemos, Ana Beatriz Barbosa (PodPeople), Patricia Leite, Paulo Muzy, Rossandro Klinjey, Marcio Atalla, Ana Escobar, Lair Ribeiro, Instituto Dr. Barakat, Christian Aguiar y Victor Sorrentino; el 13/10/2026 entraron Juliano Teles, Moacir Rosa, Rafael Freitas, Daniel Cady y Thiago Castro. La recolección lee solo YouTube; quienes son fuertes solo en Instagram están en la investigación.
+La lista está en `canais.json`, con `"ativo": false` para pausar. La base es la investigación del 10/10/2026 (`pesquisa/influenciadores.md`): Drauzio Varella, Dayan Siebra, Fernando Lemos, Ana Beatriz Barbosa (PodPeople), Patricia Leite, Paulo Muzy, Rossandro Klinjey, Marcio Atalla, Ana Escobar, Lair Ribeiro, Instituto Dr. Barakat, Christian Aguiar y Victor Sorrentino; el 13/10/2026 entraron Juliano Teles, Moacir Rosa, Leiliane Rocha, Daniel Cady y Thiago Castro. La recolección lee solo YouTube; quienes son fuertes solo en Instagram están en la investigación.
 
 Si se destaca otro profesional de salud consolidado, con registro y confiable, el sistema sugiere incluirlo en el mensaje del bot. Un nombre emergente nunca entra, y la inclusión solo ocurre con el ok de Nei.
 
