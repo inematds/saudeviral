@@ -61,7 +61,7 @@ Um script confere cada trecho; se algum não estiver no transcript, o vídeo é 
 - Resumo em `bullets` (um item por capítulo).
 - Gancho de comentário: pergunta sobre o tema ("E você? … Comente aqui."), com `fonte` "<b>Não substitui consulta
   médica.</b> Resumo do que os influenciadores disseram, com a fonte de cada fato".
-- Última fala: CTA — ponte curta do tema para a IA + "Se prepare pra gestão de agentes de IA: curso gratuito no inema
+- Última fala: CTA — ponte curta do tema para a IA + "Se prepare pra gestão de agentes de IA com o curso gratuito do inema
   ponto club." O CTA é SEMPRE só o inema.club: não citar canal do YouTube, "inscreva-se" nem outro destino. Shots: `{"type":"media","src":"img/cta.jpg","calm":true,"label":"**inema.club** · gestão de agentes de IA"}`
   e `keyword` "inema.club".
 
