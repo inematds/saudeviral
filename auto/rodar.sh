@@ -14,11 +14,12 @@ TX="${TX:-$HOME/projetos/output/saudeviral/coleta/tx}"
 MAXDUR="${MAXDUR:-4500}"   # não transcreve vídeo/live acima de 75 min
 BOT="$HOME/projetos/refazvideo/ferramentas/enviar_bot_v3.mjs"
 DRY=""; [ "${SEM_BOT:-}" = 1 ] && DRY=--dry-run
-ED="$RAIZ/edicoes/$DIA-$MODO"; mkdir -p "$ED/img"
+# VALIDAR=1: edição de teste para o Nei aprovar (pasta -validacao, nunca vai ao YouTube nem marca vídeos como usados)
+ED="$RAIZ/edicoes/$DIA-$MODO${VALIDAR:+-validacao}"; mkdir -p "$ED/img"
 LOG="$ED/rodada.log"; exec >>"$LOG" 2>&1
 exec 8>"$RAIZ/auto/.rodando"; flock -n 8 || { echo "outra rodada em andamento"; exit 0; }
 echo "=== $(date '+%F %T') $MODO $DIA"
-grep -qx "$DIA $MODO" "$RAIZ/auto/pular.txt" 2>/dev/null && { echo "pulado (auto/pular.txt)"; exit 0; }
+[ -z "${VALIDAR:-}" ] && grep -qx "$DIA $MODO" "$RAIZ/auto/pular.txt" 2>/dev/null && { echo "pulado (auto/pular.txt)"; exit 0; }
 d() { date -d "$DIA $1 day" +%Y%m%d; }
 DATA_BR=$(date -d "$DIA" +%d/%m/%Y)
 
@@ -32,19 +33,20 @@ $1" || echo "falhou o envio do aviso"
 AVISO_LONGO=""  # CTA é só o inema.club (Nei, 11/10/2026): nada de mandar para o vídeo longo / canal do YouTube
 INSTR_L=""
 case "$MODO" in
-  diario)  DE=$(d -2); ATE=$(d -1); MAXV=6
-    INSTR="DIÁRIO de $DATA_BR: o que eles publicaram ontem e anteontem. Vídeo de 40 a 60 s, de 5 a 7 falas, de 110 a 150 palavras no total. UMA história principal (o número ou a polêmica mais forte) e no máximo mais um ou dois números. Se só um influenciador publicou algo forte, o vídeo é sobre ele." ;;
+  diario)  DE=$(d -2); ATE=$(d -1); MAXV=10  # 1 por canal (resumo dos dez, Nei 13/10/2026)
+    INSTR="DIÁRIO de $DATA_BR: resumo do que os dez influenciadores publicaram nos últimos dias (datas no videos.tsv). Vídeo de 2 a 3 min, de 14 a 20 falas, de 300 a 400 palavras no total. Pelo menos cinco assuntos, um por influenciador sempre que der, o mais forte primeiro, cada um explicado inteiro (contexto, o que ele disse, o que muda pra quem assiste)." ;;
   semanal) DE=$(d -7); ATE=$(d -1); MAXV=12
-    INSTR="SEMANAL (sábado, $DATA_BR): balanço da semana de $(date -d "$DIA -7 day" +%d/%m) a $(date -d "$DIA -1 day" +%d/%m). Vídeo de 90 s a 2 min, de 9 a 12 falas, de 230 a 300 palavras. No máximo TRÊS assuntos da semana, o mais forte primeiro e com mais tempo (umas quatro falas), cada um explicado inteiro (contexto, o que ele disse, o que muda pra quem assiste). Não é um fato de cada influenciador: quem não entra num desses assuntos fica pro longo. $AVISO_LONGO"
+    INSTR="SEMANAL (sábado, $DATA_BR): balanço da semana de $(date -d "$DIA -7 day" +%d/%m) a $(date -d "$DIA -1 day" +%d/%m). Vídeo de 2 a 3 min, de 14 a 20 falas, de 300 a 400 palavras. Resumo dos dez: pelo menos cinco assuntos, um por influenciador sempre que der, cada um explicado inteiro (contexto, o que ele disse, o que muda pra quem assiste). O mais forte primeiro. $AVISO_LONGO"
     INSTR_L="SEMANAL (sábado, $DATA_BR): a semana de $(date -d "$DIA -7 day" +%d/%m) a $(date -d "$DIA -1 day" +%d/%m) explicada. Vídeo de 5,5 a 7 min. Um capítulo por influenciador com assunto forte; mostre divergências entre eles." ;;
   domingo) DE=$(d -7); ATE=$(d -1); MAXV=12
-    INSTR="DOMINGO ($DATA_BR): os alertas e hábitos da semana, segundo eles. Vídeo de uns 90 s, de 8 a 10 falas, de 190 a 240 palavras. No máximo TRÊS assuntos: comece pelo alerta mais forte da semana e foque nos alertas, nos hábitos e nos mitos que ELES apontaram, sempre atribuídos, cada um explicado inteiro (contexto, o que ele disse, o que muda pra quem assiste). $AVISO_LONGO"
+    INSTR="DOMINGO ($DATA_BR): os alertas e hábitos da semana, segundo eles. Vídeo de 2 a 3 min, de 14 a 20 falas, de 300 a 400 palavras. Resumo dos dez: pelo menos cinco assuntos, um por influenciador sempre que der, cada um explicado inteiro (contexto, o que ele disse, o que muda pra quem assiste). Comece pelo alerta mais forte da semana e foque nos alertas, nos hábitos e nos mitos que ELES apontaram, sempre atribuídos, cada um explicado inteiro (contexto, o que ele disse, o que muda pra quem assiste). $AVISO_LONGO"
     INSTR_L="DOMINGO ($DATA_BR): os alertas e hábitos da semana, explicados. Vídeo de 5,5 a 7 min. Um capítulo por influenciador: o alerta, o hábito ou o mito que ELE apontou, o raciocínio dele e os números; passos citados viram flow ou timeline; divergências entre eles com compare." ;;
   *) echo "modo inválido"; exit 2 ;;
 esac
 
 # 1. coleta (metadados) e escolha dos vídeos
 NLISTA=8; [ "$MODO" != diario ] && NLISTA=16  # Ana Beatriz e Patricia Leite publicam ~2 vídeos/dia
+escolher() {
 python3 "$RAIZ/coleta/listar.py" "$DE" "$ATE" "$ED/todos.tsv" "$NLISTA" || avisar "falhou a listagem dos canais (yt-dlp)"
 USADOS="$RAIZ/auto/usados-diario.txt"; touch "$USADOS"
 python3 - "$ED/todos.tsv" "$ED/videos.tsv" "$MODO" "$USADOS" "$MAXDUR" "$MAXV" <<'EOF'
@@ -62,6 +64,12 @@ for rodada in (1, 2, 3):  # rodízio: o mais visto de cada canal primeiro (todas
 open(saida, "w").write("".join("\t".join(c) + "\n" for c in esc))
 print(len(ls), "listados ·", len(esc), "escolhidos")
 EOF
+}
+escolher
+# resumo dos dez com 5+ assuntos: se ontem+anteontem teve menos de 5 canais, amplia o diário para 5 dias (os já usados continuam fora)
+if [ "$MODO" = diario ] && [ "$(cut -f1 "$ED/videos.tsv" 2>/dev/null | sort -u | wc -l)" -lt 5 ]; then
+  DE=$(d -5); echo "menos de 5 canais em 2 dias: janela ampliada para $(date -d "$DE" +%d/%m)"; escolher
+fi
 [ -s "$ED/videos.tsv" ] || avisar "sem vídeo novo dos canais entre $(date -d "$DE" +%d/%m) e $(date -d "$ATE" +%d/%m)" 0
 
 # 2. transcrição local (inemavox / Whisper) + miniaturas
@@ -74,6 +82,8 @@ for id in $IDS; do
     || curl -sf -m 30 -o "$ED/img/$id.jpg" "https://i.ytimg.com/vi/$id/hqdefault.jpg" || true
 done
 [ -s "$ED/transcritos.txt" ] || avisar "nenhuma transcrição saiu (download ou Whisper falhou)"
+NT=$(wc -l < "$ED/transcritos.txt"); export MIN_ASSUNTOS=$(( NT < 5 ? NT : 5 ))
+INSTR="$INSTR Mínimo de assuntos nesta edição: $MIN_ASSUNTOS ($NT vídeos transcritos disponíveis)."
 cp "$RAIZ/motor/assets/cta.jpg" "$RAIZ/motor/assets/avatar-teste.jpg" "$ED/img/"
 
 # 3. roteiro pelo Claude (assinatura, claude -p) + portão de fatos, com uma correção
@@ -126,9 +136,9 @@ fi
 #    a versão com foto (avatar falhou) e os testes só vão ao bot
 SUG=""; [ -s "$ED/sugestao.txt" ] && SUG="
 Sugestão de influenciador: $(head -c 300 "$ED/sugestao.txt")"
-SEMYT=""; { [ -n "$NOTA" ] || [ -n "$DRY" ]; } && SEMYT=1
+SEMYT=""; { [ -n "$NOTA" ] || [ -n "$DRY" ] || [ -n "${VALIDAR:-}" ]; } && SEMYT=1
 SEM_YT="$SEMYT" SEM_BOT="${SEM_BOT:-}" bash "$RAIZ/auto/publicar.sh" "$ED/video.mp4" "$ED" "$MODO · $DATA_BR $NOTA" "$SUG"
-[ "$MODO" = diario ] && [ -z "$DRY" ] && cut -f3 "$ED/videos.tsv" >> "$USADOS"
+[ "$MODO" = diario ] && [ -z "$DRY" ] && [ -z "${VALIDAR:-}" ] && cut -f3 "$ED/videos.tsv" >> "$USADOS"
 
 # 6. sábado e domingo: o LONGO 16:9 explicado (não derruba o curto: falha vira aviso no bot)
 if [ -n "$INSTR_L" ] && [ "${SEM_LONGO:-}" != 1 ]; then

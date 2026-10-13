@@ -20,7 +20,9 @@ When I correct you, or you catch yourself making a mistake: before continuing, a
 - Motor do curto: f1 com hero não leva numero/ficha/caixa (ficava número sobre número); o numero entra no início da fala e fica até o próximo visual (senão a parte de cima fica vazia); legenda cola número partido pelo Whisper ("7 ,7 %" → "7,7%"). (11/10/2026)
 - Narração e pergunta tratam por "você", nunca "tu"/"teu"/"te prepara" (pedido do Nei, 10/10/2026). A edição de referência foi convertida também, porque o modelo copia o tom dela.
 - Miniatura do fundo aparece INTEIRA (16:9, sem zoom) no meio da tela escura, sem preenchimento desfocado: o Nei reprovou o zoom de cover em 9:16 e depois o desfocado ("parece que quer esconder algo"). (10/10/2026)
-- Curto não é lista: no máximo 3 assuntos, cada um com contexto, o que ele disse e o que muda pra quem assiste; termo técnico explicado na fala (o Nei reprovou o semanal de 10/10 por "assunto muito mal explicado"). (10/10/2026)
+- Curto = RESUMO DOS DEZ com pelo menos 5 assuntos (um por influenciador sempre que der), 2–3 min, 14–20 falas, até 420 palavras; cada assunto continua inteiro (contexto, o que ele disse, o que muda pra quem assiste) e termo técnico explicado na fala. Substitui o "no máximo 3 assuntos" de 10/10: o Nei pediu em 13/10/2026; o portão conta os vídeos distintos do base.md (MIN_ASSUNTOS).
+- Quadro 0: o rosto do Nei ocupa toda a parte de baixo (1080x720 em y=1200, sem moldura) até o fim da 1ª fala; depois o quadro padrão (palco.html + compor_avatar.sh). (13/10/2026)
+- gov.br na fala = "gov bê érre", sem "ponto" ("consumidor gov bê érre"); o checar.py reprova "ponto gov". O avatar leu "consumidor ponto gov ponto bê erre" no advviral de 13/10 e o Nei reprovou. (13/10/2026)
 - Título do hero mede depois de carregar a fonte (document.fonts.load). (10/10/2026)
 - (Herdadas do finviral, mesmo motor.) Cadeia longa (HeyGen + render + publicação) disparada à mão vai por `systemd-run --user --unit …`, nunca como background da sessão. O `avatar_heygen.sh` retoma sem reenviar.
 - Legenda palavra a palavra: bloco por TAMANHO (≤18 letras); palavra da legenda vem do roteiro (o Whisper erra nome próprio).

@@ -2,7 +2,7 @@
 """Portão antes do render: confere roteiro.json e base.md de uma edição gerada pela automação.
 uso: auto/checar.py <pasta-da-edicao> [pasta-tx] [--longo]
 Sai 0 se ok; 1 com a lista de problemas (o vídeo não é feito nem enviado)."""
-import json, re, sys, unicodedata
+import json, os, re, sys, unicodedata
 from pathlib import Path
 
 LONGO = "--longo" in sys.argv  # vídeo longo 16:9 (roteiro de gerar_cena_longo.py): outros limites + deixas dos shots
@@ -50,13 +50,21 @@ for l in linhas:
         if not all(n(p) in alvo for p in partes):
             erros.append(f"base.md: trecho NÃO está no transcript de {vid}: \"{tr[:80]}\"")
 
+# curto = resumo dos dez com pelo menos 5 assuntos (Nei, 13/10/2026): conta os vídeos distintos do base.md.
+# MIN_ASSUNTOS vem do rodar.sh (menor só quando o período teve menos vídeos transcritos).
+if not LONGO:
+    vids = {v for l in linhas for v in re.findall(r"[\w-]{11}", l) if v in ids}
+    MIN_ASS = int(os.environ.get("MIN_ASSUNTOS", "5"))
+    if len(vids) < MIN_ASS:
+        erros.append(f"{len(vids)} assuntos (vídeos distintos no base.md); mínimo {MIN_ASS}")
+
 # roteiro.json
 try:
     R = json.loads((E / "roteiro.json").read_text())
 except Exception as ex:
     sys.exit(f"roteiro.json inválido: {ex}")
 F = R.get("falas", [])
-FMIN, FMAX = (25, 70) if LONGO else (4, 14)
+FMIN, FMAX = (25, 70) if LONGO else (4, 22)  # curto: resumo dos dez com 5+ assuntos (Nei, 13/10/2026)
 if not FMIN <= len(F) <= FMAX:
     erros.append(f"{len(F)} falas (esperado {FMIN} a {FMAX})")
 if LONGO:
@@ -108,6 +116,8 @@ for f in F:
         if not (E / img).exists():
             erros.append(f"{fid}: imagem ausente {img}")
 for f in F:
+    if re.search(r"ponto gov|gov ponto", f.get("fala", ""), re.I):
+        erros.append(f"{f.get('id')}: gov.br se fala 'gov bê érre', sem 'ponto' (Nei, 13/10/2026)")
     fala = f.get("fala", "")
     if re.search(r"\b(tu|teu|tua|teus|tuas|ti|contigo|te prepara)\b", fala, re.I):
         erros.append(f"{f.get('id')}: trata por 'tu' (usar 'você'): {fala[:80]}")
@@ -120,6 +130,8 @@ if F and "inema" not in F[-1].get("fala", "").lower():
 if "não substitui consulta médica" not in json.dumps(R, ensure_ascii=False).lower():
     erros.append("falta 'Não substitui consulta médica'")
 palavras = sum(len(f.get("fala", "").split()) for f in F)
+if not LONGO and palavras > 420:
+    erros.append(f"{palavras} palavras (curto: até 420, senão passa de 3 min e deixa de ser Short)")
 if LONGO and not 650 <= palavras <= 1150:
     erros.append(f"{palavras} palavras (longo: 650 a 1150, ≈ 5 a 7 min)")
 print(f"{len(F)} falas · {palavras} palavras · {len(linhas)} fatos no base.md")
