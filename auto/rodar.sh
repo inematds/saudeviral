@@ -55,9 +55,10 @@ ls = [l.rstrip("\n").split("\t") for l in open(todos) if l.count("\t") >= 6]
 ok = [c for c in ls if c[2] not in ja and c[3].isdigit() and 120 <= int(c[3]) <= maxdur]
 ok.sort(key=lambda c: -int(c[4]) if c[4].isdigit() else 0)
 por, esc = {}, []
-for c in ok:  # até 3 por canal, os mais vistos primeiro
-    if por.get(c[0], 0) < 3 and len(esc) < maxv:
-        esc.append(c); por[c[0]] = por.get(c[0], 0) + 1
+for rodada in (1, 2, 3):  # rodízio: o mais visto de cada canal primeiro (todas as fontes entram), depois completa até 3 por canal
+    for c in ok:
+        if c not in esc and por.get(c[0], 0) < rodada and len(esc) < maxv:
+            esc.append(c); por[c[0]] = por.get(c[0], 0) + 1
 open(saida, "w").write("".join("\t".join(c) + "\n" for c in esc))
 print(len(ls), "listados ·", len(esc), "escolhidos")
 EOF

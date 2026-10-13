@@ -51,7 +51,7 @@ echo "2026-10-17 diario" >> auto/pular.txt     # skip a run
 
 ## Influencers
 
-The list lives in `canais.json`, with `"ativo": false` to pause. It is based on the 10/10/2026 research (`pesquisa/influenciadores.md`): Drauzio Varella, Dayan Siebra, Fernando Lemos, Ana Beatriz Barbosa (PodPeople), Patricia Leite, Paulo Muzy, Rossandro Klinjey, Marcio Atalla, Ana Escobar, Lair Ribeiro, Instituto Dr. Barakat, Christian Aguiar and Victor Sorrentino. Collection reads YouTube only; those who are strong only on Instagram are listed in the research.
+The list lives in `canais.json`, with `"ativo": false` to pause. It is based on the 10/10/2026 research (`pesquisa/influenciadores.md`): Drauzio Varella, Dayan Siebra, Fernando Lemos, Ana Beatriz Barbosa (PodPeople), Patricia Leite, Paulo Muzy, Rossandro Klinjey, Marcio Atalla, Ana Escobar, Lair Ribeiro, Instituto Dr. Barakat, Christian Aguiar and Victor Sorrentino; on 10/13/2026 Juliano Teles, Moacir Rosa, Rafael Freitas, Daniel Cady and Thiago Castro joined. Collection reads YouTube only; those who are strong only on Instagram are listed in the research.
 
 If another established, licensed and trustworthy health professional stands out, the system suggests adding them in the bot message. Emerging names never join, and inclusion only happens with Nei's ok.
 
