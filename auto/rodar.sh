@@ -48,7 +48,8 @@ esac
 NLISTA=8; [ "$MODO" != diario ] && NLISTA=16  # Ana Beatriz e Patricia Leite publicam ~2 vídeos/dia
 escolher() {
 python3 "$RAIZ/coleta/listar.py" "$DE" "$ATE" "$ED/todos.tsv" "$NLISTA" || avisar "falhou a listagem dos canais (yt-dlp)"
-USADOS="$RAIZ/auto/usados-diario.txt"; touch "$USADOS"
+# base do que já foi publicado (auto/usados.tsv): o diário nunca repete um vídeo já citado
+USADOS="$ED/usados-ids.txt"; python3 "$RAIZ/auto/usados.py" ids > "$USADOS" || avisar "falhou a leitura de auto/usados.tsv"
 python3 - "$ED/todos.tsv" "$ED/videos.tsv" "$MODO" "$USADOS" "$MAXDUR" "$MAXV" <<'EOF'
 import sys
 todos, saida, modo, usados, maxdur, maxv = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], int(sys.argv[5]), int(sys.argv[6])
@@ -84,6 +85,12 @@ done
 [ -s "$ED/transcritos.txt" ] || avisar "nenhuma transcrição saiu (download ou Whisper falhou)"
 NT=$(wc -l < "$ED/transcritos.txt"); export MIN_ASSUNTOS=$(( NT < 5 ? NT : 5 ))
 INSTR="$INSTR Mínimo de assuntos nesta edição: $MIN_ASSUNTOS ($NT vídeos transcritos disponíveis)."
+if [ "$MODO" = diario ]; then
+  JA=$(python3 "$RAIZ/auto/usados.py" recentes "$DIA" 7)
+  [ -n "$JA" ] && INSTR="$INSTR
+Já publicados no diário nos últimos 7 dias (data · influenciador · assunto). Os vídeos deles já estão fora. O mesmo assunto PODE voltar pela boca de OUTRO influenciador, porque é outro ponto de vista: nesse caso ligue os dois na fala ("o Fulano também falou sobre isso", "no dia tal o Beltrano disse X; agora o Fulano vê diferente") e mostre o que ele traz de novo ou de diferente. O que não pode é recontar a mesma coisa do mesmo jeito.
+$JA"
+fi
 cp "$RAIZ/motor/assets/cta.jpg" "$RAIZ/motor/assets/avatar-teste.jpg" "$ED/img/"
 
 # 3. roteiro pelo Claude (assinatura, claude -p) + portão de fatos, com uma correção
@@ -138,7 +145,8 @@ SUG=""; [ -s "$ED/sugestao.txt" ] && SUG="
 Sugestão de influenciador: $(head -c 300 "$ED/sugestao.txt")"
 SEMYT=""; { [ -n "$NOTA" ] || [ -n "$DRY" ] || [ -n "${VALIDAR:-}" ]; } && SEMYT=1
 SEM_YT="$SEMYT" SEM_BOT="${SEM_BOT:-}" bash "$RAIZ/auto/publicar.sh" "$ED/video.mp4" "$ED" "$MODO · $DATA_BR $NOTA" "$SUG"
-[ "$MODO" = diario ] && [ -z "$DRY" ] && [ -z "${VALIDAR:-}" ] && cut -f3 "$ED/videos.tsv" >> "$USADOS"
+# registra só os vídeos CITADOS no base.md (o escolhido que ficou de fora continua disponível amanhã) + o assunto
+[ -z "$DRY" ] && [ -z "${VALIDAR:-}" ] && python3 "$RAIZ/auto/usados.py" registrar "$ED" "$DIA" "$MODO"
 
 # 6. sábado e domingo: o LONGO 16:9 explicado (não derruba o curto: falha vira aviso no bot)
 if [ -n "$INSTR_L" ] && [ "${SEM_LONGO:-}" != 1 ]; then

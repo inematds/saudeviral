@@ -17,7 +17,7 @@ edicoes/*/todos.tsv
 *.log
 auto/.rodando
 __pycache__/
-auto/usados-diario.txt
+auto/usados.tsv
 cena-longo.js
 .longo.html
 edicoes/*/claude.log
