@@ -163,6 +163,7 @@ function desenhar(t){
   const v=ativo(C.viradas,t), P=$('pagina'), V=$('virada');
   // logo depois da virada, a página nova fica parada 0,3 s (é o estado que apareceu por baixo do cartão)
   const vp=(C.viradas||[]).find(x=>t>x.fim&&t<x.fim+PRONTA);
+  if(VOO){VOO.style.visibility='';VOO=null;} V.style.background='';
   if(!v){ cena(vp?vp.fim+PRONTA:t); P.style.transform=''; P.style.zIndex=2; P.querySelector('.sombra').style.opacity=0; V.style.opacity=0; return; }
   const d=v.fim-v.ini, e=t-v.ini;
   const kk=v.k+v.txt; if(V.dataset.k!==kk){V.innerHTML=`<div class="bar"></div><div class="k">${v.k}</div><div class="t">${v.txt}</div>${v.img?`<div class="im" style="background-image:url('${v.img}')"></div>`:''}<div class="sombra"></div>`;V.dataset.k=kk;}
@@ -170,9 +171,18 @@ function desenhar(t){
   if(e<d-VC){ cena(v.ini-.02); const k=giro(e/VA); P.style.zIndex=3; V.style.zIndex=1;
     P.style.transform=`rotateY(${-180*k}deg)`; P.querySelector('.sombra').style.opacity=Math.sin(Math.PI*Math.min(k,.5))*.9; V.style.transform='';
     V.querySelector('.sombra').style.opacity=(1-k)*.25; }
-  else { cena(v.fim+PRONTA); const k=giro((e-(d-VC))/VC); P.style.zIndex=1; P.style.transform=''; P.querySelector('.sombra').style.opacity=k<.5?(1-k*2)*.6:0;
-    V.style.zIndex=3; V.style.transform=`rotateY(${-180*k}deg)`; V.querySelector('.sombra').style.opacity=Math.sin(Math.PI*Math.min(k,.5))*.9; }
+  else { VOO=null; cena(v.fim+PRONTA); const k=giro((e-(d-VC))/VC); P.style.zIndex=1; P.style.transform=''; P.querySelector('.sombra').style.opacity=k<.5?(1-k*2)*.6:0;
+    V.style.zIndex=3; const im=V.querySelector('.im'), ft=$('ficha').querySelector('.ft');
+    if(im&&ft&&$('ficha').style.opacity>.5){
+      // em vez de virar, a imagem do cartão encolhe até a miniatura do influenciador no topo (Nei, 14/10/2026)
+      P.querySelector('.sombra').style.opacity=0; V.style.transform=''; V.querySelector('.sombra').style.opacity=0;
+      V.style.background=`rgba(5,8,12,${1-k})`; V.querySelectorAll('.k,.t,.bar').forEach(x=>x.style.opacity=clamp(1-k*2.5));
+      im.style.transform=''; const a=im.getBoundingClientRect(), b=ft.getBoundingClientRect();
+      im.style.transformOrigin='0 0'; im.style.transform=`translate(${(b.left-a.left)*k}px,${(b.top-a.top)*k}px) scale(${lerp(1,b.width/a.width,k)},${lerp(1,b.height/a.height,k)})`;
+      ft.style.visibility='hidden'; VOO=ft; }
+    else { V.style.background=''; V.style.transform=`rotateY(${-180*k}deg)`; V.querySelector('.sombra').style.opacity=Math.sin(Math.PI*Math.min(k,.5))*.9; } }
 }
+let VOO=null;
 function cena(t){
   // fundos com dissolve e zoom lento (≤1,05)
   (C.fundos||[]).forEach((f,i)=>{const o=vis(t,f.ini,f.fim,.6); const d=$('fb'+i); d.style.opacity=o;
@@ -187,8 +197,9 @@ function cena(t){
   $('topo').style.opacity=1;
   // ficha do influenciador (entra deslizando)
   const f=ativo(C.fichas,t); const F=$('ficha');
-  if(f){const k=back(clamp((t-f.ini)/.45)); F.innerHTML=`<div class="ft" style="background-image:url('${f.foto}')"></div><div><div class="rk">${f.rk||''}</div><div class="nm">${f.nome}</div><div class="cn">${f.canal}</div></div>`;
-    F.style.opacity=vis(t,f.ini,f.fim); F.style.transform=`translateX(${(1-k)*-120}px)`;} else F.style.opacity=0;
+  const pousa=f&&(C.viradas||[]).some(x=>x.img&&Math.abs(x.fim-f.ini)<.1);
+  if(f){const k=pousa?1:back(clamp((t-f.ini)/.45)); F.innerHTML=`<div class="ft" style="background-image:url('${f.foto}')"></div><div><div class="rk">${f.rk||''}</div><div class="nm">${f.nome}</div><div class="cn">${f.canal}</div></div>`;
+    F.style.opacity=pousa?vis(t,f.ini-1,f.fim):vis(t,f.ini,f.fim); F.style.transform=`translateX(${(1-k)*-120}px)`;} else F.style.opacity=0;
   // número gigante com contador
   const n=ativo(C.numeros,t); const N=$('num');
   if(n){const k=prog(t,n.ini,n.dur||1.6); const v=lerp(n.de??0,n.ate,k);

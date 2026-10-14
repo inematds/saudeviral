@@ -108,8 +108,13 @@ for i, f in enumerate(R["falas"]):
     a, b = ini(fid), fim(fid)
     # fim do bloco = início da próxima fala que troca aquele visual (evita piscar entre falas)
     prox = lambda chave: next((ini(g["id"]) for g in R["falas"][i + 1:] if g.get(chave) or g.get("limpa")), DUR + 1)
-    if f.get("fundo") and f["fundo"] != fundo_atual:
+    # na pergunta ("e na sua cidade?") a imagem do assunto sai: não tem nada a ver (Nei, 14/10/2026)
+    if i == PERG:
         if cena["fundos"]:
+            cena["fundos"][-1]["fim"] = a - .05
+        fundo_atual = None
+    elif f.get("fundo") and f["fundo"] != fundo_atual:
+        if cena["fundos"] and fundo_atual:
             cena["fundos"][-1]["fim"] = a + .3
         cena["fundos"].append({"img": str(E / f["fundo"]), "ini": a - .3 if i else -1, "fim": DUR + 1})
         fundo_atual = f["fundo"]
