@@ -79,6 +79,22 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#05080c;font-fam
 #fonte b{color:#fff}
 #leg{position:absolute;left:40px;right:40px;top:1112px;text-align:center;font:900 60px/1.1 Inter;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;text-shadow:0 4px 18px rgba(0,0,0,.95)}
 #leg span{margin:0 8px}
+/* manchete no topo quando a fala não tem ficha nem número (o topo não fica escuro e vazio) — Nei, 14/10/2026 */
+#manchete{position:absolute;left:56px;right:56px;top:200px;opacity:0}
+#manchete .k{font:900 32px Inter;letter-spacing:3px;color:var(--amb);margin-bottom:10px}
+#manchete .t{font:400 118px/0.98 'Archivo Black';letter-spacing:-2px;text-shadow:0 8px 40px rgba(0,0,0,.8)}
+/* índice do radar no lugar da caixa vazia, assunto atual aceso */
+#indice{position:absolute;left:40px;right:470px;top:1290px;min-height:453px;background:rgba(14,18,24,.9);border:2px solid rgba(255,255,255,.14);border-radius:22px;padding:24px 26px;opacity:0}
+#indice .k{font:900 20px Inter;letter-spacing:2px;color:var(--amb);text-transform:uppercase;margin-bottom:12px}
+#indice div.i{font:900 32px/1.3 Inter;opacity:.28;margin-bottom:6px}
+#indice div.i b{color:var(--amb);margin-right:10px}
+#indice div.i.on{opacity:1}
+/* cartão de virada: 1 s de tela cheia entre assuntos e antes da pergunta (a voz para, a trilha segue) */
+#virada{position:absolute;inset:0;z-index:50;background:#05080c;display:flex;flex-direction:column;justify-content:center;padding:0 70px;opacity:0}
+#virada .k{font:900 40px Inter;letter-spacing:4px;color:var(--amb);margin-bottom:22px}
+#virada .t{font:400 128px/0.98 'Archivo Black';letter-spacing:-2px}
+#virada .im{margin-top:46px;width:940px;aspect-ratio:16/9;border-radius:22px;border:5px solid var(--amb);background-size:cover;background-position:center}
+#virada .bar{position:absolute;left:0;top:0;bottom:0;width:22px;background:var(--amb)}
 </style></head>
 <body>
 <div id="fundos"></div>
@@ -94,8 +110,11 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#05080c;font-fam
 <div id="caixa"></div>
 <div id="avbox"><div></div></div>
 <div id="avtag"></div>
+<div id="manchete"></div>
+<div id="indice"></div>
 <div id="fonte"></div>
 <div id="leg"></div>
+<div id="virada"></div>
 <script>
 const C = window.CENA;
 const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
@@ -159,6 +178,10 @@ function desenhar(t){
   if(c){let topo=640; if(n&&N.lastElementChild){topo=Math.min(950,Math.max(topo,N.lastElementChild.getBoundingClientRect().bottom+30));}
     else if(po){topo=Math.min(950,P.getBoundingClientRect().bottom-60);} K.style.top=topo+'px';const k=clamp((t-c.ini)/.28); K.textContent=c.txt; K.style.opacity=vis(t,c.ini,c.fim,.12);
     K.style.transform=`rotate(-9deg) scale(${lerp(2.4,1,ease(k))})`; K.style.borderColor=K.style.color=c.cor||'var(--red)';} else K.style.opacity=0;
+  // manchete no topo (fala sem ficha nem número)
+  const m=ativo(C.manchetes,t); const M=$('manchete');
+  if(m&&!h&&!f&&!n&&!g){const k=m.k+'|'+m.txt; if(M.dataset.k!==k){M.innerHTML=`${m.k?`<div class="k">${m.k}</div>`:''}<div class="t">${m.txt}</div>`;M.dataset.k=k;}
+    M.style.opacity=vis(t,m.ini,m.fim,.25);} else M.style.opacity=0;
   // caixa de baixo
   const b=ativo(C.caixas,t); const B=$('caixa');
   if(b){ B.className=b.tipo==='cta'?'cta':'';
@@ -166,6 +189,16 @@ function desenhar(t){
     else if(b.itens) B.innerHTML=`<div class="k">${b.k}</div><div class="itens">${b.itens.map(i=>`<div class="${t>=i.t?'on':''}">${i.txt}</div>`).join('')}</div>`;
     else B.innerHTML=`<div class="k">${b.k}</div><div class="q">${b.q}</div><div class="w">${b.w||''}</div>`;
     B.style.opacity=vis(t,b.ini,b.fim);} else B.style.opacity=0;
+  // índice do radar no lugar da caixa vazia
+  const I=$('indice'), ix=C.indice;
+  if(ix&&!b&&t>=ix.ini&&t<=ix.fim){let cur=0; ix.t.forEach((x,k)=>{if(t>=x) cur=k;});
+    const k=String(cur); if(I.dataset.k!==k){I.innerHTML=`<div class="k">No radar</div>`+ix.itens.map((x,j)=>`<div class="i${j===cur?' on':''}"><b>${j+1}/${ix.itens.length}</b>${x}</div>`).join('');I.dataset.k=k;}
+    I.style.opacity=1;} else I.style.opacity=0;
+  // cartão de virada (entra da direita, sai pela esquerda, como página)
+  const v=ativo(C.viradas,t); const V=$('virada');
+  if(v){const kk=v.k+v.txt; if(V.dataset.k!==kk){V.innerHTML=`<div class="bar"></div><div class="k">${v.k}</div><div class="t">${v.txt}</div>${v.img?`<div class="im" style="background-image:url('${v.img}')"></div>`:''}`;V.dataset.k=kk;}
+    const d=v.fim-v.ini, e=t-v.ini; let x=0; if(e<.22) x=(1-ease(e/.22))*1080; else if(e>d-.18) x=-ease((e-(d-.18))/.18)*1080;
+    V.style.opacity=1; V.style.transform=`translateX(${x}px)`;} else V.style.opacity=0;
   // avatar (imagem no piloto)
   const av=C.avatar; const ao=av?vis(t,av.ini,av.fim):0; $('avbox').style.opacity=ao;
   const h0=(C.hero||[])[0]; const capa=!!(h0&&h0.ini<=0&&t<h0.fim); $('avbox').classList.toggle('capa',capa);

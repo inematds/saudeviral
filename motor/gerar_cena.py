@@ -24,6 +24,24 @@ R = json.loads((E / "roteiro.json").read_text())
 T = {t["id"]: t for t in json.loads((E / ("avatar/tempos.json" if AVATAR else "tempos.json")).read_text())}
 ORDEM = [f["id"] for f in R["falas"]]
 
+# respiros (Nei, 14/10/2026): 1 s de pausa com cartão de virada antes de cada assunto ("assunto" na fala) e antes da
+# pergunta (penúltima fala). A cena é deslocada aqui; o áudio/vídeo ganha o mesmo buraco no motor/respiros.py.
+VIRA = 1.0
+ASS = [i for i, f in enumerate(R["falas"]) if f.get("assunto")]
+PERG = len(ORDEM) - 2 if len(ORDEM) >= 4 else None
+RESP = []  # corte na linha ORIGINAL do áudio
+for i in sorted({i for i in ASS if i} | ({PERG} if PERG else set())):
+    a0, a1 = T[ORDEM[i - 1]]["fim"], T[ORDEM[i]]["ini"]
+    RESP.append({"t": round((a0 + a1) / 2 if a1 > a0 else a1, 3), "dur": VIRA, "i": i})
+desloca = lambda x: round(x + sum(r["dur"] for r in RESP if x >= r["t"]), 3)
+for t_ in T.values():
+    t_["ini"], t_["fim"] = desloca(t_["ini"]), desloca(t_["fim"])
+    for p_ in t_["palavras"]:
+        p_["t"] = desloca(p_["t"])
+        if "f" in p_:
+            p_["f"] = desloca(p_["f"])
+(E / "respiros.json").write_text(json.dumps(RESP))
+
 
 def n(s):
     return re.sub(r"[^a-z0-9]", "", unicodedata.normalize("NFD", s.lower()).encode("ascii", "ignore").decode())
@@ -189,6 +207,38 @@ for i, f in enumerate(R["falas"]):
               for p in bloco]
         fimb = blocos[k + 1][0]["t"] if k + 1 < len(blocos) else b
         cena["legenda"].append({"ini": bloco[0]["t"], "fim": fimb, "palavras": ws})
+
+# cartão de virada (tela cheia), manchete no topo quando não há ficha/número, índice no lugar da caixa vazia (Nei, 14/10/2026)
+NASS = len(ASS)
+cena["viradas"], acum = [], 0.0
+for r in RESP:
+    t_ = r["t"] + acum; acum += r["dur"]; f = R["falas"][r["i"]]
+    if r["i"] in ASS:
+        cena["viradas"].append({"ini": t_, "fim": t_ + r["dur"], "k": f"ASSUNTO {ASS.index(r['i']) + 1} DE {NASS}",
+                                "txt": f["assunto"], "img": str(E / f["fundo"]) if f.get("fundo") else ""})
+    else:
+        cena["viradas"].append({"ini": t_, "fim": t_ + r["dur"], "k": "AGORA É COM VOCÊ", "txt": "E VOCÊ?", "img": ""})
+cena["manchetes"], atual = [], None
+for i, f in enumerate(R["falas"]):
+    if i in ASS:
+        atual = (ASS.index(i) + 1, f["assunto"])
+    if not i or f.get("hero") or i == len(ORDEM) - 1:
+        continue
+    fid = f["id"]; prox_ini = ini(ORDEM[i + 1]) - .05
+    if f.get("manchete"):
+        m = {"k": f"{NASS} ASSUNTOS" if f.get("caixa", {}).get("itens") and NASS else "", "txt": f["manchete"]}
+    elif i == PERG:
+        m = {"k": "COMENTE AQUI", "txt": "E AÍ, NA SUA CIDADE?"}
+    elif atual:
+        m = {"k": f"ASSUNTO {atual[0]} DE {NASS}", "txt": atual[1]}
+    elif f.get("caixa", {}).get("itens"):
+        m = {"k": f"{len(ASS) or len(f['caixa']['itens'])} ASSUNTOS", "txt": "HOJE NO RADAR"}
+    else:
+        continue
+    cena["manchetes"].append({**m, "ini": ini(fid) - .05, "fim": prox_ini})
+if ASS:
+    cena["indice"] = {"itens": [R["falas"][i]["assunto"] for i in ASS], "t": [ini(ORDEM[i]) - .05 for i in ASS],
+                      "ini": ini(ORDEM[ASS[0]]) - .05, "fim": ini(ORDEM[PERG]) - .05 if PERG else DUR + 1}
 
 (E / "cena.js").write_text("window.CENA=" + json.dumps(cena, ensure_ascii=False) + ";")
 print(f"cena.js  {DUR:.1f} s  {len(ORDEM)} falas")

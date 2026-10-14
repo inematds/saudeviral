@@ -57,6 +57,15 @@ if not LONGO:
     MIN_ASS = int(os.environ.get("MIN_ASSUNTOS", "5"))
     if len(vids) < MIN_ASS:
         erros.append(f"{len(vids)} assuntos (vídeos distintos no base.md); mínimo {MIN_ASS}")
+    try:
+        _F = json.loads((E / "roteiro.json").read_text()).get("falas", [])
+    except Exception:
+        _F = []
+    nass = [f.get("assunto") for f in _F if f.get("assunto")]
+    if len(nass) < MIN_ASS:
+        erros.append(f"{len(nass)} falas com \"assunto\" (a 1ª fala de cada assunto; mínimo {MIN_ASS})")
+    if any(len(a) > 24 for a in nass):
+        erros.append("\"assunto\" com mais de 24 letras (não cabe no cartão)")
 
 # roteiro.json
 try:
