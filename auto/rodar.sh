@@ -122,7 +122,7 @@ cat "$ED/checar.log"
 
 # 4. avatar do Nei (HeyGen estúdio); se falhar, versão com a foto e a voz do Nei (chatterbox)
 NOTA=""
-if [ "${SEM_AVATAR:-}" != 1 ] && bash "$RAIZ/motor/avatar_heygen.sh" "$ED" "SAUDEVIRAL-$DIA-$MODO" > "$ED/avatar.log" 2>&1 \
+if [ "${SEM_AVATAR:-}" != 1 ] && bash "$RAIZ/motor/avatar_heygen.sh" "$ED" "SAUDEVIRAL-$DIA-$MODO${VALIDAR:+-validacao}" > "$ED/avatar.log" 2>&1 \
    && python3 "$RAIZ/motor/gerar_cena.py" "$ED" --avatar && bash "$RAIZ/motor/compor_avatar.sh" "$ED" "$ED/video.mp4"; then
   echo "vídeo com avatar ok"
 else
