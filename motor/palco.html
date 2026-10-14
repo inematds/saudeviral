@@ -99,6 +99,11 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#05080c;font-fam
 body{perspective:2600px}
 #pagina{position:absolute;inset:0;transform-origin:0 50%;backface-visibility:hidden;background:#05080c;z-index:2}
 #virada{transform-origin:0 50%;backface-visibility:hidden}
+#voo{position:absolute;z-index:60;transform-origin:0 0;border-radius:22px;border:5px solid var(--amb);background-size:cover;background-position:center;box-sizing:border-box;opacity:0}
+/* pergunta da cidade: avatar grande no centro, sem moldura; a caixa ocupa a largura toda (Nei, 14/10/2026) */
+#avbox.centro{left:0;top:490px;width:1080px;height:600px;background:none}
+#avbox.centro div{left:0;top:0;width:1080px;height:600px;background-position:center 15%}
+#caixa.largo{right:40px}
 .sombra{position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.15),rgba(0,0,0,.85));opacity:0}
 /* radar: a imagem do vídeo de cada assunto no topo, trocando conforme ele é dito */
 #radar{position:absolute;left:70px;right:70px;top:500px;opacity:0}
@@ -131,6 +136,7 @@ body{perspective:2600px}
 <div class="sombra"></div>
 </div>
 <div id="virada"></div>
+<div id="voo"></div>
 <script>
 const C = window.CENA;
 const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
@@ -163,7 +169,7 @@ function desenhar(t){
   const v=ativo(C.viradas,t), P=$('pagina'), V=$('virada');
   // logo depois da virada, a página nova fica parada 0,3 s (é o estado que apareceu por baixo do cartão)
   const vp=(C.viradas||[]).find(x=>t>x.fim&&t<x.fim+PRONTA);
-  if(VOO){VOO.style.visibility='';VOO=null;} V.style.background='';
+  if(VOO){VOO.style.visibility='';VOO=null;} $('voo').style.opacity=0;
   if(!v){ cena(vp?vp.fim+PRONTA:t); P.style.transform=''; P.style.zIndex=2; P.querySelector('.sombra').style.opacity=0; V.style.opacity=0; return; }
   const d=v.fim-v.ini, e=t-v.ini;
   const kk=v.k+v.txt; if(V.dataset.k!==kk){V.innerHTML=`<div class="bar"></div><div class="k">${v.k}</div><div class="t">${v.txt}</div>${v.img?`<div class="im" style="background-image:url('${v.img}')"></div>`:''}<div class="sombra"></div>`;V.dataset.k=kk;}
@@ -173,14 +179,14 @@ function desenhar(t){
     V.querySelector('.sombra').style.opacity=(1-k)*.25; }
   else { VOO=null; cena(v.fim+PRONTA); const k=giro((e-(d-VC))/VC); P.style.zIndex=1; P.style.transform=''; P.querySelector('.sombra').style.opacity=k<.5?(1-k*2)*.6:0;
     V.style.zIndex=3; const im=V.querySelector('.im'), ft=$('ficha').querySelector('.ft');
+    V.style.transform=''; const W=$('voo');
     if(im&&ft&&$('ficha').style.opacity>.5){
-      // em vez de virar, a imagem do cartão encolhe até a miniatura do influenciador no topo (Nei, 14/10/2026)
-      P.querySelector('.sombra').style.opacity=0; V.style.transform=''; V.querySelector('.sombra').style.opacity=0;
-      V.style.background=`rgba(5,8,12,${1-k})`; V.querySelectorAll('.k,.t,.bar').forEach(x=>x.style.opacity=clamp(1-k*2.5));
-      im.style.transform=''; const a=im.getBoundingClientRect(), b=ft.getBoundingClientRect();
-      im.style.transformOrigin='0 0'; im.style.transform=`translate(${(b.left-a.left)*k}px,${(b.top-a.top)*k}px) scale(${lerp(1,b.width/a.width,k)},${lerp(1,b.height/a.height,k)})`;
-      ft.style.visibility='hidden'; VOO=ft; }
-    else { V.style.background=''; V.style.transform=`rotateY(${-180*k}deg)`; V.querySelector('.sombra').style.opacity=Math.sin(Math.PI*Math.min(k,.5))*.9; } }
+      // a imagem do cartão se solta e encolhe até a miniatura do influenciador no topo, enquanto o cartão vira (Nei, 14/10/2026)
+      const a=im.getBoundingClientRect(), b=ft.getBoundingClientRect(); im.style.visibility='hidden';
+      W.style.backgroundImage=`url('${v.img}')`; Object.assign(W.style,{left:a.left+'px',top:a.top+'px',width:a.width+'px',height:a.height+'px',opacity:1});
+      W.style.transform=`translate(${(b.left-a.left)*k}px,${(b.top-a.top)*k}px) scale(${lerp(1,b.width/a.width,k)},${lerp(1,b.height/a.height,k)})`;
+      ft.style.visibility='hidden'; VOO=ft; } else W.style.opacity=0;
+    V.style.transform=`rotateY(${-180*k}deg)`; V.querySelector('.sombra').style.opacity=Math.sin(Math.PI*Math.min(k,.5))*.9; }
 }
 let VOO=null;
 function cena(t){
@@ -245,7 +251,9 @@ function cena(t){
   // avatar (imagem no piloto)
   const av=C.avatar; const ao=av?vis(t,av.ini,av.fim):0; $('avbox').style.opacity=ao;
   const h0=(C.hero||[])[0]; const capa=!!(h0&&h0.ini<=0&&t<h0.fim); $('avbox').classList.toggle('capa',capa);
-  $('avtag').style.opacity=capa?0:ao;
+  const ag=C.avgrande, centro=!!(ag&&t>=ag.ini&&t<ag.fim); $('avbox').classList.toggle('centro',centro); B.classList.toggle('largo',centro);
+  if(centro) I.style.opacity=0;
+  $('avtag').style.opacity=(capa||centro)?0:ao;
   const fo=ativo(C.fontes,t); const FO=$('fonte'); if(fo&&!capa){FO.innerHTML=fo.html;FO.style.opacity=vis(t,fo.ini,fo.fim);} else FO.style.opacity=0;
   const L=ativo(C.legenda,t); $('leg').innerHTML=L?L.palavras.map(w=>`<span style="color:${t>=w.t?(w.cor||'#fff'):'rgba(255,255,255,.35)'}">${w.w}</span>`).join(''):'';
   // legenda sempre numa linha: encolhe a fonte até caber (nunca corta na borda)

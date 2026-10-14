@@ -253,6 +253,9 @@ for i, f in enumerate(R["falas"]):
         if imgs and ts:
             cena["radar"] = {"ini": ini(fid) - .05, "fim": ini(ORDEM[i + 1]) - .05, "imgs": imgs[:len(ts)], "t": sorted(ts)}
         break
+# pergunta da cidade: avatar grande no centro até o CTA (Nei, 14/10/2026)
+if PERG and PERG + 1 < len(ORDEM):
+    cena["avgrande"] = {"ini": ini(ORDEM[PERG]) - .05, "fim": ini(ORDEM[PERG + 1]) - .05}
 if ASS:
     cena["indice"] = {"itens": [R["falas"][i]["assunto"] for i in ASS], "t": [ini(ORDEM[i]) - .05 for i in ASS],
                       "ini": ini(ORDEM[ASS[0]]) - .05, "fim": ini(ORDEM[PERG]) - .05 if PERG else DUR + 1}
