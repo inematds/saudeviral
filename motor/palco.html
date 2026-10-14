@@ -95,8 +95,21 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#05080c;font-fam
 #virada .t{font:400 128px/0.98 'Archivo Black';letter-spacing:-2px}
 #virada .im{margin-top:46px;width:940px;aspect-ratio:16/9;border-radius:22px;border:5px solid var(--amb);background-size:cover;background-position:center}
 #virada .bar{position:absolute;left:0;top:0;bottom:0;width:22px;background:var(--amb)}
+/* virada de folha em 3D (Nei, 14/10/2026): a tela gira presa na borda esquerda como página de livro */
+body{perspective:2600px}
+#pagina{position:absolute;inset:0;transform-origin:0 50%;backface-visibility:hidden;background:#05080c;z-index:2}
+#virada{transform-origin:0 50%;backface-visibility:hidden}
+.sombra{position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.15),rgba(0,0,0,.85));opacity:0}
+/* radar: a imagem do vídeo de cada assunto no topo, trocando conforme ele é dito */
+#radar{position:absolute;left:70px;right:70px;top:500px;opacity:0}
+#radar .im{width:940px;aspect-ratio:16/9;border-radius:22px;border:5px solid var(--amb);background-size:cover;background-position:center;box-shadow:0 24px 70px rgba(0,0,0,.75)}
+#radar .bd{position:absolute;left:-14px;top:-26px;background:var(--amb);color:#0b0f14;font:400 44px 'Archivo Black';padding:6px 20px;border-radius:12px}
+#radar .ds{display:flex;gap:12px;margin-top:20px;justify-content:center}
+#radar .ds i{width:46px;height:10px;border-radius:6px;background:rgba(255,255,255,.25)}
+#radar .ds i.on{background:var(--amb)}
 </style></head>
 <body>
+<div id="pagina">
 <div id="fundos"></div>
 <div id="grade"></div>
 <div id="vinheta"></div>
@@ -106,6 +119,7 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#05080c;font-fam
 <div id="num"></div>
 <div id="graf"></div>
 <div id="print"></div>
+<div id="radar"></div>
 <div id="carimbo"></div>
 <div id="caixa"></div>
 <div id="avbox"><div></div></div>
@@ -114,6 +128,8 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#05080c;font-fam
 <div id="indice"></div>
 <div id="fonte"></div>
 <div id="leg"></div>
+<div class="sombra"></div>
+</div>
 <div id="virada"></div>
 <script>
 const C = window.CENA;
@@ -141,10 +157,31 @@ function caber(H){H.querySelectorAll('.t1,.t2,.t3,.t5').forEach(e=>{let px=parse
   H.style.transform='none'; const u=H.lastElementChild; if(!u) return;
   const fundo=u.getBoundingClientRect().bottom, topo=H.getBoundingClientRect().top+40, lim=1090;
   if(fundo>lim){H.style.transformOrigin='50% 0';H.style.transform=`scale(${Math.max(.7,(lim-topo)/(fundo-topo))})`;}}
+// virada de folha: 1ª metade a tela atual (congelada) vira e mostra o cartão; 2ª metade o cartão vira e mostra o assunto
+const VA=.65, VC=.65, PRONTA=.3; const giro=x=>.5-.5*Math.cos(Math.PI*clamp(x));
 function desenhar(t){
+  const v=ativo(C.viradas,t), P=$('pagina'), V=$('virada');
+  // logo depois da virada, a página nova fica parada 0,3 s (é o estado que apareceu por baixo do cartão)
+  const vp=(C.viradas||[]).find(x=>t>x.fim&&t<x.fim+PRONTA);
+  if(!v){ cena(vp?vp.fim+PRONTA:t); P.style.transform=''; P.style.zIndex=2; P.querySelector('.sombra').style.opacity=0; V.style.opacity=0; return; }
+  const d=v.fim-v.ini, e=t-v.ini;
+  const kk=v.k+v.txt; if(V.dataset.k!==kk){V.innerHTML=`<div class="bar"></div><div class="k">${v.k}</div><div class="t">${v.txt}</div>${v.img?`<div class="im" style="background-image:url('${v.img}')"></div>`:''}<div class="sombra"></div>`;V.dataset.k=kk;}
+  V.style.opacity=1;
+  if(e<d-VC){ cena(v.ini-.02); const k=giro(e/VA); P.style.zIndex=3; V.style.zIndex=1;
+    P.style.transform=`rotateY(${-180*k}deg)`; P.querySelector('.sombra').style.opacity=Math.sin(Math.PI*Math.min(k,.5))*.9; V.style.transform='';
+    V.querySelector('.sombra').style.opacity=(1-k)*.25; }
+  else { cena(v.fim+PRONTA); const k=giro((e-(d-VC))/VC); P.style.zIndex=1; P.style.transform=''; P.querySelector('.sombra').style.opacity=k<.5?(1-k*2)*.6:0;
+    V.style.zIndex=3; V.style.transform=`rotateY(${-180*k}deg)`; V.querySelector('.sombra').style.opacity=Math.sin(Math.PI*Math.min(k,.5))*.9; }
+}
+function cena(t){
   // fundos com dissolve e zoom lento (≤1,05)
   (C.fundos||[]).forEach((f,i)=>{const o=vis(t,f.ini,f.fim,.6); const d=$('fb'+i); d.style.opacity=o;
     if(o){const k=clamp((t-f.ini)/(f.fim-f.ini)); d.style.transform=`scale(${lerp(1,1.05,k)})`;}});
+  // radar: no sumário, a imagem de cada assunto no topo (no lugar da miniatura solta)
+  const ra=C.radar, RA=$('radar'); const emRadar=!!(ra&&t>=ra.ini&&t<=ra.fim);
+  if(emRadar){ (C.fundos||[]).forEach((f,i)=>{$('fb'+i).style.opacity=0;}); let cur=0; ra.t.forEach((x,k)=>{if(t>=x) cur=k;});
+    const k=String(cur); if(RA.dataset.k!==k){RA.innerHTML=`<div class="im" style="background-image:url('${ra.imgs[cur]}')"></div><div class="bd">${cur+1}/${ra.imgs.length}</div><div class="ds">${ra.imgs.map((_,j)=>`<i class="${j<=cur?'on':''}"></i>`).join('')}</div>`;RA.dataset.k=k;}
+    const ki=clamp((t-ra.t[cur])/.3); RA.style.opacity=vis(t,ra.ini,ra.fim,.25); RA.firstElementChild.style.transform=`scale(${lerp(.94,1,ease(ki))})`; } else RA.style.opacity=0;
   const h=ativo(C.hero,t); const H=$('hero');
   if(h){if(H.dataset.k!==h.html){H.innerHTML=h.html;H.dataset.k=h.html;} caber(H);H.style.opacity=h.ini<=0?clamp((h.fim-t)/.3):vis(t,h.ini,h.fim);} else H.style.opacity=0;
   $('topo').style.opacity=1;
@@ -194,11 +231,6 @@ function desenhar(t){
   if(ix&&!b&&t>=ix.ini&&t<=ix.fim){let cur=0; ix.t.forEach((x,k)=>{if(t>=x) cur=k;});
     const k=String(cur); if(I.dataset.k!==k){I.innerHTML=`<div class="k">No radar</div>`+ix.itens.map((x,j)=>`<div class="i${j===cur?' on':''}"><b>${j+1}/${ix.itens.length}</b>${x}</div>`).join('');I.dataset.k=k;}
     I.style.opacity=1;} else I.style.opacity=0;
-  // cartão de virada (entra da direita, sai pela esquerda, como página)
-  const v=ativo(C.viradas,t); const V=$('virada');
-  if(v){const kk=v.k+v.txt; if(V.dataset.k!==kk){V.innerHTML=`<div class="bar"></div><div class="k">${v.k}</div><div class="t">${v.txt}</div>${v.img?`<div class="im" style="background-image:url('${v.img}')"></div>`:''}`;V.dataset.k=kk;}
-    const d=v.fim-v.ini, e=t-v.ini; let x=0; if(e<.22) x=(1-ease(e/.22))*1080; else if(e>d-.18) x=-ease((e-(d-.18))/.18)*1080;
-    V.style.opacity=1; V.style.transform=`translateX(${x}px)`;} else V.style.opacity=0;
   // avatar (imagem no piloto)
   const av=C.avatar; const ao=av?vis(t,av.ini,av.fim):0; $('avbox').style.opacity=ao;
   const h0=(C.hero||[])[0]; const capa=!!(h0&&h0.ini<=0&&t<h0.fim); $('avbox').classList.toggle('capa',capa);

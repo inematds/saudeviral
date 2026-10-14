@@ -26,7 +26,7 @@ ORDEM = [f["id"] for f in R["falas"]]
 
 # respiros (Nei, 14/10/2026): 1 s de pausa com cartão de virada antes de cada assunto ("assunto" na fala) e antes da
 # pergunta (penúltima fala). A cena é deslocada aqui; o áudio/vídeo ganha o mesmo buraco no motor/respiros.py.
-VIRA = 1.0
+VIRA = 1.7  # folha virando: 0,6 s a tela sai, 0,5 s o cartão, 0,6 s o cartão vira (Nei, 14/10/2026)
 ASS = [i for i, f in enumerate(R["falas"]) if f.get("assunto")]
 PERG = len(ORDEM) - 2 if len(ORDEM) >= 4 else None
 RESP = []  # corte na linha ORIGINAL do áudio
@@ -34,12 +34,13 @@ for i in sorted({i for i in ASS if i} | ({PERG} if PERG else set())):
     a0, a1 = T[ORDEM[i - 1]]["fim"], T[ORDEM[i]]["ini"]
     RESP.append({"t": round((a0 + a1) / 2 if a1 > a0 else a1, 3), "dur": VIRA, "i": i})
 desloca = lambda x: round(x + sum(r["dur"] for r in RESP if x >= r["t"]), 3)
+desloca_fim = lambda x: round(x + sum(r["dur"] for r in RESP if x > r["t"]), 3)  # fim colado no corte fica antes do buraco
 for t_ in T.values():
-    t_["ini"], t_["fim"] = desloca(t_["ini"]), desloca(t_["fim"])
+    t_["ini"], t_["fim"] = desloca(t_["ini"]), desloca_fim(t_["fim"])
     for p_ in t_["palavras"]:
         p_["t"] = desloca(p_["t"])
         if "f" in p_:
-            p_["f"] = desloca(p_["f"])
+            p_["f"] = desloca_fim(p_["f"])
 (E / "respiros.json").write_text(json.dumps(RESP))
 
 
@@ -236,6 +237,17 @@ for i, f in enumerate(R["falas"]):
     else:
         continue
     cena["manchetes"].append({**m, "ini": ini(fid) - .05, "fim": prox_ini})
+# radar: no sumário (fala com itens antes do 1º assunto), a imagem do vídeo de cada assunto no topo, na hora do item
+for i, f in enumerate(R["falas"]):
+    its = f.get("caixa", {}).get("itens")
+    if its and ASS and i < ASS[0]:
+        fid = f["id"]
+        imgs = [str(E / R["falas"][k]["fundo"]) for k in ASS if R["falas"][k].get("fundo")]
+        ts = [em(fid, it["em"]) - .1 if it.get("em") else ini(fid) for it in its][:len(imgs)]
+        ts = [max(ini(fid), x) for x in ts]
+        if imgs and ts:
+            cena["radar"] = {"ini": ini(fid) - .05, "fim": ini(ORDEM[i + 1]) - .05, "imgs": imgs[:len(ts)], "t": sorted(ts)}
+        break
 if ASS:
     cena["indice"] = {"itens": [R["falas"][i]["assunto"] for i in ASS], "t": [ini(ORDEM[i]) - .05 for i in ASS],
                       "ini": ini(ORDEM[ASS[0]]) - .05, "fim": ini(ORDEM[PERG]) - .05 if PERG else DUR + 1}
