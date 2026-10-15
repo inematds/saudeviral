@@ -104,7 +104,7 @@ print(t)
 EOF
 )
 roteirizar() {
-  ( cd "$ED" && timeout 2400 env -u ANTHROPIC_API_KEY claude -p "$1" --allowedTools "Read,Write,Edit,Glob,Grep" \
+  ( cd "$ED" && timeout 10800 env -u ANTHROPIC_API_KEY claude -p "$1" --allowedTools "Read,Write,Edit,Glob,Grep" \
       --add-dir "$RAIZ" --add-dir "$TX" --permission-mode acceptEdits > "$ED/claude.log" 2>&1 )
 }
 # REUSAR_ROTEIRO=1: refaz só avatar/vídeo/publicação com o roteiro.json + base.md que já estão na edição (corrigido à mão)
@@ -162,7 +162,7 @@ print(t)
 PY
 )
   longo_roteiro() {
-    ( cd "$EL" && timeout 2400 env -u ANTHROPIC_API_KEY claude -p "$1" --allowedTools "Read,Write,Edit,Glob,Grep" \
+    ( cd "$EL" && timeout 10800 env -u ANTHROPIC_API_KEY claude -p "$1" --allowedTools "Read,Write,Edit,Glob,Grep" \
         --add-dir "$RAIZ" --add-dir "$TX" --add-dir "$HOME/projetos/explicavideos/engine/v2" --permission-mode acceptEdits > "$EL/claude.log" 2>&1 )
   }
   aviso_longo() { echo "$1" > "$EL/aviso.txt"; rm -f "$EL/aviso.txt.envio-v3.json"; node "$BOT" $DRY "$EL/aviso.txt" "saudeviral · $MODO · LONGO · $DATA_BR
