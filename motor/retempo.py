@@ -19,14 +19,23 @@ pal = cs.transcrever(wav, A / "t", palavras=True)
 ouv = [(w, i) for i, p in enumerate(pal) for w in cs.norm(p["word"])]
 esp = [(w, k) for k, f in enumerate(falas) for w in cs.norm(f["fala"])]
 m = difflib.SequenceMatcher(None, [w for w, _ in esp], [w for w, _ in ouv], autojunk=False)
-fala_de = {}  # índice da palavra ouvida → fala
+fala_de, pos_de = {}, {}  # índice da palavra ouvida → fala / posição no roteiro
 for a, b, n in m.get_matching_blocks():
     for j in range(n):
         fala_de.setdefault(ouv[b + j][1], esp[a + j][1])
-atual, dono = 0, []
-for i in range(len(pal)):  # palavra sem par fica com a fala da vizinha anterior
-    atual = fala_de.get(i, atual)
-    dono.append(atual)
+        pos_de.setdefault(ouv[b + j][1], a + j)
+ultima = {k: max(p for p, (_, kk) in enumerate(esp) if kk == k) for k in range(len(falas))}
+dono, ant = [], None  # ant = última palavra com par
+for i in range(len(pal)):  # palavra sem par fica com a fala da vizinha anterior...
+    if i in fala_de:
+        dono.append(fala_de[i]); ant = i; continue
+    prox = next((j for j in range(i + 1, len(pal)) if j in fala_de), None)
+    # ...menos quando a anterior já fechou a fala dela: aí é o começo da seguinte ("Vazinhos" ≠ "Vasinhos" no
+    # saudeviral 16/10 ia para a fala de antes e o corte da virada caía entre "Vasinhos" e "roxos")
+    if ant is not None and prox is not None and pos_de[ant] == ultima[fala_de[ant]] and fala_de[prox] > fala_de[ant]:
+        dono.append(fala_de[prox])
+    else:
+        dono.append(fala_de[ant] if ant is not None else 0)
 
 tempos = []
 for k, f in enumerate(falas):

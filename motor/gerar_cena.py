@@ -30,9 +30,51 @@ VIRA = 1.7  # folha virando: 0,6 s a tela sai, 0,5 s o cartão, 0,6 s o cartão 
 ASS = [i for i, f in enumerate(R["falas"]) if f.get("assunto")]
 PERG = len(ORDEM) - 2 if len(ORDEM) >= 4 else None
 RESP = []  # corte na linha ORIGINAL do áudio
+
+
+def silencio(wav, a, b):
+    """meio do trecho mais quieto (janelas de 20 ms) entre a e b s: o tempo do Whisper erra 0,1–0,3 s e o corte
+    caía com a voz soando (saudeviral 16/10: "corte errado" entre um assunto e outro)."""
+    import numpy as np, subprocess
+    raw = subprocess.run(["ffmpeg", "-v", "error", "-ss", f"{max(a, 0):.3f}", "-to", f"{b:.3f}", "-i", str(wav),
+                          "-ac", "1", "-ar", "16000", "-f", "s16le", "-"], capture_output=True).stdout
+    x = np.frombuffer(raw, np.int16).astype(float) / 32768
+    J = 320
+    if len(x) < J * 3:
+        return None
+    db = 20 * np.log10(np.sqrt((x[: len(x) // J * J].reshape(-1, J) ** 2).mean(1)) + 1e-9)
+    quieto = db < max(db.min() + 6, -45)
+    melhor, ini = (0, 0), None  # maior sequência quieta
+    for k, q in enumerate(list(quieto) + [False]):
+        if q and ini is None:
+            ini = k
+        elif not q and ini is not None:
+            melhor = max(melhor, (k - ini, ini)); ini = None
+    n_, i_ = melhor
+    return round(max(a, 0) + (i_ + n_ / 2) * J / 16000, 3)
+
+
+WAV = E / ("avatar/avatar.wav" if AVATAR else "narracao.wav")
 for i in sorted({i for i in ASS if i} | ({PERG} if PERG else set())):
     a0, a1 = T[ORDEM[i - 1]]["fim"], T[ORDEM[i]]["ini"]
-    RESP.append({"t": round((a0 + a1) / 2 if a1 > a0 else a1, 3), "dur": VIRA, "i": i})
+    t_ = (a0 + a1) / 2 if a1 > a0 else a1
+    if WAV.exists():  # entre o fim da última palavra e a 2ª palavra da fala seguinte
+        pa, pb = T[ORDEM[i - 1]]["palavras"], T[ORDEM[i]]["palavras"]
+        lo = (pa[-1]["t"] + pa[-1].get("f", pa[-1]["t"])) / 2 if pa else a0 - 0.3
+        hi = pb[1]["t"] if len(pb) > 1 else a1 + 0.6
+        t_ = silencio(WAV, lo, hi) or t_
+    RESP.append({"t": round(t_, 3), "dur": VIRA, "i": i})
+    # o que o Whisper pôs do lado errado do corte vai para o lado certo
+    T[ORDEM[i - 1]]["fim"] = min(T[ORDEM[i - 1]]["fim"], t_)
+    T[ORDEM[i]]["ini"] = max(T[ORDEM[i]]["ini"], t_)
+    for p_ in T[ORDEM[i - 1]]["palavras"]:
+        p_["t"] = min(p_["t"], t_)
+        if "f" in p_:
+            p_["f"] = min(p_["f"], t_)
+    for p_ in T[ORDEM[i]]["palavras"]:
+        p_["t"] = max(p_["t"], t_)
+        if "f" in p_:
+            p_["f"] = max(p_["f"], t_)
 desloca = lambda x: round(x + sum(r["dur"] for r in RESP if x >= r["t"]), 3)
 desloca_fim = lambda x: round(x + sum(r["dur"] for r in RESP if x > r["t"]), 3)  # fim colado no corte fica antes do buraco
 for t_ in T.values():

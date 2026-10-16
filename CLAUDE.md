@@ -18,6 +18,7 @@ When I correct you, or you catch yourself making a mistake: before continuing, a
 
 ## Lessons
 
+- Corte da virada (respiro) = silêncio medido no áudio, nunca o tempo do Whisper (erra 0,1–0,3 s e cortava a voz entre assuntos). (Nei, 16/10/2026)
 - Tratar por "você" (nunca "tu/teu/ti/te prepara") e CTA SEMPRE só o inema.club — nada de "segue o canal", vídeo longo ou canal do YouTube; o portão (checar.py / rodar.sh) reprova. (Nei, 11/10/2026)
 - Motor do curto: f1 com hero não leva numero/ficha/caixa (ficava número sobre número); o numero entra no início da fala e fica até o próximo visual (senão a parte de cima fica vazia); legenda cola número partido pelo Whisper ("7 ,7 %" → "7,7%"). (11/10/2026)
 - Narração e pergunta tratam por "você", nunca "tu"/"teu"/"te prepara" (pedido do Nei, 10/10/2026). A edição de referência foi convertida também, porque o modelo copia o tom dela.
