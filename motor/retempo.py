@@ -56,10 +56,33 @@ while k < len(tempos):
         fim_run += 1
     t0 = tempos[k - 1]["palavras"][-1]["f"] if k > 0 else 0.0
     t1 = tempos[fim_run]["palavras"][0]["t"] if fim_run < len(tempos) else cs.dur(wav)
+    # 2ª chance: transcreve só o trecho pulado (finviral 14/10: f10–f11 sem texto; recortado, o Whisper ouviu tudo)
+    ini_c, fim_c = max(t0 - 0.3, 0), t1 + 1.0
+    trecho = A / f"lacuna-{k}.wav"
+    subprocess.run(["ffmpeg", "-y", "-v", "error", "-ss", f"{ini_c:.3f}", "-to", f"{fim_c:.3f}", "-i", wav, trecho], check=True)
+    try:
+        pal2 = cs.transcrever(trecho, A / f"t-lacuna-{k}", palavras=True)
+    except Exception as e:
+        print("aviso: 2ª transcrição falhou:", e); pal2 = []
+    ouv2 = [(w, i) for i, p in enumerate(pal2) for w in cs.norm(p["word"])]
+    esp2 = [(w, j) for j in range(k, fim_run) for w in cs.norm(falas[j]["fala"])]
+    m2 = difflib.SequenceMatcher(None, [w for w, _ in esp2], [w for w, _ in ouv2], autojunk=False)
+    achou = {}
+    for a, b, n in m2.get_matching_blocks():
+        for q in range(n):
+            achou.setdefault(ouv2[b + q][1], esp2[a + q][1])
+    if all(j in achou.values() for j in range(k, fim_run)):
+        for i2, p in enumerate(pal2):
+            if i2 in achou:
+                tempos[achou[i2]]["palavras"].append({"w": p["word"].strip(), "t": round(p["start"] + ini_c, 3), "f": round(p["end"] + ini_c, 3)})
+        print("aviso: fala(s)", [tempos[j]["id"] for j in range(k, fim_run)], f"pulada(s) pelo Whisper; retranscrita(s) no trecho {ini_c:.1f}–{fim_c:.1f} s")
+        k = fim_run
+        continue
     ws = [(j, w) for j in range(k, fim_run) for w in falas[j]["fala"].split()]
     passo = max(t1 - t0, 0.3 * len(ws)) / max(len(ws), 1)
     for n, (j, w) in enumerate(ws):
         tempos[j]["palavras"].append({"w": w, "t": round(t0 + n * passo, 3), "f": round(t0 + (n + 1) * passo, 3)})
+        tempos[j]["interpolada"] = True  # tempo chutado: o gerar_cena.py não corta virada encostada nela
     print("aviso: fala(s)", [tempos[j]["id"] for j in range(k, fim_run)], f"sem transcrição; interpolada(s) em {t0:.1f}–{t1:.1f} s")
     k = fim_run
 for k, t in enumerate(tempos):

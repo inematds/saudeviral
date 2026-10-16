@@ -56,6 +56,8 @@ def silencio(wav, a, b):
 
 WAV = E / ("avatar/avatar.wav" if AVATAR else "narracao.wav")
 for i in sorted({i for i in ASS if i} | ({PERG} if PERG else set())):
+    if T[ORDEM[i - 1]].get("interpolada") or T[ORDEM[i]].get("interpolada"):  # tempo chutado: melhor sem virada
+        print(f"aviso: virada antes de {ORDEM[i]} pulada (tempo de fala chutado ao lado)"); continue
     a0, a1 = T[ORDEM[i - 1]]["fim"], T[ORDEM[i]]["ini"]
     t_ = (a0 + a1) / 2 if a1 > a0 else a1
     if WAV.exists():  # entre o fim da última palavra e a 2ª palavra da fala seguinte
@@ -63,6 +65,8 @@ for i in sorted({i for i in ASS if i} | ({PERG} if PERG else set())):
         lo = (pa[-1]["t"] + pa[-1].get("f", pa[-1]["t"])) / 2 if pa else a0 - 0.3
         hi = pb[1]["t"] if len(pb) > 1 else a1 + 0.6
         t_ = silencio(WAV, lo, hi) or t_
+    if RESP and t_ <= RESP[-1]["t"] + 0.5:  # fora de ordem quebraria o respiros.py
+        print(f"aviso: virada antes de {ORDEM[i]} pulada (corte {t_:.2f} s fora de ordem)"); continue
     RESP.append({"t": round(t_, 3), "dur": VIRA, "i": i})
     # o que o Whisper pôs do lado errado do corte vai para o lado certo
     T[ORDEM[i - 1]]["fim"] = min(T[ORDEM[i - 1]]["fim"], t_)
