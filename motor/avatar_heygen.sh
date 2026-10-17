@@ -51,13 +51,14 @@ tenta(){ local log="$1" k; shift
     [ "$i" = 1 ] && echo "$ID" > "$A/video_id.txt"
     sleep 20
   done
-  sleep 60
-  for i in $(seq 1 "$N"); do
-    [ -s "$A/avatar-b$i.mp4" ] && continue
-    tenta "$A/baixar-b$i.log" timeout 18000 node "$ENG/heygen-estudio-baixar.mjs" --id "$(cat "$A/video_id-b$i.txt")" --saida "$A/avatar-b$i.mp4" --perfil "$PERFIL" --minutos 290 --intervalo 120 \
-      || { echo "ERRO ao baixar o bloco $i/$N: $(tail -1 "$A/baixar-b$i.log")"; exit 4; }
-  done
 } 9>"$HOME/.cache/inemaccbot/heygen-estudio.lock"
+# Espera e download pela API de leitura (17/10/2026), fora da trava: não ocupa o perfil do estúdio.
+sleep 60
+for i in $(seq 1 "$N"); do
+  [ -s "$A/avatar-b$i.mp4" ] && continue
+  timeout 18000 node "$ENG/heygen-estudio-baixar.mjs" --id "$(cat "$A/video_id-b$i.txt")" --saida "$A/avatar-b$i.mp4" --minutos 290 --intervalo 60 > "$A/baixar-b$i.log" 2>&1 \
+    || { echo "ERRO ao baixar o bloco $i/$N: $(tail -1 "$A/baixar-b$i.log")"; exit 4; }
+done
 if [ "$N" = 1 ]; then
   mv "$A/avatar-b1.mp4" "$A/avatar.mp4"
 else
