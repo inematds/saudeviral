@@ -130,7 +130,7 @@ for f in F:
     fala = f.get("fala", "")
     if re.search(r"\b(tu|teu|tua|teus|tuas|ti|contigo|te prepara)\b", fala, re.I):
         erros.append(f"{f.get('id')}: trata por 'tu' (usar 'você'): {fala[:80]}")
-    if re.search(r"inema pro\b|v[ií]deo longo|inscrev|canal do youtube", fala, re.I):
+    if re.search(r"inema pro\b|inema tia\b|v[ií]deo longo|inscrev|canal do youtube", fala, re.I):
         erros.append(f"{f.get('id')}: CTA é só o inema.club (sem canal do YouTube nem vídeo longo): {fala[:80]}")
 if not LONGO and F and R.get("hero") and any(F[0].get(k) for k in ("numero", "ficha", "caixa", "carimbo")):
     erros.append("f1 com numero/ficha/caixa/carimbo por cima do hero (o número já está no hero)")

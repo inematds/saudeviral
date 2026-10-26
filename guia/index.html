@@ -142,7 +142,7 @@
 
 <section id="resumo" class="resumo"><div class="wrap">
   <span class="chip">Em resumo</span>
-  <p>O saudeviral é um sistema que faz, sozinho, vídeos curtos (9:16) sobre o que os maiores influenciadores de saúde do Brasil disseram nos vídeos deles: médicos, nutricionistas e psicólogos com maior audiência. Ele assiste aos vídeos do YouTube por transcrição, separa os fatos, os números e as polêmicas, e monta um vídeo com a fonte de cada dado na tela e o Nei comentando (avatar). Tudo é relatado e atribuído, e o que não tem consenso na medicina sai com o carimbo "SEM CONSENSO". Não substitui consulta médica. Aos sábados e domingos sai também o vídeo longo 16:9 "A semana explicada". Tudo é publicado sozinho no canal Inema Pro do YouTube e enviado ao Telegram. É o irmão do finviral: mesmo motor, outro tema.</p>
+  <p>O saudeviral é um sistema que faz, sozinho, vídeos curtos (9:16) sobre o que os maiores influenciadores de saúde do Brasil disseram nos vídeos deles: médicos, nutricionistas e psicólogos com maior audiência. Ele assiste aos vídeos do YouTube por transcrição, separa os fatos, os números e as polêmicas, e monta um vídeo com a fonte de cada dado na tela e o Nei comentando (avatar). Tudo é relatado e atribuído, e o que não tem consenso na medicina sai com o carimbo "SEM CONSENSO". Não substitui consulta médica. Aos sábados e domingos sai também o vídeo longo 16:9 "A semana explicada". Tudo é publicado sozinho no canal INEMA TIA do YouTube e enviado ao Telegram. É o irmão do finviral: mesmo motor, outro tema.</p>
 </div></section>
 
 <section id="oque"><div class="wrap">
@@ -176,7 +176,7 @@
     <div class="card"><div class="num">3</div><h3>Conferência</h3><p>O <code>auto/checar.py</code> confere se cada trecho está na transcrição, se os números da fala estão por extenso, se as imagens existem, se há CTA e o aviso "Não substitui consulta médica". Reprovou: volta uma vez para correção.</p></div>
     <div class="card"><div class="num">4</div><h3>Avatar</h3><p>O HeyGen gera o avatar do Nei pelo estúdio (assinatura). O <code>motor/retempo.py</code> alinha a arte à fala. Se o HeyGen falhar, sai a versão com a foto e a voz do Nei (Chatterbox).</p></div>
     <div class="card"><div class="num">5</div><h3>Vídeo</h3><p>O <code>motor/palco.html</code> é renderizado quadro a quadro pelo Playwright, com contadores, carimbo e a fonte em toda cena. O avatar fica no canto.</p></div>
-    <div class="card"><div class="num">6</div><h3>Publicação</h3><p>O <code>auto/publicar.sh</code> publica no YouTube Inema Pro (lives12) pelo <code>yt-pubx</code> e manda sempre ao bot v3, com o link. Se o avatar falhou, a versão com foto só vai ao bot.</p></div>
+    <div class="card"><div class="num">6</div><h3>Publicação</h3><p>O <code>auto/publicar.sh</code> publica no YouTube INEMA TIA (lives2) pelo <code>yt-pubx</code> e manda sempre ao bot v3, com o link. Se o avatar falhou, a versão com foto só vai ao bot.</p></div>
   </div>
 </div></section>
 
@@ -241,7 +241,7 @@
   </div></div>
   <div class="step"><div class="b">5</div><div>
     <h3>Acompanhar no Telegram e no YouTube</h3>
-    <p>Cada rodada publica no Inema Pro (lives12) e manda o vídeo ao bot v3 com o link. Se não houver pauta ou algo falhar, o bot recebe o aviso.</p>
+    <p>Cada rodada publica no INEMA TIA (lives2) e manda o vídeo ao bot v3 com o link. Se não houver pauta ou algo falhar, o bot recebe o aviso.</p>
   </div></div>
 </div></section>
 

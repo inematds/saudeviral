@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Vídeo LONGO 16:9 de uma edição que já tem roteiro.json aprovado no checar --longo:
-# avatar (HeyGen estúdio, em blocos) → retempo → cena → render → publica no lives12 + bot v3.
+# avatar (HeyGen estúdio, em blocos) → retempo → cena → render → publica no lives2 + bot v3.
 # uso: auto/longo.sh <pasta-da-edicao-longa> <rotulo>      (ex.: edicoes/2026-10-17-semanal-longo "semanal · LONGO · 17/10/2026")
 set -uo pipefail
 RAIZ="$(cd "$(dirname "$0")/.." && pwd)"

@@ -22,7 +22,7 @@ Guia completo (landing + passo a passo): **https://inematds.github.io/saudeviral
 3. **Conferência (`auto/checar.py`):** confere se cada trecho do `base.md` está de fato na transcrição. Também confere se os números da fala estão por extenso, se as imagens existem, se o CTA está presente e se aparece "Não substitui consulta médica". Se reprovar, o roteiro volta uma vez para correção. Se reprovar de novo, o vídeo não é feito.
 4. **Avatar:** o HeyGen gera o avatar do Nei pelo estúdio (assinatura, sem API de geração). Se falhar, sai a versão com a foto e a voz do Nei (Chatterbox).
 5. **Vídeo:** o `motor/palco.html` é renderizado quadro a quadro pelo Playwright, com contadores, carimbo, legenda palavra a palavra e fonte em toda cena. O avatar fica no canto.
-6. **Publicação:** o vídeo é publicado no YouTube **Inema Pro (lives12)** pelo `yt-pubx` (`auto/publicar.sh`) e vai sempre ao bot v3 no Telegram, com o link. Se o avatar falhar, a versão com foto só vai ao bot.
+6. **Publicação:** o vídeo é publicado no YouTube **INEMA TIA (lives2)** pelo `yt-pubx` (`auto/publicar.sh`) e vai sempre ao bot v3 no Telegram, com o link. Se o avatar falhar, a versão com foto só vai ao bot.
 7. **Sábado e domingo — o longo 16:9:** depois do curto, sai "A semana explicada" (5 a 7 min, um capítulo por influenciador), com as cenas animadas do explicavideo v2 (`motor/longo.html`, `auto/roteiro-longo.md`, `auto/checar.py --longo`, `auto/longo.sh`).
 
 ## Agenda (systemd, usuário)
@@ -33,7 +33,7 @@ Guia completo (landing + passo a passo): **https://inematds.github.io/saudeviral
 | Sábado, 05:00 | `semanal` | 90 s a 2 min: balanço da semana + longo 16:9 "A semana explicada" |
 | Domingo, 05:00 | `domingo` | ~90 s: os alertas, hábitos e mitos da semana + longo 16:9 |
 
-O horário é 05:00 para não disputar a GPU e o HeyGen com o finviral, que roda às 02:00. O bot v3 sempre recebe uma de três coisas: o vídeo (com o link do lives12), "sem pauta" ou "falhou em X".
+O horário é 05:00 para não disputar a GPU e o HeyGen com o finviral, que roda às 02:00. O bot v3 sempre recebe uma de três coisas: o vídeo (com o link do lives2), "sem pauta" ou "falhou em X".
 
 ```bash
 cp systemd/saudeviral-* ~/.config/systemd/user/ && systemctl --user daemon-reload

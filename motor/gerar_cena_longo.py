@@ -4,7 +4,7 @@ Monta <ed>/cena-longo.js para motor/longo.html (16:9) a partir de roteiro.json (
 (tempos.json do narrar.py; com --avatar, avatar/tempos.json do retempo.py).
 
 roteiro.json (longo):
-{ "marca": "<b>Inema Pro</b> · RADAR SAÚDE", "avatar": {"img": "img/avatar-teste.jpg"},
+{ "marca": "<b>INEMA TIA</b> · RADAR SAÚDE", "avatar": {"img": "img/avatar-teste.jpg"},
   "capitulos": [ {"id": "c0", "titulo": "...", "kicker": "...", "takeaway": "..."},              # abertura: sem tela de nome
                  {"id": "c1", "nome": "Drauzio Varella", "kicker": "MÉDICO · ONCOLOGISTA", "sub": "Drauzio Varella · 08/10",
                   "foto": "img/<id>.jpg", "titulo": "...", "takeaway": "..."} ],

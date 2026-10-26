@@ -62,7 +62,7 @@ Regras das `falas`:
 - **Penúltima fala:** gancho de comentário. É uma pergunta que chama a pessoa a contar onde ela está e como é aí (Nei, 13/10/2026): "De onde você está assistindo? O que você acha desse caso? Como é a situação aí na sua cidade? Comente aqui" (adapte ao tema: o caso, o preço, o atendimento, o golpe que mais aparece na região), com `"limpa": true`. A `fonte` dela é "<b>Não substitui consulta médica.</b> Resumo do que os influenciadores disseram, com a fonte de cada fato".
 - **Última fala:** CTA com `fundo` "img/cta.jpg" e `"limpa": true`.
   - Fala: uma ponte curta do tema para a IA, mais "Você pode aprender isso no inema ponto club, com cursos gratuitos." (Nei, 13/10/2026: o CTA diz que dá pra APRENDER no inema.club)
-  - O CTA é SEMPRE só o inema.club: não citar canal do YouTube, Inema Pro, "vídeo longo", "se inscreva" nem outro destino.
+  - O CTA é SEMPRE só o inema.club: não citar canal do YouTube, INEMA TIA, Inema Pro, "vídeo longo", "se inscreva" nem outro destino.
   - `hero` igual ao da referência (GESTÃO DE / AGENTES DE IA / img/cta.jpg).
   - `caixa` tipo cta com "INEMA.CLUB".
 - **Saúde (regras duras):**

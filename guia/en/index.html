@@ -142,7 +142,7 @@
 
 <section id="resumo" class="resumo"><div class="wrap">
   <span class="chip">In short</span>
-  <p>saudeviral is a system that, on its own, makes short videos (9:16) about what Brazil's biggest health influencers said in their videos: the doctors, nutritionists and psychologists with the largest audiences. It watches the YouTube videos through transcription, picks out the facts, numbers and controversies, and builds a video with the source of every data point on screen and Nei commenting (avatar). Everything is reported and attributed, and anything without medical consensus gets a "NO CONSENSUS" stamp. It does not replace a medical consultation. On Saturdays and Sundays it also makes the long 16:9 video "The week explained". Everything is published automatically on the Inema Pro YouTube channel and sent to Telegram. It is finviral's sibling: same engine, different topic.</p>
+  <p>saudeviral is a system that, on its own, makes short videos (9:16) about what Brazil's biggest health influencers said in their videos: the doctors, nutritionists and psychologists with the largest audiences. It watches the YouTube videos through transcription, picks out the facts, numbers and controversies, and builds a video with the source of every data point on screen and Nei commenting (avatar). Everything is reported and attributed, and anything without medical consensus gets a "NO CONSENSUS" stamp. It does not replace a medical consultation. On Saturdays and Sundays it also makes the long 16:9 video "The week explained". Everything is published automatically on the INEMA TIA YouTube channel and sent to Telegram. It is finviral's sibling: same engine, different topic.</p>
 </div></section>
 
 <section id="oque"><div class="wrap">
@@ -176,7 +176,7 @@
     <div class="card"><div class="num">3</div><h3>Fact-check</h3><p><code>auto/checar.py</code> checks that every excerpt is in the transcript, that spoken numbers are written out, that images exist, that there is a CTA and the notice "Não substitui consulta médica" (does not replace a medical consultation). If it fails, it goes back once for correction.</p></div>
     <div class="card"><div class="num">4</div><h3>Avatar</h3><p>HeyGen generates Nei's avatar through the studio (subscription). <code>motor/retempo.py</code> aligns the visuals to the speech. If HeyGen fails, a version with Nei's photo and voice (Chatterbox) is made instead.</p></div>
     <div class="card"><div class="num">5</div><h3>Video</h3><p><code>motor/palco.html</code> is rendered frame by frame by Playwright, with counters, stamps and the source in every scene. The avatar sits in the corner.</p></div>
-    <div class="card"><div class="num">6</div><h3>Publishing</h3><p><code>auto/publicar.sh</code> publishes on the Inema Pro YouTube channel (lives12) through <code>yt-pubx</code> and always sends it to bot v3 with the link. If the avatar failed, the photo version only goes to the bot.</p></div>
+    <div class="card"><div class="num">6</div><h3>Publishing</h3><p><code>auto/publicar.sh</code> publishes on the INEMA TIA YouTube channel (lives2) through <code>yt-pubx</code> and always sends it to bot v3 with the link. If the avatar failed, the photo version only goes to the bot.</p></div>
   </div>
 </div></section>
 
@@ -241,7 +241,7 @@
   </div></div>
   <div class="step"><div class="b">5</div><div>
     <h3>Follow along on Telegram and YouTube</h3>
-    <p>Each run publishes on Inema Pro (lives12) and sends the video to bot v3 with the link. If there is no topic or something fails, the bot gets the notice.</p>
+    <p>Each run publishes on INEMA TIA (lives2) and sends the video to bot v3 with the link. If there is no topic or something fails, the bot gets the notice.</p>
   </div></div>
 </div></section>
 

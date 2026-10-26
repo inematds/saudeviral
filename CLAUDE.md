@@ -5,6 +5,7 @@ Conta/autor: `inematds <inematds@gmail.com>`, repo `inematds/saudeviral`. Fluxo 
 - Base do que já foi publicado: `auto/usados.tsv` (local, fora do git; `auto/usados.py ids|recentes|registrar`, igual ao finviral). Cada edição publicada registra só os vídeos CITADOS no base.md, com o assunto; o diário exclui esses vídeos e recebe no prompt os assuntos dos últimos 7 dias. Assunto repetido por OUTRO canal pode (outro ponto de vista): a fala liga os dois ("o Fulano também falou sobre isso") e mostra o que muda; só não reconta igual. (Nei, 14/10/2026)
 
 - Criado em 10/10/2026 a pedido do Nei: "vamos fazer algo igual o finviral … pode publicar no lives12 e no bot v3, e publique no portal". Sai SEMPRE com o avatar HeyGen, é PUBLICADO no YouTube **Inema Pro (lives12)** por `auto/publicar.sh` (yt-pubx) e vai SEMPRE ao bot v3 com o link. A versão com foto (quando o avatar falha) só vai ao bot.
+- **Canal trocado em 26/10/2026:** do lives12 (Inema Pro) para o **lives2 (INEMA TIA)**, junto do finviral e do advviral, a pedido do Nei ("o finviral, saudeviral e advviral devem salvar tudo no lives2 de agora em diante"). Marca na tela do longo: "INEMA TIA · RADAR SAÚDE". Vídeos antigos continuam no lives12.
 - Agenda (systemd usuário, `systemd/`): diário seg–sex 05:00, semanal sáb 05:00, domingo dom 05:00 → `auto/rodar.sh <modo>`. O horário é 05:00 para não disputar GPU/Whisper e o perfil do HeyGen com o finviral (02:00). Avulso: `auto/rodar.sh <modo> <data>`.
 - Influenciadores em `canais.json` (só YouTube; base em `pesquisa/influenciadores.md`). O Nei inclui/exclui. Augusto Cury fica FORA (político, decisão do Nei em 10/10/2026). Eu posso SUGERIR (no bot) nome consolidado, com registro profissional (CRM/CRN/CRP) e confiável — nunca emergente; só entra com ok dele.
 - Coleta só por yt-dlp (metadados) + inemavox (áudio e Whisper local). Roteiro por `claude -p` (assinatura). Sem API paga. A Apify foi usada só na pesquisa inicial, com autorização do Nei; não entra na rotina.
@@ -17,6 +18,8 @@ Conta/autor: `inematds <inematds@gmail.com>`, repo `inematds/saudeviral`. Fluxo 
 When I correct you, or you catch yourself making a mistake: before continuing, add the lesson as a one-line rule under ## Lessons, so it never happens again.
 
 ## Lessons
+
+- Script auxiliar do roteiro em /tmp leva a data da edição no nome e confere o caminho alvo com assert; nunca rodar com `&&` logo depois de um Write que pode ter falhado (24/10/2026: um script velho de mesmo nome regravou o roteiro de 17/10).
 
 - Corte da virada (respiro) = silêncio medido no áudio, nunca o tempo do Whisper (erra 0,1–0,3 s e cortava a voz entre assuntos). (Nei, 16/10/2026)
 - Tratar por "você" (nunca "tu/teu/ti/te prepara") e CTA SEMPRE só o inema.club — nada de "segue o canal", vídeo longo ou canal do YouTube; o portão (checar.py / rodar.sh) reprova. (Nei, 11/10/2026)

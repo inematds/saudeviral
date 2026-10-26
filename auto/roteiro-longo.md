@@ -1,6 +1,6 @@
 # Tarefa: roteiro do saudeviral LONGO 16:9 ({MODO}, {DATA})
 
-Você monta o roteiro de um vídeo **16:9 de 5 a 7 minutos** do **saudeviral**, para o canal Inema Pro no YouTube:
+Você monta o roteiro de um vídeo **16:9 de 5 a 7 minutos** do **saudeviral**, para o canal INEMA TIA no YouTube:
 **"A semana explicada"**. O curto 9:16 da mesma rodada dá só o placar; este vídeo EXPLICA cada assunto: o que
 cada influenciador disse, o que isso quer dizer, o contexto e os números com fonte. O Nei (avatar) apresenta.
 Trabalhe só com os arquivos abaixo. Não use a internet nem outra API.
@@ -27,7 +27,7 @@ cópia LITERAL de um pedaço contínuo do transcript.txt desse id, de 6 a 30 pal
 Um script confere cada trecho; se algum não estiver no transcript, o vídeo é descartado.
 
 ### 2. `{ED}/roteiro.json` (formato longo — ver a docstring)
-- `marca`: "<b>Inema Pro</b> · RADAR SAÚDE". `avatar`: `{"img": "img/avatar-teste.jpg"}`.
+- `marca`: "<b>INEMA TIA</b> · RADAR SAÚDE". `avatar`: `{"img": "img/avatar-teste.jpg"}`.
 - `capitulos`: `c0` = abertura (sem `nome`); depois **um capítulo por influenciador com assunto forte** (3 a 5
   capítulos; quem não disse nada relevante fica de fora); por último `cz` = fecho (sem `nome`). Cada capítulo de
   influenciador tem `nome`, `kicker` (o `rk` do canais.json, ex.: "MÉDICO · ONCOLOGISTA"), `sub` ("Canal · dd/mm"),
