@@ -29,7 +29,9 @@ if [ -z "$URL" ]; then  # (Nei, 06/11/2026: aviso do YouTube no v3 só se der er
   VB="$V"  # bot aceita até ~49 MB: acima disso vai uma cópia 720p (o YouTube recebe o original)
   if [ "$(stat -c %s "$V")" -gt 48000000 ]; then
     VB="${V%.mp4}-720p.mp4"
-    ffmpeg -v error -y -i "$V" -vf "scale=-2:720" -c:v libx264 -crf 27 -preset medium -c:a aac -b:a 128k -movflags +faststart "$VB"
+    RAIZ="$(cd "$(dirname "$0")/.." && pwd)"  # encode na vaga render da máquina (motor/vaga.sh, 09/11/2026)
+    RENDER_ESPERA_MIN="${RENDER_ESPERA_MIN:-30}" bash "$RAIZ/motor/vaga.sh" render "$(basename "$RAIZ")-720p" \
+      ffmpeg -v error -y -i "$V" -vf "scale=-2:720" -c:v libx264 -crf 27 -preset medium -c:a aac -b:a 128k -movflags +faststart "$VB"
   fi
   rm -f "$VB.envio-v3.json"
   node "$BOT" $DRY "$VB" "saudeviral · $ROT · ${DUR}s

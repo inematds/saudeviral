@@ -65,6 +65,8 @@ else
   ARGS=(); FIL=""
   for i in $(seq 1 "$N"); do ARGS+=(-i "$A/avatar-b$i.mp4"); FIL+="[$((i-1)):v]fps=30,scale=1920:1080,setsar=1[v$i];[$((i-1)):a]aresample=48000[a$i];"; done
   for i in $(seq 1 "$N"); do FIL+="[v$i][a$i]"; done
-  ffmpeg -v error -y "${ARGS[@]}" -filter_complex "${FIL}concat=n=$N:v=1:a=1[v][a]" -map "[v]" -map "[a]" -c:v libx264 -crf 18 -preset fast -c:a aac -b:a 192k "$A/avatar.mp4"
+  RENDER_ESPERA_MIN="${RENDER_ESPERA_MIN:-60}" bash "$AQUI/vaga.sh" render "$(basename "$(dirname "$AQUI")")-emenda" \
+    ffmpeg -v error -y "${ARGS[@]}" -filter_complex "${FIL}concat=n=$N:v=1:a=1[v][a]" -map "[v]" -map "[a]" -c:v libx264 -crf 18 -preset fast -c:a aac -b:a 192k "$A/avatar.mp4"
 fi
-python3 "$AQUI/retempo.py" "$E"
+# só os passos pesados vão para a vaga da máquina (09/11/2026): a espera e o download do HeyGen ficam fora; saída 75 = máquina ocupada
+GPU_ESPERA_MIN="${GPU_ESPERA_MIN:-60}" bash "$AQUI/vaga.sh" gpu "$(basename "$(dirname "$AQUI")")-retempo" python3 "$AQUI/retempo.py" "$E"

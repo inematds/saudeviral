@@ -17,18 +17,31 @@ DRY=""; [ "${SEM_BOT:-}" = 1 ] && DRY=--dry-run
 # VALIDAR=1: edição de teste para o Nei aprovar (pasta -validacao, nunca vai ao YouTube nem marca vídeos como usados)
 ED="$RAIZ/edicoes/$DIA-$MODO${VALIDAR:+-validacao}"; mkdir -p "$ED/img"
 LOG="$ED/rodada.log"; exec >>"$LOG" 2>&1
-exec 8>"$RAIZ/auto/.rodando"; flock -n 8 || { echo "outra rodada em andamento"; exit 0; }
+# placar da máquina (~/projetos/wifi/scripts/rodada, 09/11/2026): início e fim de TODA rodada (publicado | sem_pauta | falhou | ocupado | ok).
+# Sem o comando (VPS6) não faz nada. RODADA_UNIDADE=teste-... nos ensaios (não suja o placar do timer). O trap grava "falhou" se a
+# saída não passou por fim(); publicado só com URL do YouTube de verdade.
+RODADA="$HOME/projetos/wifi/scripts/rodada"; UNIDADE="${RODADA_UNIDADE:-$(basename "$RAIZ")-$MODO}"; EDN="$(basename "$ED")"; FIM_GRAVADO=""
+placar() { if [ -x "$RODADA" ]; then "$RODADA" "$@" || true; fi; }
+fim() { FIM_GRAVADO=1; placar fim "$UNIDADE" "$1" --edicao "$EDN" "${@:2}"; }
+trap 'rc=$?; [ -z "$FIM_GRAVADO" ] && placar fim "$UNIDADE" falhou --edicao "$EDN" --motivo "saída inesperada (código $rc)"' EXIT
+placar inicio "$UNIDADE" "$EDN"
+VAGA="$RAIZ/motor/vaga.sh"; M="$(basename "$RAIZ")"  # passos pesados na vaga da máquina (motor/vaga.sh → wifi/scripts/fila-vaga); 75 = ocupada
+exec 8>"$RAIZ/auto/.rodando"; flock -n 8 || { echo "outra rodada em andamento"; fim ocupado --motivo "outra rodada do motor em andamento"; exit 0; }
 echo "=== $(date '+%F %T') $MODO $DIA"
-[ -z "${VALIDAR:-}" ] && grep -qx "$DIA $MODO" "$RAIZ/auto/pular.txt" 2>/dev/null && { echo "pulado (auto/pular.txt)"; exit 0; }
+[ -z "${VALIDAR:-}" ] && grep -qx "$DIA $MODO" "$RAIZ/auto/pular.txt" 2>/dev/null && { echo "pulado (auto/pular.txt)"; fim sem_pauta --motivo "pulado (auto/pular.txt)"; exit 0; }
 d() { date -d "$DIA $1 day" +%Y%m%d; }
 DATA_BR=$(date -d "$DIA" +%d/%m/%Y)
 
-avisar() {  # manda texto ao bot (como arquivo .txt com legenda) e sai
+avisar() {  # manda texto ao bot (como arquivo .txt com legenda) e sai; placar: código 0 = sem_pauta, senão falhou (ou o 3º argumento)
   echo "$1" > "$ED/aviso.txt"; rm -f "$ED/aviso.txt.envio-v3.json"
   node "$BOT" $DRY "$ED/aviso.txt" "saudeviral · $MODO · $DATA_BR
 $1" || echo "falhou o envio do aviso"
+  local r="${3:-}"; [ -n "$r" ] || { [ "${2:-1}" = 0 ] && r=sem_pauta || r=falhou; }
+  fim "$r" --motivo "$(printf %s "$1" | tr '\n' ' ' | cut -c1-200)"
   echo "AVISO: $1"; exit "${2:-1}"
 }
+# máquina ocupada (a vaga não abriu a tempo, saída 75): avisa e sai limpo; a pauta não é marcada como usada
+ocupado() { avisar "máquina ocupada: $1 não pegou vaga a tempo (fila-vaga saiu 75); a pauta não foi usada" 0 ocupado; }
 
 AVISO_LONGO=""  # CTA é só o inema.club (Nei, 11/10/2026): nada de mandar para o vídeo longo / canal do YouTube
 INSTR_L=""
@@ -76,6 +89,7 @@ fi
 # 2. transcrição local (inemavox / Whisper) + miniaturas
 IDS=$(cut -f3 "$ED/videos.tsv" | tr '\n' ' ')
 TX="$TX" systemd-run --user --scope -q -p MemoryMax=40G timeout 7200 bash "$RAIZ/coleta/transcrever.sh" $IDS
+[ "$?" = 75 ] && ocupado "o Whisper (transcrição)"
 : > "$ED/transcritos.txt"
 for id in $IDS; do
   [ -s "$TX/$id/transcript.txt" ] && echo "$id" >> "$ED/transcritos.txt"
@@ -129,14 +143,18 @@ cat "$ED/checar.log"
 
 # 4. avatar do Nei (HeyGen estúdio); se falhar, versão com a foto e a voz do Nei (chatterbox)
 NOTA=""
+#    retempo/emenda (dentro do avatar_heygen.sh), render e voz local passam pela vaga da máquina; a espera do HeyGen fica fora
 if [ "${SEM_AVATAR:-}" != 1 ] && bash "$RAIZ/motor/avatar_heygen.sh" "$ED" "SAUDEVIRAL-$DIA-$MODO${VALIDAR:+-validacao}" > "$ED/avatar.log" 2>&1 \
-   && python3 "$RAIZ/motor/gerar_cena.py" "$ED" --avatar && bash "$RAIZ/motor/compor_avatar.sh" "$ED" "$ED/video.mp4"; then
+   && python3 "$RAIZ/motor/gerar_cena.py" "$ED" --avatar \
+   && RENDER_ESPERA_MIN="${RENDER_ESPERA_MIN:-60}" bash "$VAGA" render "$M-render" bash "$RAIZ/motor/compor_avatar.sh" "$ED" "$ED/video.mp4"; then
   echo "vídeo com avatar ok"
 else
+  [ "$?" = 75 ] && ocupado "o retempo/render do vídeo com avatar"
   if [ "${SEM_AVATAR:-}" = 1 ]; then NOTA="(teste sem avatar)"; else NOTA="(sem avatar: $(grep -h ERRO "$ED/avatar.log" 2>/dev/null | tail -1 | cut -c1-150); versão com foto)"; fi
   echo "avatar falhou $NOTA"
-  python3 "$RAIZ/motor/narrar.py" "$ED" 1.12 && python3 "$RAIZ/motor/gerar_cena.py" "$ED" --livre \
-    && bash "$RAIZ/motor/montar.sh" "$ED" "$ED/video.mp4" || avisar "falhou também a versão com foto (ver $LOG)"
+  if GPU_ESPERA_MIN="${GPU_ESPERA_MIN:-60}" bash "$VAGA" gpu "$M-tts" python3 "$RAIZ/motor/narrar.py" "$ED" 1.12 && python3 "$RAIZ/motor/gerar_cena.py" "$ED" --livre \
+    && RENDER_ESPERA_MIN="${RENDER_ESPERA_MIN:-60}" bash "$VAGA" render "$M-render" bash "$RAIZ/motor/montar.sh" "$ED" "$ED/video.mp4"; then :
+  else [ "$?" = 75 ] && ocupado "a voz local/render da versão com foto"; avisar "falhou também a versão com foto (ver $LOG)"; fi
 fi
 
 # 5. publica no YouTube INEMA TIA (lives2) e manda SEMPRE ao bot v3 (autorizado pelo Nei em 10/10/2026)
@@ -144,7 +162,14 @@ fi
 SUG=""; [ -s "$ED/sugestao.txt" ] && SUG="
 Sugestão de influenciador: $(head -c 300 "$ED/sugestao.txt")"
 SEMYT=""; { [ -n "$NOTA" ] || [ -n "$DRY" ] || [ -n "${VALIDAR:-}" ]; } && SEMYT=1
-SEM_YT="$SEMYT" SEM_BOT="${SEM_BOT:-}" bash "$RAIZ/auto/publicar.sh" "$ED/video.mp4" "$ED" "$MODO · $DATA_BR $NOTA" "$SUG"
+PUB=$(SEM_YT="$SEMYT" SEM_BOT="${SEM_BOT:-}" bash "$RAIZ/auto/publicar.sh" "$ED/video.mp4" "$ED" "$MODO · $DATA_BR $NOTA" "$SUG" | tee -a /dev/stderr)  # -a: o stderr é o rodada.log (sem -a o tee o truncaria)
+# placar: publicado só com URL do YouTube de verdade (código 0 ≠ publicou)
+URL=$(printf '%s\n' "$PUB" | grep -o 'https://www.youtube.com/watch?v=[A-Za-z0-9_-]*\|https://youtu.be/[A-Za-z0-9_-]*' | tail -1)
+if [ -n "$URL" ]; then RES=publicado; MOT=""
+elif printf '%s\n' "$PUB" | grep -q '^pendente:'; then RES=ok; MOT="pronto, $(printf '%s\n' "$PUB" | grep '^pendente:' | tail -1 | cut -c1-150)"
+elif [ -n "$DRY" ] || [ -n "${VALIDAR:-}" ] || [ "${SEM_AVATAR:-}" = 1 ]; then RES=ok; MOT="ensaio sem YouTube (SEM_BOT/VALIDAR/SEM_AVATAR)"
+elif [ -n "$NOTA" ]; then RES=falhou; MOT="$(printf %s "$NOTA" | cut -c1-200); só foi ao bot"
+else RES=falhou; MOT="não publicou no YouTube: $(printf '%s\n' "$PUB" | grep 'NÃO publicou' | tail -1 | cut -c1-150)"; fi
 # registra só os vídeos CITADOS no base.md (o escolhido que ficou de fora continua disponível amanhã) + o assunto
 [ -z "$DRY" ] && [ -z "${VALIDAR:-}" ] && python3 "$RAIZ/auto/usados.py" registrar "$ED" "$DIA" "$MODO"
 
@@ -181,8 +206,10 @@ $(cat "$EL/checar.log")" || true
     fi
     if grep -qx ok "$EL/checar.log"; then
       if [ "${SEM_AVATAR:-}" = 1 ]; then echo "longo: roteiro ok (teste sem avatar, não renderiza)"
-      else bash "$RAIZ/auto/longo.sh" "$EL" "$MODO · LONGO · $DATA_BR" > "$EL/longo.log" 2>&1 || aviso_longo "longo falhou: $(grep -h ERRO "$EL/longo.log" | tail -1)"; fi
+      else bash "$RAIZ/auto/longo.sh" "$EL" "$MODO · LONGO · $DATA_BR" > "$EL/longo.log" 2>&1 \
+        || { [ "$?" = 75 ] && aviso_longo "longo não saiu: máquina ocupada ($(grep -h OCUPADO "$EL/longo.log" | tail -1))" || aviso_longo "longo falhou: $(grep -h ERRO "$EL/longo.log" | tail -1)"; }; fi
     else aviso_longo "roteiro longo reprovado na conferência: $(grep PROBLEMA "$EL/checar.log" | head -3)"; fi
   fi
 fi
+fim "$RES" ${URL:+--url "$URL"} ${MOT:+--motivo "$MOT"}
 echo "=== fim $(date '+%F %T')"
