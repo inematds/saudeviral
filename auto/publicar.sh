@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Publica um vídeo do saudeviral no YouTube INEMA TIA (lives2) pelo yt-pubx e manda SEMPRE ao bot v3 (com o link).
+# Publica um vídeo do saudeviral no YouTube Radar Viral (lives24) pelo yt-pubx e manda SEMPRE ao bot v3 (com o link).
 # uso: auto/publicar.sh <video.mp4> <pasta-da-edicao> <rotulo> [extra-da-legenda]
 #   título = 1ª linha de <ed>/legenda.txt (curto vertical recebe #Shorts e sai sem thumb; o longo ganha thumb do Codex).
 #   SEM_YT=1 só manda ao bot; SEM_BOT=1 simula o envio ao bot (teste).
@@ -11,20 +11,28 @@ V="$1"; E="$(cd "$2" && pwd)"; ROT="$3"; EXTRA="${4:-}"
 PL="$E/publicar-$(printf %s "$ROT" | tr -c 'A-Za-z0-9-' _).log"  # o rótulo traz a data dd/mm/aaaa: barra no nome quebrava o log (10/10/2026)
 BOT="$HOME/projetos/refazvideo/ferramentas/enviar_bot_v3.mjs"
 DRY=""; [ "${SEM_BOT:-}" = 1 ] && DRY=--dry-run
+# Radar Viral (Nei, 10/11/2026): com RADAR_VIRAL=1 (vem do serviço) o vídeo pronto fica pendente e o
+# ~/projetos/radar-viral/radar.py (timer de hora em hora) publica no lives24, 1 por hora, respeitando o
+# "a partir de" de cada nicho (radar.json). Para segurar: crie <ed>/SEGURAR.
+if { [ -n "${RADAR_VIRAL:-}" ] || [ -e "$E/SEGURAR" ]; } && [ "${SEM_YT:-}" != 1 ] && [ -z "${PUBLICANDO_PENDENTE:-}" ]; then
+  QUANDO="pelo Radar Viral (lives24, 1 por hora)"; [ -e "$E/SEGURAR" ] && QUANDO="só quando o Nei liberar (rm $E/SEGURAR; o radar pega na hora seguinte)"
+  printf '%s\n%s\n%s\n' "$V" "$ROT" "$EXTRA" > "$E/PUBLICAR_PENDENTE.$(basename "$V" .mp4)"
+  echo "pendente: publica $QUANDO"; exit 0
+fi
 DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$V" | cut -d. -f1)
 W=$(ffprobe -v error -select_streams v:0 -show_entries stream=width -of csv=p=0 "$V")
 TIT=$(head -1 "$E/legenda.txt" | cut -c1-90)
 [ "$W" -lt 1000 ] && TIT="$TIT #Shorts"
 URL=""
 if [ "${SEM_YT:-}" != 1 ]; then
-  CTX="saudeviral (INEMA TIA): resumo do que os maiores influenciadores de saúde do Brasil (médicos, nutricionistas e psicólogos) disseram, com a fonte de cada fato na tela e o Nei Maldaner comentando. Não substitui consulta médica. Curso gratuito de gestão de agentes de IA em https://inema.club. Não cite outros canais na descrição além dos influenciadores do vídeo."
-  timeout 2400 "$HOME/projetos/yt-pubx/yt-pubx" publicar "$V" --canal lives2 --title "$TIT" --contexto "$CTX" \
+  CTX="saudeviral (Radar Viral): resumo do que os maiores influenciadores de saúde do Brasil (médicos, nutricionistas e psicólogos) disseram, com a fonte de cada fato na tela e o Nei Maldaner comentando. Não substitui consulta médica. Curso gratuito de gestão de agentes de IA em https://inema.club. Não cite outros canais na descrição além dos influenciadores do vídeo."
+  timeout 2400 "$HOME/projetos/yt-pubx/yt-pubx" publicar "$V" --canal lives24 --title "$TIT" --contexto "$CTX" \
       --contexto-arquivo "$E/legenda.txt" > "$PL" 2>&1
   URL=$(grep -o 'https://www.youtube.com/watch?v=[A-Za-z0-9_-]*\|https://youtu.be/[A-Za-z0-9_-]*' "$PL" | tail -1)
 fi
-if [ -n "$URL" ]; then ST="publicado no INEMA TIA (lives2): $URL"
+if [ -n "$URL" ]; then ST="publicado no Radar Viral (lives24): $URL"
 elif [ "${SEM_YT:-}" = 1 ]; then ST="(sem YouTube nesta rodada)"
-else ST="⚠ NÃO publicou no lives2: $(grep -h -i 'erro\|error\|quota\|limit' "$PL" | tail -1 | cut -c1-200)"; fi
+else ST="⚠ NÃO publicou no lives24: $(grep -h -i 'erro\|error\|quota\|limit' "$PL" | tail -1 | cut -c1-200)"; fi
 if [ -z "$URL" ]; then  # (Nei, 06/11/2026: aviso do YouTube no v3 só se der erro)
   VB="$V"  # bot aceita até ~49 MB: acima disso vai uma cópia 720p (o YouTube recebe o original)
   if [ "$(stat -c %s "$V")" -gt 48000000 ]; then
@@ -43,6 +51,6 @@ echo "$ST"
 # já publicado no YouTube. Horário: finviral 07:00, saudeviral 05:00, advviral 08:00 (ou assim que pronto).
 # Pedidos do Nei em 22 e 24/10/2026. Falha aqui não derruba a rodada (o script avisa no bot).
 MP="$HOME/projetos/metricool-pub2/publicar_reel.sh"
-if [ -n "$URL" ] && [ "$W" -lt "$(ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 "$V")" ] && [ -x "$MP" ]; then
+if [ -n "$URL" ] && [ -z "${SEM_METRICOOL:-}" ] && [ "$W" -lt "$(ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 "$V")" ] && [ -x "$MP" ]; then
   SEM_BOT="${SEM_BOT:-}" timeout 900 bash "$MP" saudeviral "$V" "$E" "$URL" || echo "metricool: não agendou (ver ~/projetos/metricool-pub2/estado/saudeviral/)"
 fi

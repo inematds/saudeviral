@@ -2,6 +2,7 @@
 
 Conta/autor: `inematds <inematds@gmail.com>`, repo `inematds/saudeviral`. Fluxo e agenda: README.md. Base de cada edição: `edicoes/<ed>/base.md`. Projeto irmão (mesmo motor): `~/projetos/finviral`.
 
+- **Radar Viral (Nei, 10/11/2026) — vale sobre as notas antigas de canal e horário abaixo:** este nicho faz parte do Radar Viral e publica no **lives24** pela fila única `~/projetos/radar-viral` (timer `radar-viral`, 1 vídeo por hora, `radar.json`). Gera às 05:00; o vídeo fica `PUBLICAR_PENDENTE` (serviço com `RADAR_VIRAL=1`) e sai já na hora seguinte. Pendente com mais de 24 h é esquecido. Segurar: `touch <edição>/SEGURAR`.
 - Base do que já foi publicado: `auto/usados.tsv` (local, fora do git; `auto/usados.py ids|recentes|registrar`, igual ao finviral). Cada edição publicada registra só os vídeos CITADOS no base.md, com o assunto; o diário exclui esses vídeos e recebe no prompt os assuntos dos últimos 7 dias. Assunto repetido por OUTRO canal pode (outro ponto de vista): a fala liga os dois ("o Fulano também falou sobre isso") e mostra o que muda; só não reconta igual. (Nei, 14/10/2026)
 
 - Criado em 10/10/2026 a pedido do Nei: "vamos fazer algo igual o finviral … pode publicar no lives12 e no bot v3, e publique no portal". Sai SEMPRE com o avatar HeyGen, é PUBLICADO no YouTube **Inema Pro (lives12)** por `auto/publicar.sh` (yt-pubx) e vai SEMPRE ao bot v3 com o link. A versão com foto (quando o avatar falha) só vai ao bot.
