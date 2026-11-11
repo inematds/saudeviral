@@ -51,6 +51,7 @@ echo "$ST"
 # já publicado no YouTube. Horário: finviral 07:00, saudeviral 05:00, advviral 08:00 (ou assim que pronto).
 # Pedidos do Nei em 22 e 24/10/2026. Falha aqui não derruba a rodada (o script avisa no bot).
 MP="$HOME/projetos/metricool-pub2/publicar_reel.sh"
-if [ -n "$URL" ] && [ -z "${SEM_METRICOOL:-}" ] && [ "$W" -lt "$(ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 "$V")" ] && [ -x "$MP" ]; then
+# Desligado em 10/11/2026: o Radar Viral agenda na marca Radar do metritds (IG+TikTok inema.club24). METRICOOL_PUB2=1 religa o @inemafuturos.
+if [ -n "$URL" ] && [ -n "${METRICOOL_PUB2:-}" ] && [ "$W" -lt "$(ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 "$V")" ] && [ -x "$MP" ]; then
   SEM_BOT="${SEM_BOT:-}" timeout 900 bash "$MP" saudeviral "$V" "$E" "$URL" || echo "metricool: não agendou (ver ~/projetos/metricool-pub2/estado/saudeviral/)"
 fi
