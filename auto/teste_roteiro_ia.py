@@ -25,4 +25,13 @@ class Teste(unittest.TestCase):
  def test_fonte_ausente_para_antes_modelo(self):
   (self.p/'transcritos.txt').write_text('abcDEF123')
   with self.assertRaisesRegex(ValueError,'Transcrição ausente'):r.entradas('',self.p,self.p/'tx')
+ def test_citacao_com_escape_preserva_numero_e_texto(self):
+  base='| Prazo | Canal | video | data | "teto anual passará\\npara R$ 110.000." |'
+  r.salvar(json.dumps({'arquivos':{'base.md':base,'roteiro.json':{'falas':[]},'legenda.txt':'texto'}}),self.p)
+  self.assertIn('"teto anual passará para R$ 110.000."',(self.p/'base.md').read_text())
+  self.assertNotIn('\\n',(self.p/'base.md').read_text())
+ def test_nao_altera_escapes_do_roteiro(self):
+  fala='exemplo\\n literal'
+  r.salvar(json.dumps({'arquivos':{'base.md':'fonte','roteiro.json':{'falas':[{'fala':fala}]},'legenda.txt':'texto'}}),self.p)
+  self.assertEqual(json.loads((self.p/'roteiro.json').read_text())['falas'][0]['fala'],fala)
 if __name__=='__main__':unittest.main()

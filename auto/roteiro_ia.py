@@ -23,6 +23,10 @@ def salvar(resposta, pasta):
             if not isinstance(obj,dict) or not obj: raise ValueError('roteiro.json inválido')
             valor=json.dumps(obj,ensure_ascii=False,indent=2)
         if not isinstance(valor,str) or not valor.strip(): raise ValueError('Arquivo vazio/inválido: '+nome)
+        if nome == 'base.md':
+            # JSON às vezes traz \n duplamente escapado dentro da citação.
+            # Na tabela é espaço; o checar.py continua exigindo a fonte literal.
+            valor = valor.replace('\\n', ' ').replace('\\r', ' ').replace('\\t', ' ')
         prontos[nome]=valor+'\n'
     # Toda a resposta é validada antes da primeira escrita; cada arquivo é trocado atomicamente.
     for nome,valor in prontos.items():
