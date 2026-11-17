@@ -34,4 +34,26 @@ class Teste(unittest.TestCase):
   fala='exemplo\\n literal'
   r.salvar(json.dumps({'arquivos':{'base.md':'fonte','roteiro.json':{'falas':[{'fala':fala}]},'legenda.txt':'texto'}}),self.p)
   self.assertEqual(json.loads((self.p/'roteiro.json').read_text())['falas'][0]['fala'],fala)
+
+import copy,os,subprocess,yaml
+import ia_motor as ia
+# Recusa REAL do Claude Code (16/11/2026; ids de conta removidos).
+RECUSA=json.dumps({"type":"result","is_error":True,"api_error_status":429,"api_error_type":"rate_limit_error",
+ "api_error":"usage_limit_reached","result":"You've hit your weekly limit · resets 9pm (America/Sao_Paulo)","terminal_reason":"api_error"})
+class Trava(unittest.TestCase):
+ def setUp(self):
+  self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup);self.p=Path(self.tmp.name)
+  cfg=copy.deepcopy(ia.carregar());cfg['etapas']['roteiro_curto_diario'].update(motor='claude',modelo='claude-opus-5-5',esforco='medium')
+  (self.p/'ia.yaml').write_text(yaml.safe_dump(cfg))
+  e=patch.dict(os.environ,{ia.CONFIG_ENV:str(self.p/'ia.yaml'),ia.COTA_DB_ENV:str(self.p/'cota.sqlite')});e.start();self.addCleanup(e.stop)
+ def test_sem_cota_falha_na_hora_sem_abrir_o_claude(self):
+  n=[]
+  def run(cmd,**kw):n.append(cmd[0]);return subprocess.CompletedProcess(cmd,1,RECUSA,'')
+  with patch.object(ia.subprocess,'run',side_effect=run):
+   for _ in range(3):
+    with self.assertRaisesRegex(ia.CotaEsgotada,'sem cota'):ia.executar('roteiro_curto_diario','x',self.p)
+  self.assertEqual(len(n),1)
+ def test_claude_sem_sessao_no_disco(self):
+  self.assertIn('--no-session-persistence',ia.comando(dict(ia.carregar()['etapas']['roteiro_curto_diario'],motor='claude',modelo='claude-opus-5-5')))
+
 if __name__=='__main__':unittest.main()
