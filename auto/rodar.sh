@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Rodada automática do saudeviral (cópia do finviral adaptada para saúde): coleta → transcrição → roteiro (claude -p, assinatura) → conferência → avatar → vídeo → bot v3.
+# Rodada automática do saudeviral (cópia do finviral adaptada para saúde): coleta → transcrição → roteiro (auto/ia.yaml, assinatura) → conferência → avatar → vídeo → bot v3.
 # uso: auto/rodar.sh <diario|semanal|domingo> [AAAA-MM-DD da rodada, padrão hoje]
 #   diario  = vídeos de ontem e anteontem ainda não usados (40–60 s)
 #   semanal = balanço da semana (7 dias até ontem), 90 s a 2 min   [sábado]
@@ -107,7 +107,7 @@ $JA"
 fi
 cp "$RAIZ/motor/assets/cta.jpg" "$RAIZ/motor/assets/avatar-teste.jpg" "$ED/img/"
 
-# 3. roteiro pelo Claude (assinatura, claude -p) + portão de fatos, com uma correção
+# 3. roteiro pelo motor de auto/ia.yaml (assinatura) + portão de fatos, com uma correção
 PROMPT=$(python3 - "$RAIZ/auto/roteiro.md" "$ED" "$TX" "$RAIZ" "$MODO" "$DATA_BR" "$INSTR" <<'EOF'
 import sys
 t = open(sys.argv[1]).read()
@@ -126,7 +126,7 @@ if [ "${REUSAR_ROTEIRO:-}" = 1 ] && [ -s "$ED/roteiro.json" ] && [ -s "$ED/base.
 else
 rm -f "$ED/SEM_PAUTA.txt" "$ED/roteiro.json" "$ED/base.md"
 rm -rf "$ED/avatar"  # roteiro novo = avatar novo (o avatar_heygen.sh reaproveita blocos já enviados)
-roteirizar "$PROMPT" || avisar "o claude -p falhou ao escrever o roteiro ($(tail -c 200 "$ED/claude.log"))"
+roteirizar "$PROMPT" || avisar "o motor de IA (auto/ia.yaml) falhou ao escrever o roteiro ($(tail -c 200 "$ED/claude.log"))"
 fi
 [ -f "$ED/SEM_PAUTA.txt" ] && avisar "sem pauta: $(cat "$ED/SEM_PAUTA.txt")" 0
 if ! python3 "$RAIZ/auto/checar.py" "$ED" "$TX" > "$ED/checar.log"; then
@@ -191,7 +191,7 @@ PY
   aviso_longo() { echo "$1" > "$EL/aviso.txt"; rm -f "$EL/aviso.txt.envio-v3.json"; node "$BOT" $DRY "$EL/aviso.txt" "saudeviral · $MODO · LONGO · $DATA_BR
 $1" || true; echo "AVISO LONGO: $1"; }
   rm -f "$EL/SEM_PAUTA.txt" "$EL/roteiro.json" "$EL/base.md" && rm -rf "$EL/avatar"
-  if ! longo_roteiro "$PL"; then aviso_longo "o claude -p falhou no roteiro longo"
+  if ! longo_roteiro "$PL"; then aviso_longo "o motor de IA (auto/ia.yaml) falhou no roteiro longo"
   elif [ -f "$EL/SEM_PAUTA.txt" ]; then aviso_longo "longo sem pauta: $(cat "$EL/SEM_PAUTA.txt")"
   else
     if ! python3 "$RAIZ/auto/checar.py" "$EL" "$TX" --longo > "$EL/checar.log"; then
