@@ -32,8 +32,8 @@ etapas:
   roteiro_curto_diario:
     tipo: assinatura
     motor: codex
-    modelo: gpt-6.1-sol
-    esforco: medium
+    modelo: EXECUTOR
+    esforco: EXECUTOR
     capacidade: texto
     timeout: 900
     max_tokens: 12000
@@ -41,8 +41,8 @@ etapas:
   roteiro_curto_semanal:
     tipo: assinatura
     motor: codex
-    modelo: gpt-6.1-sol
-    esforco: medium
+    modelo: EXECUTOR
+    esforco: EXECUTOR
     capacidade: texto
     timeout: 900
     max_tokens: 12000
@@ -50,8 +50,8 @@ etapas:
   roteiro_curto_domingo:
     tipo: assinatura
     motor: codex
-    modelo: gpt-6.1-sol
-    esforco: medium
+    modelo: EXECUTOR
+    esforco: EXECUTOR
     capacidade: texto
     timeout: 900
     max_tokens: 12000
@@ -59,8 +59,8 @@ etapas:
   roteiro_longo_diario:
     tipo: assinatura
     motor: codex
-    modelo: gpt-6.1-sol
-    esforco: medium
+    modelo: EXECUTOR
+    esforco: EXECUTOR
     capacidade: texto
     timeout: 900
     max_tokens: 12000
@@ -68,8 +68,8 @@ etapas:
   roteiro_longo_semanal:
     tipo: assinatura
     motor: codex
-    modelo: gpt-6.1-sol
-    esforco: medium
+    modelo: EXECUTOR
+    esforco: EXECUTOR
     capacidade: texto
     timeout: 900
     max_tokens: 12000
@@ -77,8 +77,8 @@ etapas:
   roteiro_longo_domingo:
     tipo: assinatura
     motor: codex
-    modelo: gpt-6.1-sol
-    esforco: medium
+    modelo: EXECUTOR
+    esforco: EXECUTOR
     capacidade: texto
     timeout: 900
     max_tokens: 12000
