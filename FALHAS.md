@@ -2,6 +2,7 @@
 
 | data | o que quebrou | menor correção | prompt \| infra |
 |---|---|---|---|
+| 2026-11-28 | curto reprovado por passar de 420 palavras em 25, 26 e 27/11, sem vídeo no dia: 19 falas × ~23 palavras não cabem em 400, e a correção só dizia "passou" | pedido de 280 a 350 palavras e até 18 por fala; ao estourar, a correção mostra as falas mais longas e tira o último assunto (aceita 4) | prompt |
 | 2026-10-24 | Roteiro do semanal: script auxiliar em /tmp com nome já usado (saudeviral-encurta.py); o Write falhou, o Bash rodou o script velho e regravou o roteiro.json de 17/10 (f6 e f11 voltaram à versão anterior; restaurado pelo avatar/fala.txt) | script auxiliar com nome único por edição + assert do caminho alvo dentro do script | prompt |
 | 2026-10-16 | Virada entre assuntos cortava a voz (corte no tempo do Whisper, voz ainda soando; palavra escrita diferente ia pra fala anterior) | gerar_cena.py corta no trecho mais quieto do áudio; retempo.py dá a palavra sem par à fala seguinte quando a anterior já fechou | infra |
 | 2026-10-11 | curto de domingo com legenda sobre as miniaturas, carimbo sobre o texto, "Segundo assunto"/"o assunto" na fala e na legenda; Nei mandou tirar do ar (2Wcm60z2Yvg removido) | portão VISUAL antes do YouTube + legenda com texto do roteiro — pendente | infra + prompt |

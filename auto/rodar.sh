@@ -47,12 +47,12 @@ AVISO_LONGO=""  # CTA é só o inema.club (Nei, 11/10/2026): nada de mandar para
 INSTR_L=""
 case "$MODO" in
   diario)  DE=$(d -2); ATE=$(d -1); MAXV=10  # 1 por canal (resumo dos dez, Nei 13/10/2026)
-    INSTR="DIÁRIO de $DATA_BR: resumo do que os dez influenciadores publicaram nos últimos dias (datas no videos.tsv). Vídeo de 2 a 3 min, de 14 a 20 falas, de 300 a 400 palavras no total. Pelo menos cinco assuntos, um por influenciador sempre que der, o mais forte primeiro, cada um explicado inteiro (contexto, o que ele disse, o que muda pra quem assiste)." ;;
+    INSTR="DIÁRIO de $DATA_BR: resumo do que os dez influenciadores publicaram nos últimos dias (datas no videos.tsv). Vídeo de 2 a 3 min, de 14 a 20 falas, de 280 a 350 palavras no total, cada fala com até 18 palavras. Pelo menos cinco assuntos, um por influenciador sempre que der, o mais forte primeiro, cada um explicado inteiro (contexto, o que ele disse, o que muda pra quem assiste)." ;;
   semanal) DE=$(d -7); ATE=$(d -1); MAXV=12
-    INSTR="SEMANAL (sábado, $DATA_BR): balanço da semana de $(date -d "$DIA -7 day" +%d/%m) a $(date -d "$DIA -1 day" +%d/%m). Vídeo de 2 a 3 min, de 14 a 20 falas, de 300 a 400 palavras. Resumo dos dez: pelo menos cinco assuntos, um por influenciador sempre que der, cada um explicado inteiro (contexto, o que ele disse, o que muda pra quem assiste). O mais forte primeiro. $AVISO_LONGO"
+    INSTR="SEMANAL (sábado, $DATA_BR): balanço da semana de $(date -d "$DIA -7 day" +%d/%m) a $(date -d "$DIA -1 day" +%d/%m). Vídeo de 2 a 3 min, de 14 a 20 falas, de 280 a 350 palavras, cada fala com até 18 palavras. Resumo dos dez: pelo menos cinco assuntos, um por influenciador sempre que der, cada um explicado inteiro (contexto, o que ele disse, o que muda pra quem assiste). O mais forte primeiro. $AVISO_LONGO"
     INSTR_L="SEMANAL (sábado, $DATA_BR): a semana de $(date -d "$DIA -7 day" +%d/%m) a $(date -d "$DIA -1 day" +%d/%m) explicada. Vídeo de 5,5 a 7 min. Um capítulo por influenciador com assunto forte; mostre divergências entre eles." ;;
   domingo) DE=$(d -7); ATE=$(d -1); MAXV=12
-    INSTR="DOMINGO ($DATA_BR): os alertas e hábitos da semana, segundo eles. Vídeo de 2 a 3 min, de 14 a 20 falas, de 300 a 400 palavras. Resumo dos dez: pelo menos cinco assuntos, um por influenciador sempre que der, cada um explicado inteiro (contexto, o que ele disse, o que muda pra quem assiste). Comece pelo alerta mais forte da semana e foque nos alertas, nos hábitos e nos mitos que ELES apontaram, sempre atribuídos, cada um explicado inteiro (contexto, o que ele disse, o que muda pra quem assiste). $AVISO_LONGO"
+    INSTR="DOMINGO ($DATA_BR): os alertas e hábitos da semana, segundo eles. Vídeo de 2 a 3 min, de 14 a 20 falas, de 280 a 350 palavras, cada fala com até 18 palavras. Resumo dos dez: pelo menos cinco assuntos, um por influenciador sempre que der, cada um explicado inteiro (contexto, o que ele disse, o que muda pra quem assiste). Comece pelo alerta mais forte da semana e foque nos alertas, nos hábitos e nos mitos que ELES apontaram, sempre atribuídos, cada um explicado inteiro (contexto, o que ele disse, o que muda pra quem assiste). $AVISO_LONGO"
     INSTR_L="DOMINGO ($DATA_BR): os alertas e hábitos da semana, explicados. Vídeo de 5,5 a 7 min. Um capítulo por influenciador: o alerta, o hábito ou o mito que ELE apontou, o raciocínio dele e os números; passos citados viram flow ou timeline; divergências entre eles com compare." ;;
   *) echo "modo inválido"; exit 2 ;;
 esac
@@ -130,11 +130,24 @@ roteirizar "$PROMPT" || avisar "o motor de IA (auto/ia.yaml) falhou ao escrever 
 fi
 [ -f "$ED/SEM_PAUTA.txt" ] && avisar "sem pauta: $(cat "$ED/SEM_PAUTA.txt")" 0
 if ! python3 "$RAIZ/auto/checar.py" "$ED" "$TX" > "$ED/checar.log"; then
+  # Passou de 420 palavras (Nei, 28/11/2026): a correção tira o último assunto (o mais fraco) e aceita 4 assuntos.
+  CORTE=""
+  if grep -q "palavras (curto" "$ED/checar.log"; then
+    LONGAS=$(python3 -c 'import json,sys; F=json.load(open(sys.argv[1]))["falas"]; w=lambda f: len(f.get("fala","").split()); print(", ".join("%s=%d" % (f.get("id"), w(f)) for f in sorted(F, key=w, reverse=True)[:6]))' "$ED/roteiro.json" 2>/dev/null)
+    if [ "${MIN_ASSUNTOS:-5}" -ge 5 ]; then
+      export MIN_ASSUNTOS=4
+      CORTE="
+Passou de 420 palavras. Tire o ÚLTIMO assunto inteiro (o mais fraco, porque o mais forte vem primeiro): as falas dele, a marca \"assunto\" dele, o item dele no sumário e as linhas dele no base.md. Nesta correção bastam 4 assuntos. O total deve ficar entre 280 e 350 palavras, cada fala com até 18 palavras. Falas mais longas agora (id=palavras): $LONGAS."
+    else
+      CORTE="
+Passou de 420 palavras. Encurte as falas para até 18 palavras cada, total entre 280 e 350 palavras, sem tirar assunto. Falas mais longas agora (id=palavras): $LONGAS."
+    fi
+  fi
   roteirizar "$PROMPT
 
 ## CORREÇÃO
 A conferência automática reprovou os arquivos que você gravou. Corrija só o que está abaixo, reescrevendo base.md e roteiro.json. Trecho é cópia literal do transcript; número na fala vai por extenso.
-$(cat "$ED/checar.log")" || true
+$(cat "$ED/checar.log")$CORTE" || true
   python3 "$RAIZ/auto/checar.py" "$ED" "$TX" > "$ED/checar.log" || avisar "roteiro reprovado na conferência de fatos:
 $(grep PROBLEMA "$ED/checar.log" | head -5)"
 fi
